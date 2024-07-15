@@ -14,16 +14,23 @@ class AdminController extends Controller
         return view('admin.index');
 
     }
-    public function productlist()
+    public function listPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         $products = Product::orderBy('id', 'ASC')->paginate(6);
 
-        return view('admin.product.productlist', compact('categories', 'products'));
+        return view('admin.product.list', compact('categories', 'products'));
 
 
     }
-    public function productadd(Request $request)
+    public function formaddPro()
+    {
+        $categories = Category::orderBy('name', 'ASC')->get();
+        return view('admin.product.add',compact('categories'));
+     
+
+    }
+    public function insertPro(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -57,19 +64,13 @@ class AdminController extends Controller
         $products = Product::create($validatedData);
 
         if ($products) {
-            return redirect()->route('productlist')->with('success', 'Thêm sản phẩm thành công');
+            return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
         } else {
             return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
         }
         // return redirect()->route('productlist');
     }
-    public function productaddform()
-    {
-        $categories = Category::orderBy('name', 'ASC')->get();
-        return view('admin.product.productaddform',compact('categories'));
-     
 
-    }
     public function productdelete($id)
     {
         $product = Product::find($id);
@@ -85,8 +86,6 @@ class AdminController extends Controller
         $product->delete();
         // return redirect()->route('productlist');
         return redirect()->route('productlist')->with('success', 'Xóa sản phẩm thành công');
-
-
     }
 
     public function productupdateform($id)
@@ -103,10 +102,23 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'category_id' => 'required|integer|exists:categories,id',
-            'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'quantity' => 'required|numeric',
+            'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
-            'quantity' => 'nullable|numeric',
-
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm.',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+            'price.required' => 'Vui lòng nhập giá sản phẩm.',
+            'price.numeric' => 'Giá sản phẩm phải là số.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'category_id.integer' => 'Danh mục không hợp lệ.',
+            'category_id.exists' => 'Danh mục không tồn tại.',
+            'quantity.required' => 'Vui lòng nhập số lượng sản phẩm.',
+            'quantity.numeric' => 'Số lượng sản phẩm phải là số.',
+            'img.required' => 'Vui lòng chọn hình ảnh sản phẩm.',
+            'img.file' => 'File tải lên phải là định dạng hình ảnh.',
+            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
+            'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',
         ]);
 
         $id = $request->id;
@@ -141,5 +153,36 @@ class AdminController extends Controller
         return view('admin.productlist', compact('categories', 'products', 'query'));
     }
 
+    // CATEGORY -------------------------------------------------------------------------------------------------------------------------------
+    public function listCate()
+    {
+        $categories = Category::orderBy('id', 'ASC')->paginate(6);
+        return view('admin.category.list', compact('categories'));
+    }
+    public function formaddCate()
+    {
+        $categories = Category::orderBy('name', 'ASC')->get();
+        return view('admin.category.add',compact('categories'));
+     
 
+    }
+    public function insertCate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:20',
+            'description' => 'nullable|string',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm.',
+            'name.max' => 'Tên sản phẩm không được vượt quá 50 ký tự.',
+        ]);
+
+        $categories = Category::create($validatedData);
+
+        if ($categories) {
+            return redirect()->route('listCate')->with('success', 'Thêm danh mục thành công');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm danh mục');
+        }
+        // return redirect()->route('productlist');
+    }
 }

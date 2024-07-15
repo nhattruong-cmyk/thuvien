@@ -1451,13 +1451,13 @@
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
-												<a class="menu-link" href="index.php?url=listcate">
+												<a class="menu-link" href="{{ route('listCate') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Danh sách danh mục</span>
 												</a>
-												<a class="menu-link" href="index.php?url=addcate">
+												<a class="menu-link" href="{{ route('formaddCate') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -1492,7 +1492,7 @@
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
 
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('productlist') }}">
+													<a class="menu-link" href="{{ route('listPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
@@ -1500,7 +1500,7 @@
 													</a>
 												</div>
 												<div class="menu-item">
-													<a class="menu-link" href="index.php?url=addproducts">
+													<a class="menu-link" href="{{ route('formaddPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
