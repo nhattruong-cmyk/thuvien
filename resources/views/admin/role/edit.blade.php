@@ -1,10 +1,9 @@
 @extends('admin.layout')
 
-@section('titlepage', 'Danh sách sản phẩm')
+@section('titlepage', 'Cập nhật phân quyền')
 
 
 @section('content')
-
 
     <div class=" d-flex flex-column flex-row-fluid" id="kt_wrapper">
         <!--begin::Header-->
@@ -17,15 +16,15 @@
                     data-kt-swapper="true" data-kt-swapper-mode="prepend"
                     data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
                     <!--begin::Heading-->
-                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý sản phẩm</h1>
+                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý phân quyền</h1>
                     <!--end::Heading-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="../../demo7/dist/index.html" class="text-muted">Home</a>
                         </li>
-                        <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
-                        <li class="breadcrumb-item text-dark">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item text-muted">Quản lý phân quyền</li>
+                        <li class="breadcrumb-item text-dark">Cập nhật phân quyền</li>
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>
@@ -50,7 +49,7 @@
                     </div>
                     <!--end::Aside mobile toggle-->
                     <!--begin::Logo-->
-                    <a href="index.php" class="d-flex align-items-center">
+                    <a href="../../demo7/dist/index.html" class="d-flex align-items-center">
                         <img alt="Logo" src="assets/media/logos/logo-demo7.svg" class="h-30px" />
                     </a>
                     <!--end::Logo-->
@@ -136,33 +135,33 @@
                     <div class="card-header mt-6">
                         <!--begin::Card title-->
                         <div class="card-title">
-
                             <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1 me-5">
-                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
-                                            rx="1" transform="rotate(45 17.0365 15.1223)" fill="black" />
-                                        <path
-                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                            fill="black" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                                <input type="text" data-kt-permissions-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-15"
-                                    placeholder="Tìm kiếm sản phẩm" />
-                            </div>
+                            @if (session('success'))
+                                <div class="alert alert-success mb-1" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <i class="mdi mdi-checkbox-marked-outline mr-1"></i>
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
+                            @if (session('error'))
+                                <div class="alert alert-danger mb-1" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <i class="mdi mdi-close-circle-outline mr-1"></i>
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <!--end::Search-->
                         </div>
                         <!--end::Card title-->
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddPro') }}"><input type="button" value="Thêm mới sản phẩm"
+                            <a href="{{ route('listRole') }}"><input type="button" value="Danh sách phân quyền"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -170,91 +169,84 @@
                         </div>
                         <!--end::Card toolbar-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
+
                     <div class="card-body pt-0">
-                        <!--begin::Table-->
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-check-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu tích --}}
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-close-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu X --}}
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                            <!--begin::Form-->
+                            <form class="form" action="{{ route('updateRole') }}" method="post"
+                                enctype="multipart/form-data" name="formupdate">
+                                @csrf
+                                <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll"
+                                    data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
+                                    data-kt-scroll-max-height="auto"
+                                    data-kt-scroll-dependencies="#kt_modal_add_user_header"
+                                    data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
 
 
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-bold fs-6 mb-2">Tên phân quyền</label>
+                                        <input type="text" name="role_name"
+                                            class="form-control form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Tên phân quyền" value="{{ $role->role_name }}" />
+                                        @error('role_name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="d-flex flex-column mb-7 fv-row">
+                                        <div class="fs-5 fw-bolder form-label mb-3">Mô tả
+                                            <i class="cursor-pointer fas fa-exclamation-circle ms-2 fs-7"></i>
+                                        </div>
+                                        <textarea class="form-control form-control-solid rounded-3" name="description" rows="4">{{ $role->description }}</textarea>
+                                        @error('description')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                </div>
+
+                                <div class="text-center pt-15">
+                                    <button type="reset" class="btn btn-light me-3"
+                                        data-kt-permissions-modal-action="cancel">Hủy</button>
+                                    <input type="hidden" name="id" value="{{ $role->id }}">
+                                    <input type="submit" value="Cập nhật" class="btn btn-primary">
+
+                                </div>
+
+                            </form>
+
+
+                            <!--end::Form-->
+                        </div>
 
 
 
-                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
-                            <!--begin::Table head-->
-                            <thead>
-                                <!--begin::Table row-->
-                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Mã sản phẩm</th>
-                                    <th class="min-w-125px">Tên sản phẩm</th>
-                                    <th class="min-w-125px">Hình ảnh</th>
-                                    <th class="min-w-125px">Giá</th>
-                                    <th class="min-w-125px">Số lượng</th>
-                                    <th class="min-w-125px">Hành động</th>
-
-                                </tr>
-                                <!--end::Table row-->
-                            </thead>
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
-                            <tbody class="fw-bold text-gray-600">
-                                @foreach ($products as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td><img src="{{ asset('uploaded/' . $item->img) }}" width="80"
-                                                alt=""></td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }} vnđ</td>
-                                        <td>{{ $item->quantity }}</td>
-                                        {{-- <td>{{ $item->sold }}</td> --}}
-                                        {{-- <td>{{ $item->description }}</td> --}}
-                                        <td>
-                                            <a href="{{ route('formupdatePro', $item->id) }}"><input
-                                                    class="btn btn-warning" type="button" value="Sửa"></a>
-                                            <a href="javascript:void(0);"
-                                                onclick="confirmDelete({{ $item->id }})"><input type="button"
-                                                    class="btn btn-danger" value="Xóa"></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-
-                        </table>
-                        <!--end::Table-->
                     </div>
                     <!--end::Card body-->
                 </div>
 
+                <!--end::Modals-->
             </div>
             <!--end::Container-->
         </div>
         <!--end::Content-->
+        <!--begin::Footer-->
+
         <!--end::Footer-->
     </div>
     <script>
-        function confirmDelete(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('delPro') }}/" + id;
-            } else {
-                alert("Thao tác đã được hủy");
-            }
-        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputs = document.querySelectorAll('input, textarea, select');
+
+            inputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    var error = this.closest('.fv-row').querySelector('.text-danger');
+                    if (error) {
+                        error.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 @endsection

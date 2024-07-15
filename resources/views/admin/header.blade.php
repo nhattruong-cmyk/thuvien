@@ -1509,8 +1509,8 @@
 												</div>
 											</div>
 
-
 										</div>
+										
 									</div>
 									<!-- danh sách đơn hàng -->
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
@@ -1533,17 +1533,25 @@
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">Quản lý đơn hàng</span>
+											<span class="menu-title">Quản lý phân quyền</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 
 											<div class="menu-item">
-												<a class="menu-link" href="index.php?url=listbill">
+												<a class="menu-link" href="{{ route('listRole') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Danh sách đơn hàng</span>
+													<span class="menu-title">Danh sách phân quyền</span>
+												</a>
+											</div>
+											<div class="menu-item">
+												<a class="menu-link" href="{{ route('formaddRole') }}">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Thêm mới phân quyền</span>
 												</a>
 											</div>
 

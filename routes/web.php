@@ -31,18 +31,27 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 Route::get('/admin/listPro', [AdminController::class, 'listPro'])->name('listPro');
 Route::get('/admin/formaddPro', [AdminController::class, 'formaddPro'])->name('formaddPro');
 Route::post('/insertPro', [AdminController::class, 'insertPro'])->name('insertPro');
-Route::get('/delPro/{id}', [AdminController::class, 'productdelete'])->name('productdelete');
-Route::get('/admin/productupdateform/{id}', [AdminController::class, 'productupdateform'])->name('productupdateform');
-Route::post('/productupdate', [AdminController::class, 'productupdate'])->name('productupdate');
+Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
+Route::get('/admin/formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
+Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
 
 
 // category
 Route::get('/admin/listCate', [AdminController::class, 'listCate'])->name('listCate');
 Route::get('/admin/formaddCate', [AdminController::class, 'formaddCate'])->name('formaddCate');
+Route::get('/admin/formupdateCate/{id}', [AdminController::class, 'formupdateCate'])->name('formupdateCate');
 Route::post('/insertCate', [AdminController::class, 'insertCate'])->name('insertCate');
+Route::post('/updateCate', [AdminController::class, 'updateCate'])->name('updateCate');
+Route::get('/delCate/{id}', [AdminController::class, 'delCate'])->name('delCate');
 
 
-
+// role
+Route::get('/admin/listRole', [AdminController::class, 'listRole'])->name('listRole');
+Route::get('/admin/formaddRole', [AdminController::class, 'formaddRole'])->name('formaddRole');
+Route::get('/admin/formupdateRole/{id}', [AdminController::class, 'formupdateRole'])->name('formupdateRole');
+Route::post('/insertRole', [AdminController::class, 'insertRole'])->name('insertRole');
+Route::post('/updateRole', [AdminController::class, 'updateRole'])->name('updateRole');
+Route::get('/delRole/{id}', [AdminController::class, 'delRole'])->name('delRole');
 
 
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');

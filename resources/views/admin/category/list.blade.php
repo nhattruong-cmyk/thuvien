@@ -219,7 +219,7 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->description }}</td>
                                         <td>
-                                            <a href="{{ route('productupdateform', $item->id) }}"><input
+                                            <a href="{{ route('formupdateCate', $item->id) }}"><input
                                                     class="btn btn-warning" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -245,7 +245,7 @@
 
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('productdelete') }}/" + id;
+                window.location.href = "{{ url('delCate') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

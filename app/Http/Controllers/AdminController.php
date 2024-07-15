@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Role;
 
 
 class AdminController extends Controller
@@ -14,21 +15,18 @@ class AdminController extends Controller
         return view('admin.index');
 
     }
+
+    // PRODUCT --------------------------------------------------------------------------------------------------------------------------
     public function listPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         $products = Product::orderBy('id', 'ASC')->paginate(6);
-
         return view('admin.product.list', compact('categories', 'products'));
-
-
     }
     public function formaddPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         return view('admin.product.add',compact('categories'));
-     
-
     }
     public function insertPro(Request $request)
     {
@@ -88,15 +86,15 @@ class AdminController extends Controller
         return redirect()->route('productlist')->with('success', 'Xóa sản phẩm thành công');
     }
 
-    public function productupdateform($id)
+    public function formupdatePro($id)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         $products = Product::orderBy('id', 'DESC')->paginate(10);
         $product = Product::find($id);
-        return view('admin.product.productupdateform', compact('categories', 'products', 'product'));
+        return view('admin.product.edit', compact('categories', 'products', 'product'));
     }
 
-    public function productupdate(Request $request)
+    public function updatePro(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -137,7 +135,28 @@ class AdminController extends Controller
 
         $product->update($validatedData);
 
-        return redirect()->route('productlist');
+        return redirect()->route('listPro');
+    }
+
+    public function delPro($id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra nếu sản phẩm tồn tại
+        
+            // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
+            $imagePath ="public/uploaded/".$product->img;
+            if (file_exists($imagePath)) {
+                // Xóa tệp hình ảnh
+                unlink($imagePath);
+            }
+
+            // Xóa sản phẩm khỏi cơ sở dữ liệu
+            $product->delete();
+            
+            // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
 
     public function search(Request $request)
@@ -185,4 +204,114 @@ class AdminController extends Controller
         }
         // return redirect()->route('productlist');
     }
+    public function formupdateCate($id)
+    {
+        $categories = Category::orderBy('name', 'ASC')->get();
+        $category = Category::find($id);
+        return view('admin.category.edit',compact('categories', 'category'));
+    }
+    public function updateCate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string',
+        ], [
+            'name.required' => 'Vui lòng nhập tên danh mục.',
+            'name.max' => 'Tên danh mục không được vượt quá 50 ký tự.'
+        ]);
+
+        $id = $request->id;
+        $categories = Category::findOrFail($id);
+        $categories->update($validatedData);
+        return redirect()->route('listCate');
+    }
+    public function delCate($id)
+    {
+        $categories = Category::find($id);
+        if (!$categories) {
+            return redirect()->route('listCate')->with('error', 'Danh mục không tồn tại');
+        }
+        $categories->delete();
+        return redirect()->route('listCate')->with('success', 'Xóa danh mục thành công');
+    }
+
+    // ROLE -------------------------------------------------------------------------------------------------------------------------------
+    public function listRole()
+    {
+        $roles = Role::orderBy('id', 'ASC')->paginate(6);
+        return view('admin.role.list', compact('roles'));
+    }
+    public function formaddRole()
+    {
+        $roles = Role::orderBy('role_name', 'ASC')->get();
+        return view('admin.role.add',compact('roles'));
+     
+
+    }
+    public function insertRole(Request $request)
+    {
+        $validatedData = $request->validate([
+            'role_name' => 'required|string|max:20',
+            'description' => 'nullable|string',
+        ], [
+            'role_name.required' => 'Vui lòng nhập tên phân quyền.',
+            'role_name.max' => 'Tên phân quyền không được vượt quá 50 ký tự.',
+        ]);
+
+        $roles = Role::create($validatedData);
+
+        if ($roles) {
+            return redirect()->route('listRole')->with('success', 'Thêm phân quyền thành công');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm phân quyền');
+        }
+    }
+    public function formupdateRole($id)
+    {
+        $roles = Role::orderBy('role_name', 'ASC')->get();
+        $role = Role::find($id);
+        return view('admin.role.edit',compact('roles', 'role'));
+    }
+    public function updateRole(Request $request)
+    {
+        $validatedData = $request->validate([
+            'role_name' => 'required|string|max:50',
+            'description' => 'nullable|string',
+        ], [
+            'role_name.required' => 'Vui lòng nhập tên phân quyền.',
+            'role_name.max' => 'Tên phân quyền không được vượt quá 50 ký tự.'
+        ]);
+
+        $id = $request->id;
+        $roles = Role::findOrFail($id);
+        $roles->update($validatedData);
+        return redirect()->route('listRole');
+    }
+    public function delRole($id)
+    {
+        $roles = Role::find($id);
+        if (!$roles) {
+            return redirect()->route('listRole')->with('error', 'Phân quyền không tồn tại');
+        }
+        $roles->delete();
+        return redirect()->route('listRole')->with('success', 'Xóa phân quyền thành công');
+    }
+
+    // USERS -----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+    
+
+    // ĐƠN HÀNG --------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+    // COMMENT -------------------------------------------------------------------------------------------------------------------------
 }

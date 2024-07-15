@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('titlepage', 'Danh sách sản phẩm')
+@section('titlepage', 'Danh sách phân quyền')
 
 
 @section('content')
@@ -153,7 +153,7 @@
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-permissions-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-15"
-                                    placeholder="Tìm kiếm sản phẩm" />
+                                    placeholder="Tìm kiếm phân quyền" />
                             </div>
 
                             <!--end::Search-->
@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddPro') }}"><input type="button" value="Thêm mới sản phẩm"
+                            <a href="{{ route('formaddRole') }}"><input type="button" value="Thêm mới phân quyền"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -202,11 +202,9 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Mã sản phẩm</th>
-                                    <th class="min-w-125px">Tên sản phẩm</th>
-                                    <th class="min-w-125px">Hình ảnh</th>
-                                    <th class="min-w-125px">Giá</th>
-                                    <th class="min-w-125px">Số lượng</th>
+                                    <th class="min-w-125px">Mã Phân Quyền</th>
+                                    <th class="min-w-125px">Tên Phân Quyền</th>
+                                    <th class="min-w-125px">Mô tả</th>
                                     <th class="min-w-125px">Hành động</th>
 
                                 </tr>
@@ -215,18 +213,13 @@
                             <!--end::Table head-->
                             <!--begin::Table body-->
                             <tbody class="fw-bold text-gray-600">
-                                @foreach ($products as $item)
+                                @foreach ($roles as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td><img src="{{ asset('uploaded/' . $item->img) }}" width="80"
-                                                alt=""></td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }} vnđ</td>
-                                        <td>{{ $item->quantity }}</td>
-                                        {{-- <td>{{ $item->sold }}</td> --}}
-                                        {{-- <td>{{ $item->description }}</td> --}}
+                                        <td>{{ $item->role_name }}</td>
+                                        <td>{{ $item->description }}</td>
                                         <td>
-                                            <a href="{{ route('formupdatePro', $item->id) }}"><input
+                                            <a href="{{ route('formupdateRole', $item->id) }}"><input
                                                     class="btn btn-warning" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -249,9 +242,10 @@
         <!--end::Footer-->
     </div>
     <script>
+
         function confirmDelete(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('delPro') }}/" + id;
+            if (confirm("Bạn có chắc chắn muốn xóa phân quyền này?")) {
+                window.location.href = "{{ url('delRole') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }
