@@ -26,7 +26,7 @@ class AdminController extends Controller
     public function formaddPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
-        return view('admin.product.add',compact('categories'));
+        return view('admin.product.add', compact('categories'));
     }
     public function insertPro(Request $request)
     {
@@ -144,19 +144,19 @@ class AdminController extends Controller
         $product = Product::find($id);
 
         // Kiểm tra nếu sản phẩm tồn tại
-        
-            // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
-            $imagePath ="public/uploaded/".$product->img;
-            if (file_exists($imagePath)) {
-                // Xóa tệp hình ảnh
-                unlink($imagePath);
-            }
 
-            // Xóa sản phẩm khỏi cơ sở dữ liệu
-            $product->delete();
-            
-            // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
-            return redirect()->route('listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
+        // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
+        $imagePath = "public/uploaded/" . $product->img;
+        if (file_exists($imagePath)) {
+            // Xóa tệp hình ảnh
+            unlink($imagePath);
+        }
+
+        // Xóa sản phẩm khỏi cơ sở dữ liệu
+        $product->delete();
+
+        // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
+        return redirect()->route('listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
 
     public function search(Request $request)
@@ -181,8 +181,8 @@ class AdminController extends Controller
     public function formaddCate()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
-        return view('admin.category.add',compact('categories'));
-     
+        return view('admin.category.add', compact('categories'));
+
 
     }
     public function insertCate(Request $request)
@@ -208,7 +208,7 @@ class AdminController extends Controller
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         $category = Category::find($id);
-        return view('admin.category.edit',compact('categories', 'category'));
+        return view('admin.category.edit', compact('categories', 'category'));
     }
     public function updateCate(Request $request)
     {
@@ -244,8 +244,8 @@ class AdminController extends Controller
     public function formaddRole()
     {
         $roles = Role::orderBy('role_name', 'ASC')->get();
-        return view('admin.role.add',compact('roles'));
-     
+        return view('admin.role.add', compact('roles'));
+
 
     }
     public function insertRole(Request $request)
@@ -270,7 +270,7 @@ class AdminController extends Controller
     {
         $roles = Role::orderBy('role_name', 'ASC')->get();
         $role = Role::find($id);
-        return view('admin.role.edit',compact('roles', 'role'));
+        return view('admin.role.edit', compact('roles', 'role'));
     }
     public function updateRole(Request $request)
     {
@@ -303,7 +303,7 @@ class AdminController extends Controller
 
 
 
-    
+
 
     // ĐƠN HÀNG --------------------------------------------------------------------------------------------------------------------
 
