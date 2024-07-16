@@ -134,8 +134,12 @@ class AdminController extends Controller
         }
 
         $product->update($validatedData);
-
-        return redirect()->route('listPro');
+        if ($product) {
+            return redirect()->route('listPro')->with('success', 'Cập nhật sản phẩm thành công');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
+        }
+        // return redirect()->route('listPro');
     }
 
     public function delPro($id)
@@ -216,8 +220,19 @@ class AdminController extends Controller
             'name' => 'required|string|max:50',
             'description' => 'nullable|string',
         ], [
-            'name.required' => 'Vui lòng nhập tên danh mục.',
-            'name.max' => 'Tên danh mục không được vượt quá 50 ký tự.'
+            'name.required' => 'Vui lòng nhập tên sản phẩm.',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+            'price.required' => 'Vui lòng nhập giá sản phẩm.',
+            'price.numeric' => 'Giá sản phẩm phải là số.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'category_id.integer' => 'Danh mục không hợp lệ.',
+            'category_id.exists' => 'Danh mục không tồn tại.',
+            'quantity.required' => 'Vui lòng nhập số lượng sản phẩm.',
+            'quantity.numeric' => 'Số lượng sản phẩm phải là số.',
+            'img.required' => 'Vui lòng chọn hình ảnh sản phẩm.',
+            'img.file' => 'File tải lên phải là định dạng hình ảnh.',
+            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
+            'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',
         ]);
 
         $id = $request->id;
