@@ -175,22 +175,23 @@
                     <div class="card-body pt-0">
                         <!--begin::Table-->
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-check-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu tích --}}
+                            <div class="alert alert-success">
                                 {{ session('success') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
                             </div>
                         @endif
 
                         @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-close-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu X --}}
+                            <div class="alert alert-danger">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
                             </div>
                         @endif
+
+                        @if (session('info'))
+                            <div class="alert alert-info">
+                                {{ session('info') }}
+                            </div>
+                        @endif
+
 
 
 
@@ -227,10 +228,10 @@
                                         {{-- <td>{{ $item->description }}</td> --}}
                                         <td>
                                             <a href="{{ route('formupdatePro', $item->id) }}"><input
-                                                    class="btn btn-warning" type="button" value="Sửa"></a>
+                                                    class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
-                                                    class="btn btn-danger" value="Xóa"></a>
+                                                    class="btn btn-danger btn-sm" value="Xóa"></a>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -6,21 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Role;
-
+use App\Http\Requests\Product\ProductRequest;
+use App\Http\Requests\Product\UpdateRequest;
 
 class AdminController extends Controller
 {
     public function index()
     {
         return view('admin.index');
-
     }
 
     // PRODUCT --------------------------------------------------------------------------------------------------------------------------
     public function listPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
-        $products = Product::orderBy('id', 'ASC')->paginate(6);
+        $products = Product::orderBy('id', 'ASC')->paginate(15);
         return view('admin.product.list', compact('categories', 'products'));
     }
     public function formaddPro()
@@ -28,44 +28,39 @@ class AdminController extends Controller
         $categories = Category::orderBy('name', 'ASC')->get();
         return view('admin.product.add', compact('categories'));
     }
-    public function insertPro(Request $request)
+    public function insertPro(ProductRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|integer|exists:categories,id',
-            'quantity' => 'required|numeric',
-            'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable|string',
-        ], [
-            'name.required' => 'Vui lòng nhập tên sản phẩm.',
-            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
-            'price.required' => 'Vui lòng nhập giá sản phẩm.',
-            'price.numeric' => 'Giá sản phẩm phải là số.',
-            'category_id.required' => 'Vui lòng chọn danh mục.',
-            'category_id.integer' => 'Danh mục không hợp lệ.',
-            'category_id.exists' => 'Danh mục không tồn tại.',
-            'quantity.required' => 'Vui lòng nhập số lượng sản phẩm.',
-            'quantity.numeric' => 'Số lượng sản phẩm phải là số.',
-            'img.required' => 'Vui lòng chọn hình ảnh sản phẩm.',
-            'img.file' => 'File tải lên phải là định dạng hình ảnh.',
-            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
-            'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',
-        ]);
+        $productData = $request->all();
 
+        // Kiểm tra và xử lý file hình ảnh
         if ($request->hasFile('img')) {
             $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('uploaded'), $imageName);
-            $validatedData['img'] = $imageName;
+            $productData['img'] = $imageName;
+
+            // Kiểm tra xem file có tồn tại không
+            if (!file_exists(public_path('uploaded') . '/' . $imageName)) {
+                return redirect()->back()->with('error', 'Tải lên hình ảnh thất bại');
+            }
         }
 
-        $products = Product::create($validatedData);
 
-        if ($products) {
+
+        // $products = Product::create($validatedData);
+        // if(Product::create($request->all())){
+        //     return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
+
+        // }
+        if (Product::create($productData)) {
             return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
         } else {
-            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
         }
+        // if ($products) {
+        //     return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
+        // } else {
+        //     return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
+        // }
         // return redirect()->route('productlist');
     }
 
@@ -93,55 +88,52 @@ class AdminController extends Controller
         $product = Product::find($id);
         return view('admin.product.edit', compact('categories', 'products', 'product'));
     }
-
-    public function updatePro(Request $request)
+    public function updatePro(UpdateRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|integer|exists:categories,id',
-            'quantity' => 'required|numeric',
-            'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'nullable|string',
-        ], [
-            'name.required' => 'Vui lòng nhập tên sản phẩm.',
-            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
-            'price.required' => 'Vui lòng nhập giá sản phẩm.',
-            'price.numeric' => 'Giá sản phẩm phải là số.',
-            'category_id.required' => 'Vui lòng chọn danh mục.',
-            'category_id.integer' => 'Danh mục không hợp lệ.',
-            'category_id.exists' => 'Danh mục không tồn tại.',
-            'quantity.required' => 'Vui lòng nhập số lượng sản phẩm.',
-            'quantity.numeric' => 'Số lượng sản phẩm phải là số.',
-            'img.required' => 'Vui lòng chọn hình ảnh sản phẩm.',
-            'img.file' => 'File tải lên phải là định dạng hình ảnh.',
-            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
-            'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',
-        ]);
-
         $id = $request->id;
         $product = Product::findOrFail($id);
 
+        // Lấy dữ liệu đã được validate
+        $validatedData = $request->validated();
+
+        $isImageUpdated = false; // Biến để kiểm tra xem ảnh có được cập nhật hay không
+
+        // Kiểm tra xem có file hình ảnh mới không
         if ($request->hasFile('img')) {
             $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('uploaded'), $imageName);
             $validatedData['img'] = $imageName;
-            // kiểm tra hình củ và xóa
+
+            // Xóa hình ảnh cũ nếu tồn tại
             $oldImagePath = public_path('uploaded/' . $product->img);
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath);
             }
-        }
 
-        $product->update($validatedData);
-        if ($product) {
-            return redirect()->route('listPro')->with('success', 'Cập nhật sản phẩm thành công');
+            $isImageUpdated = true; // Đánh dấu là ảnh đã được cập nhật
         } else {
-            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
+            // Nếu không có file hình ảnh mới, giữ lại hình ảnh cũ
+            $validatedData['img'] = $product->img;
         }
-        // return redirect()->route('listPro');
-    }
 
+        // Kiểm tra nếu không có sự thay đổi
+        $isChanged = false;
+        foreach ($validatedData as $key => $value) {
+            if ($product[$key] != $value) {
+                $isChanged = true;
+                break;
+            }
+        }
+
+        if (!$isChanged && !$isImageUpdated) {
+            return redirect()->route('listPro')->with('info', 'Không có gì thay đổi');
+        }
+
+        // Cập nhật sản phẩm
+        $product->update($validatedData);
+
+        return redirect()->route('listPro')->with('success', 'Cập nhật sản phẩm thành công');
+    }
     public function delPro($id)
     {
         // Tìm sản phẩm theo ID
@@ -169,7 +161,7 @@ class AdminController extends Controller
         $products = Product::where('name', 'LIKE', "%$query%")
             ->orWhere('description', 'LIKE', "%$query%")
             ->orderBy('id', 'DESC')
-            ->paginate(5);//số sản phẩm để phân trang
+            ->paginate(5); //số sản phẩm để phân trang
 
         $categories = Category::orderBy('name', 'ASC')->get();
 
@@ -186,8 +178,6 @@ class AdminController extends Controller
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         return view('admin.category.add', compact('categories'));
-
-
     }
     public function insertCate(Request $request)
     {
@@ -195,8 +185,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:20',
             'description' => 'nullable|string',
         ], [
-            'name.required' => 'Vui lòng nhập tên sản phẩm.',
-            'name.max' => 'Tên sản phẩm không được vượt quá 50 ký tự.',
+            'name.required' => 'Vui lòng nhập tên danh mục.',
+            'name.max' => 'Tên danh mục không được vượt quá 50 ký tự.',
         ]);
 
         $categories = Category::create($validatedData);
@@ -260,8 +250,6 @@ class AdminController extends Controller
     {
         $roles = Role::orderBy('role_name', 'ASC')->get();
         return view('admin.role.add', compact('roles'));
-
-
     }
     public function insertRole(Request $request)
     {

@@ -2,7 +2,7 @@
 	data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
 	data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_toggle">
 	<!--begin::Primary-->
-	<div class="aside-primary d-flex flex-column align-items-lg-center flex-row-auto">
+	<div class="aside-primary d-flex flex-column align-items-lg-center flex-row-auto bg-dark">
 		<!--begin::Logo-->
 		<div class="aside-logo d-none d-lg-flex flex-column align-items-center flex-column-auto py-10"
 			id="kt_aside_logo">
@@ -305,7 +305,7 @@
 	</div>
 	<!--end::Primary-->
 	<!--begin::Secondary-->
-	<div class="aside-secondary d-flex flex-row-fluid">
+	<div class="aside-secondary d-flex flex-row-fluid bg-secondary">
 		<!--begin::Workspace-->
 		<div class="aside-workspace my-5 p-5" id="kt_aside_wordspace">
 			<div class="d-flex h-100 flex-column">
@@ -1408,7 +1408,7 @@
 										</div>
 									</div>
 									<div class="menu-item">
-										<a class="menu-link active" href="index.php">
+										<a class="menu-link active" href="{{ route('admin') }}">
 											<span class="menu-icon">
 												<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
 												<span class="svg-icon svg-icon-2">
