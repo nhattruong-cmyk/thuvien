@@ -220,10 +220,10 @@
                                         <td>{{ $item->description }}</td>
                                         <td>
                                             <a href="{{ route('formupdateCate', $item->id) }}"><input
-                                                    class="btn btn-warning" type="button" value="Sửa"></a>
+                                                    class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
-                                                    class="btn btn-danger" value="Xóa"></a>
+                                                    class="btn btn-danger btn-sm" value="Xóa"></a>
                                         </td>
                                     </tr>
                                 @endforeach

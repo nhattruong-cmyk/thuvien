@@ -44,43 +44,13 @@ class AdminController extends Controller
             }
         }
 
-
-
-        // $products = Product::create($validatedData);
-        // if(Product::create($request->all())){
-        //     return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
-
-        // }
         if (Product::create($productData)) {
             return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
         } else {
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
         }
-        // if ($products) {
-        //     return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
-        // } else {
-        //     return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
-        // }
-        // return redirect()->route('productlist');
+
     }
-
-    public function productdelete($id)
-    {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return redirect()->route('productlist')->with('error', 'Sản phẩm không tồn tại');
-        }
-
-        $imgpath = "uploaded/" . $product->img;
-        if (file_exists($imgpath)) {
-            unlink($imgpath);
-        }
-        $product->delete();
-        // return redirect()->route('productlist');
-        return redirect()->route('productlist')->with('success', 'Xóa sản phẩm thành công');
-    }
-
     public function formupdatePro($id)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
