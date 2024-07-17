@@ -220,8 +220,13 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
-                                        <td><img src="{{ asset('uploaded/' . $item->img) }}" width="80"
-                                                alt=""></td>
+                                        <td>
+                                            @if (file_exists(public_path('uploaded/' . $item->img)))
+                                                <img src="{{ asset('uploaded/' . $item->img) }}" width="80" alt="">
+                                            @else
+                                                Ảnh không tìm thấy
+                                            @endif
+                                        </td>
                                         <td>{{ number_format($item->price, 0, ',', '.') }} vnđ</td>
                                         <td>{{ $item->quantity }}</td>
                                         {{-- <td>{{ $item->sold }}</td> --}}
