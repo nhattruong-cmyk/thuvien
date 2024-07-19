@@ -9,10 +9,11 @@ class ProductController extends Controller
 {
     public function products()
     {
-        return view('cilent.products');
+        $products = Product::paginate(4);
+        return view('client.products', compact('products'));
     }
     public function detail()
     {
-        return view('cilent.detail');
+        return view('client.detail');
     }
 }

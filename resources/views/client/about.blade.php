@@ -1,4 +1,4 @@
-@extends('cilent.layout')
+@extends('client.layout')
 
 @section('content')
 

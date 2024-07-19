@@ -22,13 +22,13 @@
 
 <body>
 
-    @include('cilent.header')
+    @include('client.header')
     
 
     @yield('content')
 
 
-    @include('cilent.footer')
+    @include('client.footer')
 
 
    

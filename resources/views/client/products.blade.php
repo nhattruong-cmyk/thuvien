@@ -1,4 +1,4 @@
-@extends('cilent.layout')
+@extends('client.layout')
 
 @section('content')
     <!--================Breadcrumb Area =================-->
@@ -36,61 +36,30 @@
                 </ul>
             </div>
             <div class="row mb_30 ">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/dacnhantam.jpg') }}" alt="">
-
+                <div class="row mb_30">
+                    @foreach ($products as $item)
+                        <div class="col-lg-3 col-sm-6 mb-4 d-flex">
+                            <div class="accomodation_item text-center d-flex flex-column">
+                                <div class="book_img">
+                                    <img class="img-px" src="{{ asset('uploaded/' . $item->img) }}"
+                                        alt="{{ $item->name }}">
+                                </div>
+                                <a href="#" class="flex-grow-1">
+                                    <h4 class="sec_h4">{{ $item->name }}</h4>
+                                </a>
+                                <h5>{{ number_format($item->price, 0, '.', '.') }}</h5>
+                                <a href="#" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
+                            </div>
                         </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Đắc Nhân Tâm</h4>
-                        </a>
-                        <h5>100,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/cotienthayphien.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Có tiền thấy phiền</h4>
-                        </a>
-                        <h5>150,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/nguoiphunuuyluc.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Người phụ nữ uy lực</h4>
-                        </a>
-                        <h5>120,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/neuthaythienduong.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Nếu thấy thiên đường</h4>
-                        </a>
-                        <h5>90,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-
-                    </div>
+                    @endforeach
                 </div>
 
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {{ $products->links('pagination::default') }}
+
+                    </ul>
+                </nav>
 
             </div>
         </div>
