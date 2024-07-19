@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('titlepage', 'Danh sách phân quyền')
+@section('titlepage', 'Danh sách sản phẩm')
 
 
 @section('content')
@@ -17,15 +17,15 @@
                     data-kt-swapper="true" data-kt-swapper-mode="prepend"
                     data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
                     <!--begin::Heading-->
-                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý sản phẩm</h1>
+                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý Tài Khoản</h1>
                     <!--end::Heading-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
                             <a href="index.php" class="text-muted">Home</a>
                         </li>
-                        <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
-                        <li class="breadcrumb-item text-dark">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item text-muted">Quản lý Tài Khoản</li>
+                        <li class="breadcrumb-item text-dark">Danh sách Tài Khoản</li>
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>
@@ -153,7 +153,7 @@
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-permissions-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-15"
-                                    placeholder="Tìm kiếm phân quyền" />
+                                    placeholder="Tìm kiếm tài khoản" />
                             </div>
 
                             <!--end::Search-->
@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddRole') }}"><input type="button" value="Thêm mới phân quyền"
+                            <a href="{{ route('formaddUser') }}"><input type="button" value="Thêm mới tài khoản"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -196,15 +196,18 @@
 
 
 
+
                         <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Mã Phân Quyền</th>
-                                    <th class="min-w-125px">Tên Phân Quyền</th>
-                                    <th class="min-w-125px">Mô tả</th>
+                                    <th class="min-w-125px">Mã tài khoản</th>
+                                    <th class="min-w-125px">Tên tài khoản</th>
+                                    <th class="min-w-125px">Avata</th>
+                                    <th class="min-w-125px">Email</th>
+                                    <th class="min-w-125px">Chức vụ</th>
                                     <th class="min-w-125px">Hành động</th>
 
                                 </tr>
@@ -213,17 +216,25 @@
                             <!--end::Table head-->
                             <!--begin::Table body-->
                             <tbody class="fw-bold text-gray-600">
-                                @foreach ($roles as $item)
+                                @foreach ($users as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->role_name }}</td>
-                                        <td>{{ $item->description }}</td>
+                                        <td>{{ $item->name }}</td>
                                         <td>
-                                            <a href="{{ route('formupdateRole', $item->id) }}"><input
-                                                    class="btn btn-warning" type="button" value="Sửa"></a>
+                                            @if (file_exists(public_path('avata/' . $item->img)))
+                                                <img src="{{ asset('avata/' . $item->img) }}" width="80" alt="">
+                                            @else
+                                                Ảnh không tìm thấy
+                                            @endif
+                                        </td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->role_id == 1 ? 'Admin' : ($item->role_id == 2 ? 'Nhân Viên' : 'Khách Hàng') }}</td>
+                                        <td>
+                                            <a href="{{ route('formupdateUser', $item->id) }}"><input
+                                                    class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
-                                                    class="btn btn-danger" value="Xóa"></a>
+                                                    class="btn btn-danger btn-sm" value="Xóa"></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -242,10 +253,9 @@
         <!--end::Footer-->
     </div>
     <script>
-
         function confirmDelete(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa phân quyền này?")) {
-                window.location.href = "{{ url('delRole') }}/" + id;
+            if (confirm("Bạn có chắc chắn muốn xóa tài khoản này?")) {
+                window.location.href = "{{ url('delUser') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

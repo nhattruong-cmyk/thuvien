@@ -174,25 +174,24 @@
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
                         <!--begin::Table-->
+
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-check-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu tích --}}
+                            <div class="alert alert-success">
                                 {{ session('success') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
                             </div>
                         @endif
 
                         @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show mb-1" role="alert">
-                                <i class="mdi mdi-close-circle-outline me-1"></i> {{-- Sử dụng biểu tượng dấu X --}}
+                            <div class="alert alert-danger">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-dismiss="alert"
-                                    aria-label="Close"></button>
                             </div>
                         @endif
 
-
+                        @if (session('info'))
+                            <div class="alert alert-info">
+                                {{ session('info') }}
+                            </div>
+                        @endif
 
 
 

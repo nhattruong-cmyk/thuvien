@@ -1645,18 +1645,26 @@
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">Quản lý người dùng</span>
+											<span class="menu-title">Quản lý tài khoản</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
 
 												<div class="menu-item">
-													<a class="menu-link" href="index.php?url=listusers">
+													<a class="menu-link" href="{{ route('listUser') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
-														<span class="menu-title">Danh sách người dùng</span>
+														<span class="menu-title">Danh sách tài khoản</span>
+													</a>
+												</div>
+												<div class="menu-item">
+													<a class="menu-link" href="{{ route('formaddUser') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+														<span class="menu-title">Thêm mới tài khoản</span>
 													</a>
 												</div>
 											</div>
