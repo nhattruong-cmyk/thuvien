@@ -54,4 +54,13 @@ Route::post('/updateRole', [AdminController::class, 'updateRole'])->name('update
 Route::get('/delRole/{id}', [AdminController::class, 'delRole'])->name('delRole');
 
 
+// user
+Route::get('/admin/listUser', [AdminController::class, 'listUser'])->name('listUser');
+Route::get('/admin/formaddUser', [AdminController::class, 'formaddUser'])->name('formaddUser');
+Route::post('/insertUser', [AdminController::class, 'insertUser'])->name('insertUser');
+Route::get('/delUser/{id}', [AdminController::class, 'delUser'])->name('delUser');
+Route::get('/admin/formupdateUser/{id}', [AdminController::class, 'formupdateUser'])->name('formupdateUser');
+Route::post('/updateUser', [AdminController::class, 'updateUser'])->name('updateUser');
+
+
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');

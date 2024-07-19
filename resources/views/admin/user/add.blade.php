@@ -1,10 +1,9 @@
 @extends('admin.layout')
 
-@section('titlepage', 'Danh sách phân quyền')
+@section('titlepage', 'Thêm mới tài khoản')
 
 
 @section('content')
-
 
     <div class=" d-flex flex-column flex-row-fluid" id="kt_wrapper">
         <!--begin::Header-->
@@ -17,15 +16,15 @@
                     data-kt-swapper="true" data-kt-swapper-mode="prepend"
                     data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
                     <!--begin::Heading-->
-                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý sản phẩm</h1>
+                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý tài khoản</h1>
                     <!--end::Heading-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="../../demo7/dist/index.html" class="text-muted">Home</a>
                         </li>
-                        <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
-                        <li class="breadcrumb-item text-dark">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item text-muted">Quản lý tài khoản</li>
+                        <li class="breadcrumb-item text-dark">Thêm mới tài khoản</li>
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>
@@ -50,7 +49,7 @@
                     </div>
                     <!--end::Aside mobile toggle-->
                     <!--begin::Logo-->
-                    <a href="index.php" class="d-flex align-items-center">
+                    <a href="../../demo7/dist/index.html" class="d-flex align-items-center">
                         <img alt="Logo" src="assets/media/logos/logo-demo7.svg" class="h-30px" />
                     </a>
                     <!--end::Logo-->
@@ -136,33 +135,31 @@
                     <div class="card-header mt-6">
                         <!--begin::Card title-->
                         <div class="card-title">
-
                             <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1 me-5">
-                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
-                                            rx="1" transform="rotate(45 17.0365 15.1223)" fill="black" />
-                                        <path
-                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                            fill="black" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                                <input type="text" data-kt-permissions-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-15"
-                                    placeholder="Tìm kiếm phân quyền" />
+                            @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
                             </div>
-
+                        @endif
+                        
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        
+                        @if (session('info'))
+                            <div class="alert alert-info">
+                                {{ session('info') }}
+                            </div>
+                        @endif
                             <!--end::Search-->
                         </div>
                         <!--end::Card title-->
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddRole') }}"><input type="button" value="Thêm mới phân quyền"
+                            <a href="{{ route('listUser') }}"><input type="button" value="Danh sách tài khoản"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -170,85 +167,126 @@
                         </div>
                         <!--end::Card toolbar-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
+
                     <div class="card-body pt-0">
-                        <!--begin::Table-->
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
+                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                            <!--begin::Form-->
+                            <form class="form" action="{{ route('insertUser') }}" method="post" enctype="multipart/form-data" name="formadd">
+                                @csrf
+                                <div class="d-flex justify-content-between">
+                                    <div class="w-50 pe-3">
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Tên Tài khoản</label>
+                                            <input type="text" name="name" class="form-control form-control-solid" placeholder="Tên tài khoản" value="{{ old('name') }}" />
+                                            @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                            
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Email</label>
+                                            <input type="email" name="email" class="form-control form-control-solid" placeholder="Địa chỉ email" value="{{ old('email') }}" />
+                                            @error('email')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                            
+                                    <div class="w-50 ps-3">
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Mật khẩu</label>
+                                            <input type="password" name="password" class="form-control form-control-solid" placeholder="Mật khẩu" value="{{ old('password') }}" />
+                                            @error('password')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                            
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label fs-6 fw-bold">
+                                                <span class="required">Phân quyền</span>
+                                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Country of origination"></i>
+                                            </label>
+                                            <select name="role_id" class="form-control form-control-solid mb-3 mb-lg-0">
+                                                <option value="">Vui lòng chọn phân quyền</option>
+                                                @foreach ($roles as $item)
+                                                <option value="{{ $item->id }}" {{ old('role_id') == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->role_name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('role_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between">
+                                    <div class="w-50 pe-3">
+                                        <div class="fv-row mb-7">
+                                            <label class="d-block fw-bold fs-6 mb-5">Ảnh đại diện</label>
+                                            <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(../assets/media/avatars/blank.png)">
+                                                <div class="image-input-wrapper w-125px h-125px"></div>
+                                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                                    <input type="file" name="img" accept=".png, .jpg, .jpeg" />
+                                                </label>
+                                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                                    <i class="bi bi-x fs-2"></i>
+                                                </span>
+                                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                                    <i class="bi bi-x fs-2"></i>
+                                                </span>
+                                            </div>
+                                            <div class="form-text">Các loại tệp được phép: png, jpg, jpeg.</div>
+                                            @error('img')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-
-                        @if (session('info'))
-                            <div class="alert alert-info">
-                                {{ session('info') }}
-                            </div>
-                        @endif
+                                </div>
+                            
+                                <div class="text-center pt-15">
+                                    <button type="reset" class="btn btn-light me-3" data-kt-permissions-modal-action="cancel">Hủy</button>
+                                    <input type="submit" value="Thêm mới" class="btn btn-primary">
+                                </div>
+                            </form>
+                            
+                            
 
 
+                            <!--end::Form-->
+                        </div>
 
 
 
-                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
-                            <!--begin::Table head-->
-                            <thead>
-                                <!--begin::Table row-->
-                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Mã Phân Quyền</th>
-                                    <th class="min-w-125px">Tên Phân Quyền</th>
-                                    <th class="min-w-125px">Mô tả</th>
-                                    <th class="min-w-125px">Hành động</th>
-
-                                </tr>
-                                <!--end::Table row-->
-                            </thead>
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
-                            <tbody class="fw-bold text-gray-600">
-                                @foreach ($roles as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->role_name }}</td>
-                                        <td>{{ $item->description }}</td>
-                                        <td>
-                                            <a href="{{ route('formupdateRole', $item->id) }}"><input
-                                                    class="btn btn-warning" type="button" value="Sửa"></a>
-                                            <a href="javascript:void(0);"
-                                                onclick="confirmDelete({{ $item->id }})"><input type="button"
-                                                    class="btn btn-danger" value="Xóa"></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-
-                        </table>
-                        <!--end::Table-->
                     </div>
                     <!--end::Card body-->
                 </div>
 
+                <!--end::Modals-->
             </div>
             <!--end::Container-->
         </div>
         <!--end::Content-->
+        <!--begin::Footer-->
+
         <!--end::Footer-->
     </div>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var inputs = document.querySelectorAll('input, textarea, select');
 
-        function confirmDelete(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa phân quyền này?")) {
-                window.location.href = "{{ url('delRole') }}/" + id;
-            } else {
-                alert("Thao tác đã được hủy");
-            }
-        }
+            inputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    var error = this.closest('.fv-row').querySelector('.text-danger');
+                    if (error) {
+                        error.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 @endsection
