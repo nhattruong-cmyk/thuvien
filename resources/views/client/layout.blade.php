@@ -22,8 +22,8 @@
 
 <body>
 
-    @include('client.header')
-    
+    {{-- @include('client.header') --}}
+    <x-header></x-header>
 
     @yield('content')
 
