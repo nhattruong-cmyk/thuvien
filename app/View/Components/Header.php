@@ -3,28 +3,30 @@
 namespace App\View\Components;
 
 use App\Models\Category;
-use Closure;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class Header extends Component
 {
+    public $categories;
+
     /**
      * Create a new component instance.
+     *
+     * @return void
      */
     public function __construct()
     {
-        //
+        // Lấy danh sách danh mục
+        $this->categories = Category::orderBy('name', 'desc')->get();
     }
 
     /**
      * Get the view / contents that represent the component.
+     *
+     * @return \Illuminate\View\View|\Closure|string
      */
-    public function render(): View|Closure|string
+    public function render()
     {
-        $categories = Category::
-        orderBy('name','desc')
-        ->get();
-        return view('components.header', compact('categories'));
+        return view('components.header');
     }
 }

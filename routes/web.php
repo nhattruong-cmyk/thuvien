@@ -1,29 +1,27 @@
 <?php
 
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
-
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 
-// Client routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/', function () {
+    return view('client.home');
+});
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/products', [ProductController::class, 'products'])->name('products');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
-Route::get('/products', [ProductController::class, 'products'])->name('products');
-Route::get('/products/detail/{product_id}', [ProductController::class, 'detail'])->name('productsdetail');
-Route::get('/products/{category_id}', [ProductController::class, 'products'])->name('productsByCategoryId');
-Route::get('/category', [CategoryController::class, 'category'])->name('category');
-Route::get('/search', [ProductController::class, 'search'])->name('products.search');
+Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
+Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 
 
 // product
@@ -64,3 +62,16 @@ Route::post('/updateUser', [AdminController::class, 'updateUser'])->name('update
 
 
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

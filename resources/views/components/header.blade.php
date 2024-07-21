@@ -2,8 +2,9 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <a class="navbar-brand logo_h" href="{{ route('home') }}"><img src="{{ asset('image/cmtlira2.png') }}"
-                    alt=""></a>
+            <a class="navbar-brand logo_h" href="{{ route('home') }}">
+                <img src="{{ asset('image/cmtlira2.png') }}" alt="Logo">
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="icon-bar"></span>
@@ -18,8 +19,8 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('products') }}">Sản phẩm</a></li>
                     <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
                     <li class="nav-item submenu dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">Bài viết</a>
+                        <a href="{{ route('blog') }}" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                            role="button" aria-haspopup="true" aria-expanded="false">Bài viết</a>
                         <ul class="dropdown-menu">
                             <li class="nav-item"><a class="nav-link" href="">Blog</a></li>
                             <li class="nav-item"><a class="nav-link" href="blog-single.html">Blog Details</a></li>
@@ -34,10 +35,27 @@
                             @endforeach
                         </ul>
                     </li>
-                  
                     <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Liên hệ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('admin') }}">Đăng nhập Admin</a></li>
 
+                    @guest
+                        <!-- Nếu chưa đăng nhập -->
+                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Đăng nhập</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Đăng ký</a></li>
+                    @else
+                        <!-- Nếu đã đăng nhập -->
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">Xin chào! {{ Auth::user()->name }}</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Tài khoản của tôi</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a></li>
+                            </ul>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                            style="display: none;">
+                            @csrf
+                        </form>
+                        </li>
+                    @endguest
                 </ul>
             </div>
         </nav>
