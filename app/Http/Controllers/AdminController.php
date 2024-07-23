@@ -31,7 +31,7 @@ class AdminController extends Controller
     public function listPro()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
-        $products = Product::orderBy('id', 'ASC')->paginate(15);
+        $products = Product::orderBy('id', 'ASC')->paginate(100);
         return view('admin.product.list', compact('categories', 'products'));
     }
     public function formaddPro()

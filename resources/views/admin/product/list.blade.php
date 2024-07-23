@@ -221,8 +221,9 @@
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>
-                                            @if (file_exists(public_path('uploaded/' . $item->img)))
-                                                <img src="{{ asset('uploaded/' . $item->img) }}" width="80" alt="">
+                                            @if ($item->img && file_exists(public_path('uploaded/' . $item->img)))
+                                                <img src="{{ asset('uploaded/' . $item->img) }}" width="80"
+                                                    alt="">
                                             @else
                                                 Ảnh không tìm thấy
                                             @endif

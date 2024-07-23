@@ -1,5 +1,10 @@
 @extends('client.layout')
 
+@push('styles')
+
+    <link href="{{ asset('css/product.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
     <!--================Breadcrumb Area =================-->
     <section class="breadcrumb_area">
@@ -47,8 +52,9 @@
                                 <a href="#" class="flex-grow-1">
                                     <h4 class="sec_h4">{{ $item->name }}</h4>
                                 </a>
-                                <h5>{{ number_format($item->price, 0, '.', '.') }}</h5>
-                                <a href="#" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
+                                <span class="price p-2">{{ number_format($item->price, 0, '.', '.') }}<sup>đ</sup></span>
+
+                                <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
                             </div>
                         </div>
                     @endforeach
