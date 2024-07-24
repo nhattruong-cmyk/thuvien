@@ -1,0 +1,82 @@
+/* productdetail css */
+.avatar {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.comment-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.comment-avatar {
+  margin-right: 15px;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-username {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.comment-time {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.rating-star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.rating-star:hover,
+.rating-star.selected {
+  color: #ffd700;
+}
+
+.short-description {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.d-flex a {
+  font-size: 1rem;
+}
+
+.share-section .btn {
+  font-size: 1rem;
+  padding: 10px 20px;
+}
+
+.share-section .btn i {
+  margin-right: 5px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.price sup {
+  color: red;
+  font-size: 1.5rem;
+}
+
+.share-section .btn {
+  font-size: 0.875rem;
+  padding: 5px 10px;
+}
+
+.share-section .btn i {
+  font-size: 1rem;
+}
