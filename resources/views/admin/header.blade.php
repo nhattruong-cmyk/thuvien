@@ -1451,13 +1451,13 @@
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
-												<a class="menu-link" href="{{ route('listCate') }}">
+												<a class="menu-link" href="{{ route('admin.category.listCate') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Danh sách danh mục</span>
 												</a>
-												<a class="menu-link" href="{{ route('formaddCate') }}">
+												<a class="menu-link" href="{{ route('admin.category.formaddCate') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -1492,7 +1492,7 @@
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
 
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('listPro') }}">
+													<a class="menu-link" href="{{ route('admin.pro.listPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
@@ -1500,7 +1500,7 @@
 													</a>
 												</div>
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('formaddPro') }}">
+													<a class="menu-link" href="{{ route('admin.pro.formaddPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
@@ -1539,7 +1539,7 @@
 										<div class="menu-sub menu-sub-accordion">
 
 											<div class="menu-item">
-												<a class="menu-link" href="{{ route('listRole') }}">
+												<a class="menu-link" href="{{ route('admin.role.listRole') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -1547,7 +1547,7 @@
 												</a>
 											</div>
 											<div class="menu-item">
-												<a class="menu-link" href="{{ route('formaddRole') }}">
+												<a class="menu-link" href="{{ route('admin.role.formaddRole') }}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -1652,7 +1652,7 @@
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
 
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('listUser') }}">
+													<a class="menu-link" href="{{ route('admin.user.listUser') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
@@ -1660,7 +1660,7 @@
 													</a>
 												</div>
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('formaddUser') }}">
+													<a class="menu-link" href="{{ route('admin.user.formaddUser') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>

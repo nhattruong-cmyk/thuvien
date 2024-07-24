@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddUser') }}"><input type="button" value="Thêm mới tài khoản"
+                            <a href="{{ route('admin.user.formaddUser') }}"><input type="button" value="Thêm mới tài khoản"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -230,7 +230,7 @@
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->role_id == 1 ? 'Admin' : ($item->role_id == 2 ? 'Nhân Viên' : 'Khách Hàng') }}</td>
                                         <td>
-                                            <a href="{{ route('formupdateUser', $item->id) }}"><input
+                                            <a href="{{ route('admin.user.formupdateUser', $item->id) }}"><input
                                                     class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -255,7 +255,7 @@
     <script>
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa tài khoản này?")) {
-                window.location.href = "{{ url('delUser') }}/" + id;
+                window.location.href = "{{ url('admin.user.delUser') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

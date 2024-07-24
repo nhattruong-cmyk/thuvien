@@ -159,7 +159,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('listPro') }}"><input type="button" value="Danh sách sản phẩm"
+                            <a href="{{ route('admin.pro.listPro') }}"><input type="button" value="Danh sách sản phẩm"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -171,7 +171,7 @@
                     <div class="card-body pt-0">
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                             <!--begin::Form-->
-                            <form class="form" action="{{ route('insertPro') }}" method="post" enctype="multipart/form-data" name="formadd">
+                            <form class="form" action="{{ route('admin.pro.insertPro') }}" method="post" enctype="multipart/form-data" name="formadd">
                                 @csrf
                                 <div class="d-flex justify-content-between">
                                     <div class="w-50 pe-3">

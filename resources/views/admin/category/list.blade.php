@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddCate') }}"><input type="button" value="Thêm mới loại sản phẩm"
+                            <a href="{{ route('admin.category.formaddCate') }}"><input type="button" value="Thêm mới loại sản phẩm"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -218,7 +218,7 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->description }}</td>
                                         <td>
-                                            <a href="{{ route('formupdateCate', $item->id) }}"><input
+                                            <a href="{{ route('admin.category.formupdateCate', $item->id) }}"><input
                                                     class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -244,7 +244,7 @@
 
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('delCate') }}/" + id;
+                window.location.href = "{{ url('admin.category.delCate') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

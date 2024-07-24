@@ -161,7 +161,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('listRole') }}"><input type="button" value="Danh sách phân quyền"
+                            <a href="{{ route('admin.role.listRole') }}"><input type="button" value="Danh sách phân quyền"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -173,7 +173,7 @@
                     <div class="card-body pt-0">
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                             <!--begin::Form-->
-                            <form class="form" action="{{ route('insertRole') }}" method="post"
+                            <form class="form" action="{{ route('admin.role.insertRole') }}" method="post"
                                 enctype="multipart/form-data" name="formadd">
                                 @csrf
                                 <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll"

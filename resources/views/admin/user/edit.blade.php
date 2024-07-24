@@ -161,7 +161,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('listUser') }}"><input type="button" value="Danh sách tài khoản"
+                            <a href="{{ route('admin.user.listUser') }}"><input type="button" value="Danh sách tài khoản"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -173,7 +173,7 @@
                     <div class="card-body pt-0">
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                             <!--begin::Form-->
-                            <form class="form" action="{{ route('updateUser') }}" method="post" enctype="multipart/form-data" name="formadd">
+                            <form class="form" action="{{ route('admin.user.updateUser') }}" method="post" enctype="multipart/form-data" name="formadd">
                                 @csrf
                                 <div class="d-flex justify-content-between">
                                     <div class="w-50 pe-3">

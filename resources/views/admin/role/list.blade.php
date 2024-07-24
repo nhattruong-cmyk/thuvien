@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('formaddRole') }}"><input type="button" value="Thêm mới phân quyền"
+                            <a href="{{ route('admin.role.formaddRole') }}"><input type="button" value="Thêm mới phân quyền"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -219,7 +219,7 @@
                                         <td>{{ $item->role_name }}</td>
                                         <td>{{ $item->description }}</td>
                                         <td>
-                                            <a href="{{ route('formupdateRole', $item->id) }}"><input
+                                            <a href="{{ route('admin.role.formupdateRole', $item->id) }}"><input
                                                     class="btn btn-warning" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -245,7 +245,7 @@
 
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa phân quyền này?")) {
-                window.location.href = "{{ url('delRole') }}/" + id;
+                window.location.href = "{{ url('admin.role.delRole') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }
