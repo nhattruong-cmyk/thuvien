@@ -245,7 +245,7 @@
 
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa phân quyền này?")) {
-                window.location.href = "{{ url('admin.role.delRole') }}/" + id;
+                window.location.href = "{{ url('admin/role/delRole') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

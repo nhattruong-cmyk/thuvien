@@ -255,7 +255,7 @@
     <script>
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa tài khoản này?")) {
-                window.location.href = "{{ url('admin.user.delUser') }}/" + id;
+                window.location.href = "{{ url('admin/user/delUser') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

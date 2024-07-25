@@ -244,7 +244,7 @@
 
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('admin.category.delCate') }}/" + id;
+                window.location.href = "{{ url('admin/category/delCate') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

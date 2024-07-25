@@ -170,7 +170,7 @@ class AdminController extends Controller
         $categoriesData = $request->all();
 
         if (Category::create($categoriesData)) {
-            return redirect()->route('listCate')->with('success', 'Thêm danh mục thành công');
+            return redirect()->route('admin.category.listCate')->with('success', 'Thêm danh mục thành công');
         } else {
             return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm danh mục');
         }

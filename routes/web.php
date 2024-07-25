@@ -12,12 +12,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminController;
 
 
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
-
-// client
-Route::get('/', function () {
-    return redirect('/home');
-});
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 Route::get('/products', [ProductController::class, 'products'])->name('products');

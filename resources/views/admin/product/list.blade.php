@@ -258,7 +258,7 @@
     <script>
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ route('admin.product.delPro', ':id') }}".replace(':id', id);
+                window.location.href = "{{ route('admin/product/delPro', ':id') }}".replace(':id', id);
             } else {
                 alert("Thao tác đã được hủy");
             }
