@@ -2,7 +2,6 @@
 
 
 @push('styles')
-
     <link href="{{ asset('css/product.css') }}" rel="stylesheet">
 @endpush
 
@@ -108,6 +107,7 @@
             </div>
 
             <div class="row mb_30">
+                <!-- resources/views/client/home.blade.php -->
                 @foreach ($newBooks as $item)
                     <div class="col-lg-3 col-sm-6">
                         <div class="accomodation_item text-center d-flex flex-column">
@@ -118,13 +118,18 @@
                                 <h4 class="sec_h4">{{ $item->name }}</h4>
                             </a>
                             <span class="price p-2">{{ number_format($item->price, 0, '.', '.') }}<sup>đ</sup></span>
-            
-                            <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
+
+                            <a href="{{ route('products.detail', ['id' => $item->id]) }}"
+                                class="btn theme_btn button_hover mt-auto">Xem ngay</a>
                         </div>
                     </div>
                 @endforeach
+
+
+
             </div>
-            
+
+
         </div>
     </section>
     <!--================ Books Area  =================-->
@@ -142,45 +147,51 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-chair"></i>Bàn ghế làm việc</h4>
-                        <p>Chúng tôi cung cấp các khu vực làm việc với bàn ghế tiện nghi, lý tưởng cho việc học tập và nghiên cứu.</p>
+                        <p>Chúng tôi cung cấp các khu vực làm việc với bàn ghế tiện nghi, lý tưởng cho việc học tập và
+                            nghiên cứu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-couch"></i>Nệm ngồi thoải mái</h4>
-                        <p>Chúng tôi có khu vực nệm ngồi thoải mái để bạn có thể thư giãn và đọc sách trong môi trường dễ chịu.</p>
+                        <p>Chúng tôi có khu vực nệm ngồi thoải mái để bạn có thể thư giãn và đọc sách trong môi trường dễ
+                            chịu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-building"></i>Phòng đọc yên tĩnh</h4>
-                        <p>Chúng tôi cung cấp các phòng đọc yên tĩnh để bạn có thể tập trung vào việc học mà không bị làm phiền.</p>
+                        <p>Chúng tôi cung cấp các phòng đọc yên tĩnh để bạn có thể tập trung vào việc học mà không bị làm
+                            phiền.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-arrow-up"></i>Khu vực đọc sách trên lầu</h4>
-                        <p>Khám phá khu vực đọc sách trên lầu với không gian mở và ánh sáng tự nhiên, lý tưởng cho việc đọc và nghiên cứu.</p>
+                        <p>Khám phá khu vực đọc sách trên lầu với không gian mở và ánh sáng tự nhiên, lý tưởng cho việc đọc
+                            và nghiên cứu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-cocktail"></i>Nước uống</h4>
-                        <p>Chúng tôi cung cấp nước uống miễn phí để bạn có thể giải khát và duy trì sự tỉnh táo khi đọc sách hoặc làm việc.</p>
+                        <p>Chúng tôi cung cấp nước uống miễn phí để bạn có thể giải khát và duy trì sự tỉnh táo khi đọc sách
+                            hoặc làm việc.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
                         <h4 class="sec_h4"><i class="fas fa-concierge-bell"></i>Lễ tân</h4>
-                        <p>Đội ngũ lễ tân của chúng tôi luôn sẵn sàng hỗ trợ bạn với các yêu cầu và thông tin cần thiết trong suốt thời gian bạn ở thư viện.</p>
+                        <p>Đội ngũ lễ tân của chúng tôi luôn sẵn sàng hỗ trợ bạn với các yêu cầu và thông tin cần thiết
+                            trong suốt thời gian bạn ở thư viện.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
-    
-    
+
+
+
     <!--================ Facilities Area  =================-->
 
     <!--================ About History Area  =================-->

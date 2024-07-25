@@ -16,9 +16,10 @@ use App\Http\Controllers\AdminController;
 
 // client
 Route::get('/', function () {
-    return view('client.home');
+    return redirect('/home');
 });
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'home'])->name('home');
+
 Route::get('/products', [ProductController::class, 'products'])->name('products');
 Route::get('/products/{id}', [ProductController::class, 'productsdetail'])->name('products.detail');
 Route::get('/category/{id}/products', [ProductController::class, 'productsByCategory'])->name('category.products');
