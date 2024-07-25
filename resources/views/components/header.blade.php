@@ -15,28 +15,22 @@
             <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                 <ul class="nav navbar-nav menu_nav ml-auto">
                     <li class="nav-item active"><a class="nav-link" href="{{ route('home') }}">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Về chúng tôi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('products') }}">Sản phẩm</a></li>
-                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-                    <li class="nav-item submenu dropdown">
-                        <a href="{{ route('blog') }}" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                            role="button" aria-haspopup="true" aria-expanded="false">Bài viết</a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link" href="">Blog</a></li>
-                            <li class="nav-item"><a class="nav-link" href="blog-single.html">Blog Details</a></li>
-                        </ul>
-                    </li>
                     <li class="nav-item submenu dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">Danh mục</a>
+                            aria-haspopup="true" aria-expanded="false">Danh mục sách</a>
                         <ul class="dropdown-menu">
                             @foreach ($categories as $category)
-                                <li class="nav-item"><a class="nav-link" href="#">{{ $category->name }}</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                        href="{{ route('category.products', $category->id) }}">{{ $category->name }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Về chúng tôi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('blog') }}">Bài viết</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('products') }}">Sách tổng hợp</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Liên hệ</a></li>
-
                     @guest
                         <!-- Nếu chưa đăng nhập -->
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Đăng nhập</a></li>
@@ -47,13 +41,15 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-haspopup="true" aria-expanded="false">Xin chào! {{ Auth::user()->name }}</a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Tài khoản của tôi</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Tài khoản của
+                                        tôi</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng
+                                        xuất</a></li>
                             </ul>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                            style="display: none;">
-                            @csrf
-                        </form>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     @endguest
                 </ul>

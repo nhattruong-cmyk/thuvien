@@ -1,4 +1,11 @@
 @extends('client.layout')
+
+
+@push('styles')
+
+    <link href="{{ asset('css/product.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
     <!--================Banner Area =================-->
     <section class="banner_area">
@@ -50,8 +57,8 @@
                                                 <option value="2021">2021</option>
                                                 <option value="2020">2020</option>
                                             </select>
-                                  
-                                            
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -95,69 +102,29 @@
     <section class="books_area section_gap">
         <div class="container">
             <div class="section_title text-center">
-                <h2 class="title_color">Các loại sách tại thư viện</h2>
+                <h2 class="title_color">Các loại sách mới tại thư viện</h2>
                 <p>Chúng ta đang sống trong một thời đại thuộc về những người trẻ tuổi. Cuộc sống đang trở nên cực kỳ nhanh
                     chóng,</p>
             </div>
-         
-            <div class="row mb_30 ">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/dacnhantam.jpg') }}" alt="">
 
+            <div class="row mb_30">
+                @foreach ($newBooks as $item)
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="accomodation_item text-center d-flex flex-column">
+                            <div class="book_img">
+                                <img class="img-px" src="{{ asset('uploaded/' . $item->img) }}" alt="{{ $item->name }}">
+                            </div>
+                            <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="flex-grow-1">
+                                <h4 class="sec_h4">{{ $item->name }}</h4>
+                            </a>
+                            <span class="price p-2">{{ number_format($item->price, 0, '.', '.') }}<sup>đ</sup></span>
+            
+                            <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
                         </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Đắc Nhân Tâm</h4>
-                        </a>
-                        <h5>100,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/cotienthayphien.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Có tiền thấy phiền</h4>
-                        </a>
-                        <h5>150,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/nguoiphunuuyluc.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Người phụ nữ uy lực</h4>
-                        </a>
-                        <h5>120,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="accomodation_item text-center">
-                        <div class="book_img">
-                            <img class="img-px" src="{{ asset('image/neuthaythienduong.jpg') }}" alt="">
-
-                        </div>
-                        <a href="#">
-                            <h4 class="sec_h4">Nếu thấy thiên đường</h4>
-                        </a>
-                        <h5>90,000₫</h5>
-                        <a href="#" class="btn theme_btn button_hover">Xem ngay</a>
-
-                    </div>
-                </div>
-
-
+                @endforeach
             </div>
+            
         </div>
     </section>
     <!--================ Books Area  =================-->
@@ -169,54 +136,51 @@
         <div class="container">
             <div class="section_title text-center">
                 <h2 class="title_w">Cơ sở vật chất tại thư viện</h2>
-                <p>Những ai yêu thích hệ thống thân thiện với môi trường.</p>
+                <p>Khám phá các tiện nghi và không gian thân thiện tại thư viện của chúng tôi.</p>
             </div>
             <div class="row mb_30">
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-dinner"></i>Nhà hàng</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-chair"></i>Bàn ghế làm việc</h4>
+                        <p>Chúng tôi cung cấp các khu vực làm việc với bàn ghế tiện nghi, lý tưởng cho việc học tập và nghiên cứu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-bicycle"></i>Câu lạc bộ thể thao</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-couch"></i>Nệm ngồi thoải mái</h4>
+                        <p>Chúng tôi có khu vực nệm ngồi thoải mái để bạn có thể thư giãn và đọc sách trong môi trường dễ chịu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-shirt"></i>Hồ bơi</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-building"></i>Phòng đọc yên tĩnh</h4>
+                        <p>Chúng tôi cung cấp các phòng đọc yên tĩnh để bạn có thể tập trung vào việc học mà không bị làm phiền.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-car"></i>Thuê xe</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-arrow-up"></i>Khu vực đọc sách trên lầu</h4>
+                        <p>Khám phá khu vực đọc sách trên lầu với không gian mở và ánh sáng tự nhiên, lý tưởng cho việc đọc và nghiên cứu.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-construction"></i>Phòng Gym</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-cocktail"></i>Nước uống</h4>
+                        <p>Chúng tôi cung cấp nước uống miễn phí để bạn có thể giải khát và duy trì sự tỉnh táo khi đọc sách hoặc làm việc.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="facilities_item">
-                        <h4 class="sec_h4"><i class="lnr lnr-coffee-cup"></i>Quán cafe</h4>
-                        <p>Việc sử dụng Internet đang trở nên phổ biến hơn do sự tiến bộ nhanh chóng của công nghệ và sức
-                            mạnh.</p>
+                        <h4 class="sec_h4"><i class="fas fa-concierge-bell"></i>Lễ tân</h4>
+                        <p>Đội ngũ lễ tân của chúng tôi luôn sẵn sàng hỗ trợ bạn với các yêu cầu và thông tin cần thiết trong suốt thời gian bạn ở thư viện.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    
+    
+    
     <!--================ Facilities Area  =================-->
 
     <!--================ About History Area  =================-->

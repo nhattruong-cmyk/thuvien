@@ -10,8 +10,10 @@ class ProductController extends Controller
 {
     public function products()
     {
-        $products = Product::paginate(4);
-        return view('client.products', compact('products'));
+        $products = Product::paginate(6);
+        $pageTitle = 'Sản phẩm';
+        $categories = Category::all();
+        return view('client.products', compact('products', 'categories','pageTitle'));
     }
     public function productsdetail($id)
     {
@@ -23,7 +25,15 @@ class ProductController extends Controller
             ->limit(4)
             ->get();
 
-        return view('client.productsdetail', compact('product', 'relatedproducts'));
-    }
+        $pageTitle = $product->name;
 
+        return view('client.productsdetail', compact('product', 'relatedproducts','pageTitle'));
+    }
+    public function productsByCategory($id)
+    {
+        $category = Category::findOrFail($id);
+        $products = Product::where('category_id', $id)->paginate(6);
+        $categories = Category::all();
+        return view('client.products', compact('products', 'categories', 'category'));
+    }
 }

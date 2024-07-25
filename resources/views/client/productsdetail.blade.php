@@ -10,7 +10,29 @@
 
 
 @section('content')
+    <section class="breadcrumb_area">
+        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+        <div class="container">
+            <div class="page-cover text-center">
+                <h2 class="page-cover-tittle">{{ $pageTitle ?? 'Trang' }}</h2>
+
+            </div>
+        </div>
+    </section>
+
     <div class="container mt-4">
+        {{-- <ol class="breadcrumb">
+            <li><a href="{{ route('home') }}">Trang chủ </a></li>
+            <li><a href="{{ route('products') }}">Sản phẩm</a></li>
+            <li class="active">{{ $pageTitle ?? 'Trang' }}</li>
+        </ol> --}}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('products') }}">Sản phẩm</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle ?? 'Trang' }}</li>
+            </ol>
+        </nav>  
         <main>
             <section class="section-product py-5">
                 <div class="container mt-4">
@@ -184,7 +206,7 @@
                     @if ($relatedproducts->count())
                         <section class="related-products py-5">
                             <div class="container">
-                                <h2 class="title">Sản phẩm liên quan</h2>
+                                <h3 class="title">Sản phẩm liên quan</h3>
                                 <div class="row">
                                     @foreach ($relatedproducts as $relatedProduct)
                                         <div class="col-md-3 mb-4">

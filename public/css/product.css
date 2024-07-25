@@ -1,3 +1,6 @@
+body {
+    font-family: Arial, sans-serif;
+}
 .price {
     color: #222222;
     font-size: 1.4rem;
@@ -7,4 +10,50 @@
 .price sup {
     color: red;
     font-size: 1.4rem;
+}
+
+.category-list {
+    padding: 0;
+    margin: 0;
+}
+
+.category-list .list-group-item {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.category-link {
+    display: block;
+    font-size: 1.2rem; 
+    color: #000; 
+    text-decoration: none; 
+    transition: color 0.3s; 
+}
+
+.category-link:hover {
+    color: #007bff; 
+}
+/* Đảm bảo mỗi item có chiều cao đồng đều */
+.accomodation_item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Đảm bảo hình ảnh và nội dung có cùng kích thước */
+.book_img img {
+    width: 100%;
+    height: auto; /* Đảm bảo tỷ lệ khung hình của ảnh được giữ nguyên */
+}
+
+/* Đảm bảo giá và nút "Xem ngay" luôn ở dưới cùng */
+.price, .btn {
+    margin: 0.5rem 0;
+}
+
+/* Căn giữa giá và nút "Xem ngay" */
+.price, .btn {
+    text-align: center;
 }

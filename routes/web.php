@@ -20,6 +20,8 @@ Route::get('/', function () {
 });
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'products'])->name('products');
+Route::get('/products/{id}', [ProductController::class, 'productsdetail'])->name('products.detail');
+Route::get('/category/{id}/products', [ProductController::class, 'productsByCategory'])->name('category.products');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
@@ -27,19 +29,19 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    
+
     //product
-    Route::prefix('product')->name('product.')->group(function (){
+    Route::prefix('product')->name('product.')->group(function () {
         Route::get('listPro', [AdminController::class, 'listPro'])->name('listPro');
         Route::get('formaddPro', [AdminController::class, 'formaddPro'])->name('formaddPro');
         Route::post('/insertPro', [AdminController::class, 'insertPro'])->name('insertPro');
-        
+        Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
         Route::get('formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
         Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
     });
 
     //category
-    Route::prefix('category')->name('category.')->group(function (){
+    Route::prefix('category')->name('category.')->group(function () {
         Route::get('/listCate', [AdminController::class, 'listCate'])->name('listCate');
         Route::get('/formaddCate', [AdminController::class, 'formaddCate'])->name('formaddCate');
         Route::get('/formupdateCate/{id}', [AdminController::class, 'formupdateCate'])->name('formupdateCate');
@@ -49,7 +51,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     //role
-    Route::prefix('role')->name('role.')->group(function (){
+    Route::prefix('role')->name('role.')->group(function () {
         Route::get('listRole', [AdminController::class, 'listRole'])->name('listRole');
         Route::get('formaddRole', [AdminController::class, 'formaddRole'])->name('formaddRole');
         Route::get('formupdateRole/{id}', [AdminController::class, 'formupdateRole'])->name('formupdateRole');
@@ -59,7 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     //user
-    Route::prefix('user')->name('user.')->group(function (){
+    Route::prefix('user')->name('user.')->group(function () {
         Route::get('listUser', [AdminController::class, 'listUser'])->name('listUser');
         Route::get('formaddUser', [AdminController::class, 'formaddUser'])->name('formaddUser');
         Route::post('/insertUser', [AdminController::class, 'insertUser'])->name('insertUser');
@@ -81,6 +83,5 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');

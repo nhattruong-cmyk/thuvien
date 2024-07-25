@@ -11,10 +11,10 @@
         <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
         <div class="container">
             <div class="page-cover text-center">
-                <h2 class="page-cover-tittle">Accomodation</h2>
+                <h2 class="page-cover-tittle">{{ $pageTitle ?? 'Sản phẩm' }}</h2>
                 <ol class="breadcrumb">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="active">Accomodation</li>
+                    <li><a href="{{ route('home') }}">Trang chủ</a></li>
+                    <li class="active">{{ $pageTitle ?? 'Sản phẩm' }}</li>
                 </ol>
             </div>
         </div>
@@ -24,121 +24,128 @@
     <!--================ Accomodation Area  =================-->
     <section class="books_area section_gap">
         <div class="container">
-
             <div class="section_title text-center">
                 <h2 class="title_color">Các loại sách nổi bật</h2>
-                <p>Chúng ta đang sống trong một thời đại thuộc về những người trẻ tuổi. Cuộc sống đang trở nên cực kỳ nhanh
-                    chóng,</p>
+                <p>Chúng ta đang sống trong một thời đại thuộc về những người trẻ tuổi. Cuộc sống đang trở nên cực kỳ nhanh chóng,</p>
             </div>
-            <div class="">
-                <h2>Danh Mục</h2>
-                <!-- Danh sách danh mục -->
-                <ul>
-                    <li><a href="#">Danh mục 1</a></li>
-                    <li><a href="#">Danh mục 2</a></li>
-                    <li><a href="#">Danh mục 3</a></li>
-                    <!-- Thêm danh mục cần hiển thị -->
-                </ul>
-            </div>
-            <div class="row mb_30 ">
-                <div class="row mb_30">
-                    @foreach ($products as $item)
-                        <div class="col-lg-3 col-sm-6 mb-4 d-flex">
-                            <div class="accomodation_item text-center d-flex flex-column">
-                                <div class="book_img">
-                                    <img class="img-px" src="{{ asset('uploaded/' . $item->img) }}"
-                                        alt="{{ $item->name }}">
-                                </div>
-                                <a href="#" class="flex-grow-1">
-                                    <h4 class="sec_h4">{{ $item->name }}</h4>
-                                </a>
-                                <span class="price p-2">{{ number_format($item->price, 0, '.', '.') }}<sup>đ</sup></span>
-
-                                <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        {{ $products->links('pagination::default') }}
-
+            <div class="row">
+                <!-- Danh mục nằm bên trái -->
+                <div class="col-lg-3">
+                    <h2 class="mb-4">Danh Mục</h2>
+                    <!-- Danh sách danh mục -->
+                    <ul class="list-group category-list">
+                        @foreach ($categories as $category)
+                            <li class="list-group-item">
+                                <a href="{{ route('category.products', ['id' => $category->id]) }}" class="category-link">{{ $category->name }}</a>
+                            </li>
+                        @endforeach
                     </ul>
-                </nav>
-
+                </div>
+    
+                <!-- Sản phẩm nằm bên phải -->
+                <div class="col-lg-9">
+                    <div class="row mb_30">
+                        @foreach ($products as $item)
+                            <div class="col-lg-4 col-sm-6 mb-4 d-flex">
+                                <div class="accomodation_item text-center d-flex flex-column">
+                                    <div class="book_img">
+                                        <img class="img-px" src="{{ asset('uploaded/' . $item->img) }}" alt="{{ $item->name }}">
+                                    </div>
+                                    <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="flex-grow-1">
+                                        <h4 class="sec_h4">{{ $item->name }}</h4>
+                                    </a>
+                                    <span class="price p-2">{{ number_format($item->price, 0, '.', '.') }}<sup>đ</sup></span>
+                                    <a href="{{ route('products.detail', ['id' => $item->id]) }}" class="btn theme_btn button_hover mt-auto">Xem ngay</a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+    
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $products->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
             </div>
         </div>
     </section>
     <!--================ Accomodation Area  =================-->
     <!--================Booking Tabel Area =================-->
     <section class="book_booking_area">
-        <div class="container">
-            <div class="row book_booking_table">
-                <div class="col-md-3">
-                    <h2>Book<br> Your Room</h2>
-                </div>
-                <div class="col-md-9">
-                    <div class="boking_table">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="book_tabel_item">
-                                    <div class="form-group">
-                                        <div class='input-group date' id='datetimepicker11'>
-                                            <input type='text' class="form-control" placeholder="Arrival Date" />
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>
+         <div class="container">
+                <div class="book_booking_table">
+                    <div class="col-md-3">
+                        <h2>Tìm<br> Sách của bạn</h2>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="boking_table">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="book_tabel_item">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <select class="wide">
+                                                    <option data-display="Ngôn ngữ">Ngôn ngữ</option>
+                                                    <option value="1">Tiếng Việt</option>
+                                                    <option value="2">Tiếng Anh</option>
+                                                    <option value="3">Tiếng Pháp</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class='input-group date' id='datetimepicker1'>
-                                            <input type='text' class="form-control" placeholder="Departure Date" />
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>
+                                        <div class="form-group">
+                                            {{-- <div class='input-group date' id='datetimepicker1'>
+                                                <input type='text' class="form-control" placeholder="Ngày đi" />
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>
+                                            </div> --}}
+                                            <select class="wide">
+                                                <option data-display="Chọn năm">Chọn năm</option>
+                                                <!-- Bạn có thể thêm nhiều năm khác vào danh sách này -->
+                                                <option value="2024">2024</option>
+                                                <option value="2023">2023</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2020">2020</option>
+                                            </select>
+                                  
+                                            
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="book_tabel_item">
-                                    <div class="input-group">
-                                        <select class="wide">
-                                            <option data-display="Adult">Adult</option>
-                                            <option value="1">Old</option>
-                                            <option value="2">Younger</option>
-                                            <option value="3">Potato</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group">
-                                        <select class="wide">
-                                            <option data-display="Child">Child</option>
-                                            <option value="1">Child</option>
-                                            <option value="2">Baby</option>
-                                            <option value="3">Child</option>
-                                        </select>
+                                <div class="col-md-4">
+                                    <div class="book_tabel_item">
+                                        <div class="input-group">
+                                            <select class="wide">
+                                                <option data-display="Thể loại">Thể loại</option>
+                                                <option value="1">Tiểu thuyết</option>
+                                                <option value="2">Khoa học</option>
+                                                <option value="3">Lịch sử</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group">
+                                            <select class="wide">
+                                                <option data-display="Tác giả">Tác giả</option>
+                                                <option value="1">Nguyễn Nhật Ánh</option>
+                                                <option value="2">J.K. Rowling</option>
+                                                <option value="3">George Orwell</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="book_tabel_item">
-                                    <div class="input-group">
-                                        <select class="wide">
-                                            <option data-display="Child">Number of Rooms</option>
-                                            <option value="1">Room 01</option>
-                                            <option value="2">Room 02</option>
-                                            <option value="3">Room 03</option>
-                                        </select>
+                                <div class="col-md-4">
+                                    <div class="book_tabel_item">
+                                        <div class="input-group">
+                                            <input type='text' class="form-control" placeholder="Tên sách" />
+                                        </div>
+                                        <a class="book_now_btn button_hover" href="#">Tìm kiếm</a>
                                     </div>
-                                    <a class="book_now_btn button_hover" href="#">Book Now</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
     <!--================Booking Tabel Area  =================-->
 

@@ -122,19 +122,23 @@ class AdminController extends Controller
         $product = Product::find($id);
 
         // Kiểm tra nếu sản phẩm tồn tại
+        if ($product) {
+            // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
+            $imagePath = public_path("uploaded/" . $product->img);
+            if (file_exists($imagePath)) {
+                // Xóa tệp hình ảnh
+                unlink($imagePath);
+            }
 
-        // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
-        $imagePath = "public/uploaded/" . $product->img;
-        if (file_exists($imagePath)) {
-            // Xóa tệp hình ảnh
-            unlink($imagePath);
+            // Xóa sản phẩm khỏi cơ sở dữ liệu
+            $product->delete();
+
+            // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
+        } else {
+            // Sản phẩm không tồn tại
+            return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
         }
-
-        // Xóa sản phẩm khỏi cơ sở dữ liệu
-        $product->delete();
-
-        // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
-        return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
 
     public function search(Request $request)
@@ -200,20 +204,20 @@ class AdminController extends Controller
 
         return redirect()->route('admin.category.listCate')->with('success', 'Cập nhật danh mục thành công');
     }
-    
+
     public function delCate($id)
     {
         $category = Category::find($id);
-    
+
         if (!$category) {
             return redirect()->route('admin.category.listCate')->with('error', 'Danh mục không tồn tại');
         }
-    
+
         $category->delete();
-        
+
         return redirect()->route('admin.category.listCate')->with('success', 'Xóa danh mục thành công');
     }
-    
+
 
     // ROLE -------------------------------------------------------------------------------------------------------------------------------
     public function listRole()
@@ -246,22 +250,22 @@ class AdminController extends Controller
     }
     public function updateRole(UpdateRoleRequest $request)
     {
-        
+
         $id = $request->id;
         $roles = Role::findOrFail($id);
         $validatedData = $request->validated();
-                // Kiểm tra nếu không có sự thay đổi
-                $isChanged = false;
-                foreach ($validatedData as $key => $value) {
-                    if ($roles[$key] != $value) {
-                        $isChanged = true;
-                        break;
-                    }
-                }
-        
-                if (!$isChanged) {
-                    return redirect()->route('admin.role.listRole')->with('info', 'Không có gì thay đổi');
-                }
+        // Kiểm tra nếu không có sự thay đổi
+        $isChanged = false;
+        foreach ($validatedData as $key => $value) {
+            if ($roles[$key] != $value) {
+                $isChanged = true;
+                break;
+            }
+        }
+
+        if (!$isChanged) {
+            return redirect()->route('admin.role.listRole')->with('info', 'Không có gì thay đổi');
+        }
         $roles->update($validatedData);
         return redirect()->route('admin.role.listRole');
     }
@@ -291,26 +295,26 @@ class AdminController extends Controller
     public function insertUser(InsertUserRequest $request)
     {
         $userData = $request->all();
-    
+
         // Kiểm tra và xử lý file hình ảnh
         if ($request->hasFile('img')) {
             $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('avata'), $imageName);
             $userData['img'] = $imageName;
-    
+
             // Kiểm tra xem file có tồn tại không
             if (!file_exists(public_path('avata') . '/' . $imageName)) {
                 return redirect()->back()->with('error', 'Tải lên hình ảnh thất bại');
             }
         }
-    
+
         if (User::create($userData)) {
             return redirect()->route('admin.user.listUser')->with('success', 'Thêm tài khoản thành công');
         } else {
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm tài khoản');
         }
     }
-     
+
 
     public function formupdateUser($id)
     {
@@ -323,28 +327,28 @@ class AdminController extends Controller
     {
         $id = $request->id;
         $user = User::findOrFail($id);
-    
+
         // Lấy dữ liệu đã được validate
         $validatedData = $request->validated();
-    
+
         // Kiểm tra xem có file hình ảnh mới không
         if ($request->hasFile('img')) {
             $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('avata'), $imageName);
-    
+
             // Xóa hình ảnh cũ nếu tồn tại
             $oldImagePath = public_path('avata/' . $user->img);
             if (file_exists($oldImagePath) && !is_dir($oldImagePath)) {
                 unlink($oldImagePath);
             }
-    
+
             // Cập nhật tên hình ảnh mới vào dữ liệu
             $validatedData['img'] = $imageName;
         } else {
             // Nếu không có file hình ảnh mới, giữ lại hình ảnh cũ
             $validatedData['img'] = $user->img;
         }
-    
+
         // Kiểm tra sự thay đổi trong dữ liệu
         $isChanged = false;
         foreach ($validatedData as $key => $value) {
@@ -353,17 +357,17 @@ class AdminController extends Controller
                 break;
             }
         }
-    
+
         if (!$isChanged) {
             return redirect()->route('admin.user.listUser')->with('info', 'Không có gì thay đổi');
         }
-    
+
         // Cập nhật tài khoản
         $user->update($validatedData);
-    
+
         return redirect()->route('admin.user.listUser')->with('success', 'Cập nhật tài khoản thành công');
     }
-    
+
     public function delUser($id)
     {
         // Tìm sản phẩm theo ID
