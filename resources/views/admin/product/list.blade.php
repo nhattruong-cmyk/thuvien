@@ -162,7 +162,7 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('admin.pro.formaddPro') }}"><input type="button" value="Thêm mới sản phẩm"
+                            <a href="{{ route('admin.product.formaddPro') }}"><input type="button" value="Thêm mới sản phẩm"
                                     class="btn btn-light-primary">
 
                             </a>
@@ -233,7 +233,7 @@
                                         {{-- <td>{{ $item->sold }}</td> --}}
                                         {{-- <td>{{ $item->description }}</td> --}}
                                         <td>
-                                            <a href="{{ route('admin.pro.formupdatePro', $item->id) }}"><input
+                                            <a href="{{ route('admin.product.formupdatePro', $item->id) }}"><input
                                                     class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
@@ -258,7 +258,7 @@
     <script>
         function confirmDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('admin.pro.delPro') }}/" + id;
+                window.location.href = "{{ url('delPro') }}/" + id;
             } else {
                 alert("Thao tác đã được hủy");
             }

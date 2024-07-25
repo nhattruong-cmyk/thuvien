@@ -1492,7 +1492,7 @@
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
 
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('admin.pro.listPro') }}">
+													<a class="menu-link" href="{{ route('admin.product.listPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
@@ -1500,7 +1500,7 @@
 													</a>
 												</div>
 												<div class="menu-item">
-													<a class="menu-link" href="{{ route('admin.pro.formaddPro') }}">
+													<a class="menu-link" href="{{ route('admin.product.formaddPro') }}">
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>

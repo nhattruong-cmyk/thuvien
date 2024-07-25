@@ -33,7 +33,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('listPro', [AdminController::class, 'listPro'])->name('listPro');
         Route::get('formaddPro', [AdminController::class, 'formaddPro'])->name('formaddPro');
         Route::post('/insertPro', [AdminController::class, 'insertPro'])->name('insertPro');
-        Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
+        
         Route::get('formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
         Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
     });
@@ -82,3 +82,5 @@ Route::get('/dashboard', function () {
 
 
 require __DIR__.'/auth.php';
+
+Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');

@@ -56,7 +56,7 @@ class AdminController extends Controller
         }
 
         if (Product::create($productData)) {
-            return redirect()->route('listPro')->with('success', 'Thêm sản phẩm thành công');
+            return redirect()->route('admin.product.listPro')->with('success', 'Thêm sản phẩm thành công');
         } else {
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
         }
@@ -108,13 +108,13 @@ class AdminController extends Controller
         }
 
         if (!$isChanged && !$isImageUpdated) {
-            return redirect()->route('listPro')->with('info', 'Không có gì thay đổi');
+            return redirect()->route('admin.product.listPro')->with('info', 'Không có gì thay đổi');
         }
 
         // Cập nhật sản phẩm
         $product->update($validatedData);
 
-        return redirect()->route('listPro')->with('success', 'Cập nhật sản phẩm thành công');
+        return redirect()->route('admin.product.listPro')->with('success', 'Cập nhật sản phẩm thành công');
     }
     public function delPro($id)
     {
@@ -134,7 +134,7 @@ class AdminController extends Controller
         $product->delete();
 
         // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
-        return redirect()->route('listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
+        return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
 
     public function search(Request $request)
@@ -193,23 +193,27 @@ class AdminController extends Controller
         }
 
         if (!$isChanged) {
-            return redirect()->route('listCate')->with('info', 'Không có gì thay đổi');
+            return redirect()->route('admin.category.listCate')->with('info', 'Không có gì thay đổi');
         }
         // Cập nhật sản phẩm
         $categories->update($validatedData);
 
-        return redirect()->route('listCate')->with('success', 'Cập nhật danh mục thành công');
+        return redirect()->route('admin.category.listCate')->with('success', 'Cập nhật danh mục thành công');
     }
     
     public function delCate($id)
     {
-        $categories = Category::find($id);
-        if (!$categories) {
-            return redirect()->route('listCate')->with('error', 'Danh mục không tồn tại');
+        $category = Category::find($id);
+    
+        if (!$category) {
+            return redirect()->route('admin.category.listCate')->with('error', 'Danh mục không tồn tại');
         }
-        $categories->delete();
-        return redirect()->route('listCate')->with('success', 'Xóa danh mục thành công');
+    
+        $category->delete();
+        
+        return redirect()->route('admin.category.listCate')->with('success', 'Xóa danh mục thành công');
     }
+    
 
     // ROLE -------------------------------------------------------------------------------------------------------------------------------
     public function listRole()
@@ -229,7 +233,7 @@ class AdminController extends Controller
         $roles = Role::create($roleData);
 
         if ($roles) {
-            return redirect()->route('listRole')->with('success', 'Thêm phân quyền thành công');
+            return redirect()->route('admin.role.listRole')->with('success', 'Thêm phân quyền thành công');
         } else {
             return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm phân quyền');
         }
@@ -256,19 +260,19 @@ class AdminController extends Controller
                 }
         
                 if (!$isChanged) {
-                    return redirect()->route('listRole')->with('info', 'Không có gì thay đổi');
+                    return redirect()->route('admin.role.listRole')->with('info', 'Không có gì thay đổi');
                 }
         $roles->update($validatedData);
-        return redirect()->route('listRole');
+        return redirect()->route('admin.role.listRole');
     }
     public function delRole($id)
     {
         $roles = Role::find($id);
         if (!$roles) {
-            return redirect()->route('listRole')->with('error', 'Phân quyền không tồn tại');
+            return redirect()->route('admin.role.listRole')->with('error', 'Phân quyền không tồn tại');
         }
         $roles->delete();
-        return redirect()->route('listRole')->with('success', 'Xóa phân quyền thành công');
+        return redirect()->route('admin.role.listRole')->with('success', 'Xóa phân quyền thành công');
     }
 
     // USERS -----------------------------------------------------------------------------------------------------------------------
@@ -301,7 +305,7 @@ class AdminController extends Controller
         }
     
         if (User::create($userData)) {
-            return redirect()->route('listUser')->with('success', 'Thêm tài khoản thành công');
+            return redirect()->route('admin.user.listUser')->with('success', 'Thêm tài khoản thành công');
         } else {
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm tài khoản');
         }
@@ -351,13 +355,13 @@ class AdminController extends Controller
         }
     
         if (!$isChanged) {
-            return redirect()->route('listUser')->with('info', 'Không có gì thay đổi');
+            return redirect()->route('admin.user.listUser')->with('info', 'Không có gì thay đổi');
         }
     
         // Cập nhật tài khoản
         $user->update($validatedData);
     
-        return redirect()->route('listUser')->with('success', 'Cập nhật tài khoản thành công');
+        return redirect()->route('admin.user.listUser')->with('success', 'Cập nhật tài khoản thành công');
     }
     
     public function delUser($id)
@@ -378,7 +382,7 @@ class AdminController extends Controller
         $user->delete();
 
         // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
-        return redirect()->route('listUer')->with('success', 'Tài khoản đã được xóa thành công.');
+        return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
     }
 
 
