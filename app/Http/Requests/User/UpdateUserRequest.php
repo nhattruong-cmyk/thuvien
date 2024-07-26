@@ -25,6 +25,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
+            'role_id' => 'required|integer|exists:roles,id',
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
@@ -37,8 +38,12 @@ class UpdateUserRequest extends FormRequest
             'email.required' => 'Vui lòng nhập email.',
             'email.email' => 'Email không hợp lệ.',
             'email.max' => 'Email không được vượt quá 255 ký tự.',
+            'role_id.required' => 'Vui lòng chọn phân quyền.',
+            'role_id.integer' => 'phân quyền không hợp lệ.',
+            'role_id.exists' => 'phân quyền không tồn tại.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'img.required' => 'Vui lòng chọn hình ảnh sản phẩm.',
             'img.file' => 'File tải lên phải là định dạng hình ảnh.',
             'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
             'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',

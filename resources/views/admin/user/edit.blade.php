@@ -229,7 +229,7 @@
                                         <div class="fv-row mb-7">
                                             <label class="d-block fw-bold fs-6 mb-5">Ảnh đại diện</label>
                                             <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(../assets/media/avatars/blank.png)">
-                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('avata' . $user->img) }});"></div>
+                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('avata/' . $user->img) }});"></div>
                             
                                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
                                                     <i class="bi bi-pencil-fill fs-7"></i>
