@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
             'price' => 'required|numeric',
             'category_id' => 'required|integer|exists:categories,id',
             'quantity' => 'required|numeric',
-            'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
         ];
     }

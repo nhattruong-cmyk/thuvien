@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -22,7 +22,17 @@ Route::get('/category/{id}/products', [ProductController::class, 'productsByCate
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
-Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+
+Route::get('/admin', function () {
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa và có role_id = 1 hay không
+    if (Auth::check() && Auth::user()->role_id == 1) {
+        // Nếu có quyền truy cập, chuyển đến controller action
+        return app(App\Http\Controllers\AdminController::class)->index();
+    }
+
+    // Nếu không có quyền truy cập, chuyển hướng về trang chủ hoặc trang lỗi
+    return redirect('/')->with('error', 'Bạn không có quyền truy cập trang này.');
+})->name('admin');
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
