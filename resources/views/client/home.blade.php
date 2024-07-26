@@ -105,6 +105,10 @@
                 <p>Chúng ta đang sống trong một thời đại thuộc về những người trẻ tuổi. Cuộc sống đang trở nên cực kỳ nhanh
                     chóng,</p>
             </div>
+{{-- @php
+use App\Models\Product;
+$newbook = Product::paginate(12);
+@endphp --}}
 
             <div class="row mb_30">
                 <!-- resources/views/client/home.blade.php -->

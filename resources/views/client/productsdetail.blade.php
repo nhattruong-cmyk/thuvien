@@ -21,18 +21,13 @@
     </section>
 
     <div class="container mt-4">
-        {{-- <ol class="breadcrumb">
-            <li><a href="{{ route('home') }}">Trang chủ </a></li>
-            <li><a href="{{ route('products') }}">Sản phẩm</a></li>
-            <li class="active">{{ $pageTitle ?? 'Trang' }}</li>
-        </ol> --}}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('products') }}">Sản phẩm</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle ?? 'Trang' }}</li>
             </ol>
-        </nav>  
+        </nav>
         <main>
             <section class="section-product py-5">
                 <div class="container mt-4">
@@ -60,9 +55,10 @@
                                 <li><strong>Năm xuất bản:</strong> 2024</li>
                             </ul>
                             <div class="d-flex mt-3">
-                                <input type="number" class="btn border rounded me-2" id="quantity" value="1" name="quantity" min="1" max="5">
+                                <input type="number" class="btn border rounded me-2" id="quantity" value="1"
+                                    name="quantity" min="1" max="5">
                                 <a href="#" class="btn btn-primary me-2">
-                                    
+
                                     <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                                 </a>
                                 <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
@@ -90,6 +86,7 @@
                             </section>
                         </div>
                         <div class="col-12">
+
                             <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="single-product-description-tab" data-bs-toggle="tab"
@@ -106,7 +103,10 @@
                             <div class="tab-content mt-2" id="myTabContent">
                                 <div class="tab-pane fade show active" id="single-product-description-tab-pane"
                                     role="tabpanel" aria-labelledby="single-product-description-tab" tabindex="0">
-                                    <p>{{ $product->description }}</p>
+                                    <div class="description" id="description">
+                                        <p>{{ $product->description }}</p>
+                                    </div>
+                                    <span class="see-more" id="see-more">Xem thêm</span>
                                 </div>
                                 <div class="tab-pane fade" id="comment-tab-pane" role="tabpanel"
                                     aria-labelledby="comment-tab" tabindex="0">
@@ -203,6 +203,7 @@
                                     <p>Disabled section here...</p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     @if ($relatedproducts->count())
@@ -247,4 +248,5 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/some-cdn-script@1.0.0/dist/script.min.js"></script>
+    <script src="{{ asset('js/description.js') }}"></script>
 @endpush
