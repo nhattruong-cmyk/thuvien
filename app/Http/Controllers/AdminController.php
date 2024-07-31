@@ -7,17 +7,17 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\PhieuMuon;
 use App\Http\Requests\Product\ProductRequest;
 use App\Http\Requests\Category\CategoryRequest;
 use App\Http\Requests\Category\UpdateCateRequest;
+use App\Http\Requests\PhieuMuon\UpdatePMRequest;
+use App\Http\Requests\PhieuMuon\InsertPMRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Http\Requests\Role\InsertRoleRequest;
 use App\Http\Requests\User\InsertUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-
-
-
 
 
 class AdminController extends Controller
@@ -154,130 +154,6 @@ class AdminController extends Controller
         return view('admin.productlist', compact('categories', 'products', 'query'));
     }
 
-    // CATEGORY -------------------------------------------------------------------------------------------------------------------------------
-    public function listCate()
-    {
-        $categories = Category::orderBy('id', 'ASC')->paginate(6);
-        return view('admin.category.list', compact('categories'));
-    }
-    public function formaddCate()
-    {
-        $categories = Category::orderBy('name', 'ASC')->get();
-        return view('admin.category.add', compact('categories'));
-    }
-    public function insertCate(CategoryRequest $request)
-    {
-        $categoriesData = $request->all();
-
-        if (Category::create($categoriesData)) {
-            return redirect()->route('admin.category.listCate')->with('success', 'Thêm danh mục thành công');
-        } else {
-            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm danh mục');
-        }
-    }
-    public function formupdateCate($id)
-    {
-        $categories = Category::orderBy('name', 'ASC')->get();
-        $category = Category::find($id);
-        return view('admin.category.edit', compact('categories', 'category'));
-    }
-    public function updateCate(UpdateCateRequest $request)
-    {
-        $id = $request->id;
-        $categories = Category::findOrFail($id);
-        $validatedData = $request->validated();
-        // Kiểm tra nếu không có sự thay đổi
-
-        $isChanged = false;
-        foreach ($validatedData as $key => $value) {
-            if ($categories[$key] != $value) {
-                $isChanged = true;
-                break;
-            }
-        }
-
-        if (!$isChanged) {
-            return redirect()->route('admin.category.listCate')->with('info', 'Không có gì thay đổi');
-        }
-        // Cập nhật sản phẩm
-        $categories->update($validatedData);
-
-        return redirect()->route('admin.category.listCate')->with('success', 'Cập nhật danh mục thành công');
-    }
-
-    public function delCate($id)
-    {
-        $category = Category::find($id);
-
-        if (!$category) {
-            return redirect()->route('admin.category.listCate')->with('error', 'Danh mục không tồn tại');
-        }
-
-        $category->delete();
-
-        return redirect()->route('admin.category.listCate')->with('success', 'Xóa danh mục thành công');
-    }
-
-
-    // ROLE -------------------------------------------------------------------------------------------------------------------------------
-    public function listRole()
-    {
-        $roles = Role::orderBy('id', 'ASC')->paginate(6);
-        return view('admin.role.list', compact('roles'));
-    }
-    public function formaddRole()
-    {
-        $roles = Role::orderBy('role_name', 'ASC')->get();
-        return view('admin.role.add', compact('roles'));
-    }
-    public function insertRole(InsertRoleRequest $request)
-    {
-        $roleData = $request->all();
-
-        $roles = Role::create($roleData);
-
-        if ($roles) {
-            return redirect()->route('admin.role.listRole')->with('success', 'Thêm phân quyền thành công');
-        } else {
-            return redirect()->back()->withInput()->with('error', 'Đã xảy ra lỗi khi thêm phân quyền');
-        }
-    }
-    public function formupdateRole($id)
-    {
-        $roles = Role::orderBy('role_name', 'ASC')->get();
-        $role = Role::find($id);
-        return view('admin.role.edit', compact('roles', 'role'));
-    }
-    public function updateRole(UpdateRoleRequest $request)
-    {
-
-        $id = $request->id;
-        $roles = Role::findOrFail($id);
-        $validatedData = $request->validated();
-        // Kiểm tra nếu không có sự thay đổi
-        $isChanged = false;
-        foreach ($validatedData as $key => $value) {
-            if ($roles[$key] != $value) {
-                $isChanged = true;
-                break;
-            }
-        }
-
-        if (!$isChanged) {
-            return redirect()->route('admin.role.listRole')->with('info', 'Không có gì thay đổi');
-        }
-        $roles->update($validatedData);
-        return redirect()->route('admin.role.listRole');
-    }
-    public function delRole($id)
-    {
-        $roles = Role::find($id);
-        if (!$roles) {
-            return redirect()->route('admin.role.listRole')->with('error', 'Phân quyền không tồn tại');
-        }
-        $roles->delete();
-        return redirect()->route('admin.role.listRole')->with('success', 'Xóa phân quyền thành công');
-    }
 
     // USERS -----------------------------------------------------------------------------------------------------------------------
     public function listUser()
@@ -389,18 +265,4 @@ class AdminController extends Controller
         return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
     }
 
-
-
-
-
-
-    // ĐƠN HÀNG --------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-    // COMMENT -------------------------------------------------------------------------------------------------------------------------
 }

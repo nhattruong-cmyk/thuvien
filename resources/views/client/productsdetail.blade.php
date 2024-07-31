@@ -32,7 +32,7 @@
                 <li class="breadcrumb-item"><a href="{{ route('products') }}">Sản phẩm</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle ?? 'Trang' }}</li>
             </ol>
-        </nav>  
+        </nav>
         <main>
             <section class="section-product py-5">
                 <div class="container mt-4">
@@ -47,7 +47,6 @@
                             <h1 class="title-product">{{ $product->name }}</h1>
                             <span class="price">Giá:{{ number_format($product->price, 0, '.', '.') }} <sup>đ</sup></span>
                             <hr>
-                            {{-- <p class="short-description">{{ $product->short_description }}</p> <!-- Thêm mô tả ngắn --> --}}
                             <p>Praesent ac condimentum felis. Nulla at nisl orci, at dignissim dolor, The best product
                                 descriptions address your ideal buyer directly and personally. The best product
                                 descriptions address your ideal buyer directly and personally.</p>
@@ -59,17 +58,55 @@
                                 <li><strong>Trọng lượng:</strong> 200 g</li>
                                 <li><strong>Năm xuất bản:</strong> 2024</li>
                             </ul>
-                            <div class="d-flex mt-3">
-                                <input type="number" class="btn border rounded me-2" id="quantity" value="1" name="quantity" min="1" max="5">
-                                <a href="#" class="btn btn-primary me-2">
-                                    
-                                    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
-                                </a>
-                                <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
-                                    thích</a>
-                                <a href="#" class="btn btn-outline-info me-2"><i class="fa fa-book"></i> Yêu cầu
-                                    mượn sách</a>
+                            <div class="container">
+                                <div class="d-flex mt-3">
+                                    <input type="number" class="btn border rounded me-2" id="quantity" value="1" name="quantity" min="1" max="5">
+                                    <button class="btn btn-primary me-2" id="add-to-cart" data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">
+                                        <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
+                                    </button>
+                                    <button class="btn btn-outline-info me-2" id="request-borrow" data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">
+                                        <i class="fa fa-book"></i> Yêu cầu mượn sách
+                                    </button>
+                                </div>
                             </div>
+                            
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    var isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+                            
+                                    $('#request-borrow').click(function(e) {
+                                        e.preventDefault();
+                            
+                                        if (!isLoggedIn) {
+                                            window.location.href = "{{ route('login') }}";
+                                            return;
+                                        }
+                            
+                                        var maSach = $(this).data('ma-sach');
+                                        var tenSach = $(this).data('ten-sach');
+                                        var soLuong = $('#quantity').val();
+                            
+                                        $.ajax({
+                                            url: "{{ route('add.to.cart') }}",
+                                            method: "POST",
+                                            data: {
+                                                _token: "{{ csrf_token() }}",
+                                                maSach: maSach,
+                                                tenSach: tenSach,
+                                                soLuong: soLuong
+                                            },
+                                            success: function(response) {
+                                                if(response.success) {
+                                                    window.location.href = "{{ route('cart') }}";
+                                                } else {
+                                                    alert('Có lỗi xảy ra, vui lòng thử lại');
+                                                }
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
                             <section class="share-section mt-2">
                                 <span>Chia sẻ</span>
                                 <div class="d-flex">
@@ -92,9 +129,10 @@
                         <div class="col-12">
                             <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="single-product-description-tab" data-bs-toggle="tab"
-                                        data-bs-target="#single-product-description-tab-pane" type="button" role="tab"
-                                        aria-controls="single-product-description-tab-pane" aria-selected="true">Tóm
+                                    <button class="nav-link active" id="single-product-description-tab"
+                                        data-bs-toggle="tab" data-bs-target="#single-product-description-tab-pane"
+                                        type="button" role="tab" aria-controls="single-product-description-tab-pane"
+                                        aria-selected="true">Tóm
                                         Tắt</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
