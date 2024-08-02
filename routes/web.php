@@ -10,6 +10,13 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PhieuMuonController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\CartController;
+
+
+
 
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -23,15 +30,20 @@ Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart');
+});
+
+
+
+
 Route::get('/admin', function () {
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa và có role_id = 1 hay không
     if (Auth::check() && Auth::user()->role_id == 1) {
-        // Nếu có quyền truy cập, chuyển đến controller action
         return app(App\Http\Controllers\AdminController::class)->index();
     }
-
-    // Nếu không có quyền truy cập, chuyển hướng về trang chủ hoặc trang lỗi
-    return redirect('/')->with('error', 'Bạn không có quyền truy cập trang này.');
+    return redirect('/login')->with('error', 'Vui lòng đăng nhập tài khoản admin.');
 })->name('admin');
 
 
@@ -49,22 +61,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //category
     Route::prefix('category')->name('category.')->group(function () {
-        Route::get('/listCate', [AdminController::class, 'listCate'])->name('listCate');
-        Route::get('/formaddCate', [AdminController::class, 'formaddCate'])->name('formaddCate');
-        Route::get('/formupdateCate/{id}', [AdminController::class, 'formupdateCate'])->name('formupdateCate');
-        Route::post('/insertCate', [AdminController::class, 'insertCate'])->name('insertCate');
-        Route::post('/updateCate', [AdminController::class, 'updateCate'])->name('updateCate');
-        Route::get('/delCate/{id}', [AdminController::class, 'delCate'])->name('delCate');
+        Route::get('/listCate', [CategoryController::class, 'listCate'])->name('listCate');
+        Route::get('/formaddCate', [CategoryController::class, 'formaddCate'])->name('formaddCate');
+        Route::get('/formupdateCate/{id}', [CategoryController::class, 'formupdateCate'])->name('formupdateCate');
+        Route::post('/insertCate', [CategoryController::class, 'insertCate'])->name('insertCate');
+        Route::post('/updateCate', [CategoryController::class, 'updateCate'])->name('updateCate');
+        Route::get('/delCate/{id}', [CategoryController::class, 'delCate'])->name('delCate');
     });
 
     //role
     Route::prefix('role')->name('role.')->group(function () {
-        Route::get('listRole', [AdminController::class, 'listRole'])->name('listRole');
-        Route::get('formaddRole', [AdminController::class, 'formaddRole'])->name('formaddRole');
-        Route::get('formupdateRole/{id}', [AdminController::class, 'formupdateRole'])->name('formupdateRole');
-        Route::post('/insertRole', [AdminController::class, 'insertRole'])->name('insertRole');
-        Route::post('/updateRole', [AdminController::class, 'updateRole'])->name('updateRole');
-        Route::get('/delRole/{id}', [AdminController::class, 'delRole'])->name('delRole');
+        Route::get('listRole', [RoleController::class, 'listRole'])->name('listRole');
+        Route::get('formaddRole', [RoleController::class, 'formaddRole'])->name('formaddRole');
+        Route::get('formupdateRole/{id}', [RoleController::class, 'formupdateRole'])->name('formupdateRole');
+        Route::post('/insertRole', [RoleController::class, 'insertRole'])->name('insertRole');
+        Route::post('/updateRole', [RoleController::class, 'updateRole'])->name('updateRole');
+        Route::get('/delRole/{id}', [RoleController::class, 'delRole'])->name('delRole');
     });
 
     //user
@@ -76,7 +88,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('formupdateUser/{id}', [AdminController::class, 'formupdateUser'])->name('formupdateUser');
         Route::post('/updateUser', [AdminController::class, 'updateUser'])->name('updateUser');
     });
+
+    //phiếu mượn
+    Route::prefix('phieumuon')->name('phieumuon.')->group(function () {
+        Route::get('listPhieuMuon', [PhieuMuonController::class, 'listPhieuMuon'])->name('listPhieuMuon');
+        Route::get('formaddPhieuMuon', [PhieuMuonController::class, 'formaddPhieuMuon'])->name('formaddPhieuMuon');
+        Route::post('/insertPhieuMuon', [PhieuMuonController::class, 'insertPhieuMuon'])->name('insertPhieuMuon');
+        Route::get('/delPhieuMuon/{id}', [PhieuMuonController::class, 'delPhieuMuon'])->name('delPhieuMuon');
+        Route::get('formupdatePhieuMuon/{id}', [PhieuMuonController::class, 'formupdatePhieuMuon'])->name('formupdatePhieuMuon');
+        Route::post('/updatePhieuMuon', [PhieuMuonController::class, 'updatePhieuMuon'])->name('updatePhieuMuon');
+
+    });
 });
+
+Route::get('/admin/phieumuon/details/{id}', [PhieuMuonController::class, 'getDetails'])->name('admin.phieumuon.getDetails');
+
 
 // verifycation email
 
