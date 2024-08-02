@@ -2,6 +2,7 @@
 body {
   font-family: Arial, sans-serif;
 }
+
 .avatar {
   border-radius: 50%;
   width: 50px;
@@ -30,11 +31,29 @@ body {
   font-size: 0.875rem;
   color: #888;
 }
+.comment-actions {
+  margin-top: 10px;
+}
 
+.comment-actions .btn {
+  margin-right: 5px;
+}
 .rating-star {
-  font-size: 24px;
   cursor: pointer;
-  color: #ccc;
+  font-size: 24px;
+  color: gold;
+}
+.rating-star.selected {
+  color: gold;
+}
+
+.alert-success {
+  margin-bottom: 15px;
+}
+
+.rating-star-display {
+  font-size: 24px;
+  color: gold;
 }
 
 .rating-star:hover,
@@ -111,24 +130,25 @@ a {
   color: #000;
   padding: 0 5px;
 }
+
 /* description */
 .description {
-    max-height: 100px;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
-    opacity: 1;
+  max-height: 100px;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 1;
 }
 
 .description.expanding {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .description.expanded {
-    max-height: 1000px;
-    opacity: 1;
+  max-height: 1000px;
+  opacity: 1;
 }
 
 .see-more {
-    color: blue;
-    cursor: pointer;
+  color: blue;
+  cursor: pointer;
 }

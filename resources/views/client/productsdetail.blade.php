@@ -54,9 +54,10 @@
                                 <li><strong>Năm xuất bản:</strong> 2024</li>
                             </ul>
                             <div class="d-flex mt-3">
-                                <input type="number" class="btn border rounded me-2" id="quantity" value="1" name="quantity" min="1" max="5">
+                                <input type="number" class="btn border rounded me-2" id="quantity" value="1"
+                                    name="quantity" min="1" max="5">
                                 <a href="#" class="btn btn-primary me-2">
-                                    
+
                                     <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                                 </a>
                                 <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
@@ -64,24 +65,24 @@
                                 <a href="#" class="btn btn-outline-info me-2"><i class="fa fa-book"></i> Yêu cầu
                                     mượn sách</a>
                             </div>
-                            
+
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script type="text/javascript">
                                 $(document).ready(function() {
                                     var isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
-                            
+
                                     $('#request-borrow').click(function(e) {
                                         e.preventDefault();
-                            
+
                                         if (!isLoggedIn) {
                                             window.location.href = "{{ route('login') }}";
                                             return;
                                         }
-                            
+
                                         var maSach = $(this).data('ma-sach');
                                         var tenSach = $(this).data('ten-sach');
                                         var soLuong = $('#quantity').val();
-                            
+
                                         $.ajax({
                                             url: "{{ route('add.to.cart') }}",
                                             method: "POST",
@@ -92,7 +93,7 @@
                                                 soLuong: soLuong
                                             },
                                             success: function(response) {
-                                                if(response.success) {
+                                                if (response.success) {
                                                     window.location.href = "{{ route('cart') }}";
                                                 } else {
                                                     alert('Có lỗi xảy ra, vui lòng thử lại');
@@ -122,127 +123,177 @@
                             </section>
                         </div>
                         <div class="col-12">
-
                             <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="single-product-description-tab"
-                                        data-bs-toggle="tab" data-bs-target="#single-product-description-tab-pane"
-                                        type="button" role="tab" aria-controls="single-product-description-tab-pane"
-                                        aria-selected="true">Tóm
+                                    <button class="nav-link {{ request('tab') == 'comment' ? '' : 'active' }}"
+                                        id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-tab-pane"
+                                        type="button" role="tab" aria-controls="summary-tab-pane"
+                                        aria-selected="{{ request('tab') == 'comment' ? 'false' : 'true' }}">Tóm
                                         Tắt</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="comment-tab" data-bs-toggle="tab"
-                                        data-bs-target="#comment-tab-pane" type="button" role="tab"
-                                        aria-controls="comment-tab-pane" aria-selected="false">Bình luận</button>
+                                    <button class="nav-link {{ request('tab') == 'comment' ? 'active' : '' }}"
+                                        id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment-tab-pane"
+                                        type="button" role="tab" aria-controls="comment-tab-pane"
+                                        aria-selected="{{ request('tab') == 'comment' ? 'true' : 'false' }}">Bình
+                                        luận</button>
                                 </li>
                             </ul>
+
                             <div class="tab-content mt-2" id="myTabContent">
-                                <div class="tab-pane fade show active" id="single-product-description-tab-pane"
-                                    role="tabpanel" aria-labelledby="single-product-description-tab" tabindex="0">
+                                <div class="tab-pane fade {{ request('tab') == 'comment' ? '' : 'show active' }}"
+                                    id="summary-tab-pane" role="tabpanel" aria-labelledby="summary-tab" tabindex="0">
                                     <div class="description" id="description">
                                         <p>{{ $product->description }}</p>
                                     </div>
-                                    <span class="see-more" id="see-more">Xem thêm</span>
+                                    <p class="see-more" id="see-more">Xem thêm</p>
                                 </div>
-                                <div class="tab-pane fade" id="comment-tab-pane" role="tabpanel"
-                                    aria-labelledby="comment-tab" tabindex="0">
-                                    <div class="row">
+                                <div class="tab-pane fade {{ request('tab') == 'comment' ? 'show active' : '' }}"
+                                    id="comment-tab-pane" role="tabpanel" aria-labelledby="comment-tab" tabindex="0">
+                                    <div class="row" id="rating-stars-form">
                                         <div class="col-md-7">
-                                            <div class="chat-body no-padding profile-message">
-                                                <ul class="list-unstyled">
-                                                    <li class="comment-item">
-                                                        <div class="comment-avatar">
-                                                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                                                                class="avatar online" />
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <div class="comment-username">Minh Tiến
+                                            <div class="comment-list mt-4" id="comment-list">
+                                                <ul class="list-unstyled" id="comment-list">
+                                                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                                                    @forelse ($comments as $comment)
+                                                        <li class="comment-item">
+                                                            <div class="comment-avatar">
+                                                                <img src="{{ asset('avata/' . $comment->user->img) }}"
+                                                                    class="avatar online" />
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <div class="comment-username">
+                                                                    {{ $comment->user->name }}
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        <span
+                                                                            class="rating-star-display">{{ $i <= $comment->rating ? '★' : '☆' }}</span>
+                                                                    @endfor
+                                                                </div>
+                                                                <div class="comment-text">{{ $comment->comment }}</div>
+                                                                <div class="comment-time">
+                                                                    {{ $comment->created_at->setTimezone('Asia/Ho_Chi_Minh')->format('H:i:s d/m/Y') }}
+                                                                    @if ($comment->updated_at > $comment->created_at)
+                                                                        <span class="comment-edited"> (Đã chỉnh sửa lúc
+                                                                            {{ $comment->updated_at->setTimezone('Asia/Ho_Chi_Minh')->format('H:i:s d/m/Y') }})</span>
+                                                                    @endif
+                                                                </div>
 
-                                                                <span class="rating-star" data-value="1">&#9733;</span>
-                                                                <span class="rating-star" data-value="2">&#9733;</span>
-                                                                <span class="rating-star" data-value="3">&#9733;</span>
-                                                                <span class="rating-star" data-value="4">&#9733;</span>
-                                                                <span class="rating-star" data-value="5">&#9733;</span>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                Sản phẩm rất tuyệt nhé ae
-                                                            </div>
-                                                            <div class="comment-time">Vào 1 giờ trước</div>
-                                                        </div>
-                                                    </li>
-                                                    <li class="comment-item">
-                                                        <div class="comment-avatar">
-                                                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                                                                class="avatar online" />
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <div class="comment-username">Nhật Trường
 
-                                                                <span class="rating-star" data-value="1">&#9733;</span>
-                                                                <span class="rating-star" data-value="2">&#9733;</span>
-                                                                <span class="rating-star" data-value="3">&#9733;</span>
-                                                                <span class="rating-star" data-value="4">&#9733;</span>
-                                                                <span class="rating-star" data-value="5">&#9733;</span>
+
+                                                                @if (Auth::check() && Auth::id() === $comment->user_id)
+                                                                    <div class="comment-actions">
+                                                                        <button
+                                                                            class="btn btn-warning btn-sm btn-edit-comment"
+                                                                            data-id="{{ $comment->id }}"
+                                                                            data-comment="{{ $comment->comment }}"
+                                                                            data-rating="{{ $comment->rating }}">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                        <button
+                                                                            class="btn btn-danger btn-sm btn-delete-comment"
+                                                                            data-id="{{ $comment->id }}">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                                                            <div class="comment-text">
-                                                                Cửa hàng uy tín số 1 nhé, hàng chất lượng cao
-                                                            </div>
-                                                            <div class="comment-time">Vào 2 giờ trước</div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
+
+                                                    @empty
+                                                        <li class="comment-item">
+                                                            <p>Chưa có bình luận nào.</p>
+                                                        </li>
+                                                    @endforelse
+
                                                 </ul>
+
                                             </div>
+                                            <button id="load-more-comments" class="btn btn-secondary mt-3">Tải thêm bình
+                                                luận</button>
+                                            <button id="collapse-comments" class="btn btn-secondary mt-3"
+                                                style="display: none;">Thu gọn bình luận</button>
+
                                         </div>
                                         <div class="col-md-5">
-                                            <form method="post" class="well padding-bottom-10" onsubmit="return false;">
-                                                <div>
-                                                    <label for="rating">Đánh giá của bạn:</label>
-                                                    <span class="rating-star" data-value="1">&#9733;</span>
-                                                    <span class="rating-star" data-value="2">&#9733;</span>
-                                                    <span class="rating-star" data-value="3">&#9733;</span>
-                                                    <span class="rating-star" data-value="4">&#9733;</span>
-                                                    <span class="rating-star" data-value="5">&#9733;</span>
-                                                </div>
-                                                <label for="">Nội dung bình luận</label>
-                                                <textarea rows="2" class="form-control" placeholder="Để lại bình luận của bạn..."></textarea>
-
-                                                <div class="margin-top-10 mt-2">
-                                                    <button type="submit" class="btn btn-sm btn-primary pull-right">
-                                                        Gửi bình luận
-                                                    </button>
-                                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn"
-                                                        rel="tooltip" data-placement="bottom" title=""
-                                                        data-original-title="Add Location"><i
-                                                            class="fa fa-location-arrow"></i></a>
-                                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn"
-                                                        rel="tooltip" data-placement="bottom" title=""
-                                                        data-original-title="Add Voice"><i
-                                                            class="fa fa-microphone"></i></a>
-                                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn"
-                                                        rel="tooltip" data-placement="bottom" title=""
-                                                        data-original-title="Add Photo"><i class="fa fa-camera"></i></a>
-                                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn"
-                                                        rel="tooltip" data-placement="bottom" title=""
-                                                        data-original-title="Add File"><i class="fa fa-file"></i></a>
-                                                </div>
-                                            </form>
+                                            @auth
+                                                <h4>Đánh giá sản phẩm</h4>
+                                                <form method="post" action="{{ route('comments.send') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <div class="mb-3">
+                                                        <label for="comment" class="form-label">Bình luận</label>
+                                                        <textarea class="form-control" id="comment" name="comment" rows="2"></textarea>
+                                                        @error('comment')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                    @if ($product->is_approved)
+                                                        <div class="mb-3">
+                                                            <div class="rating-stars">
+                                                                <label for="rating" class="form-label">Đánh giá</label>
+                                                                <input type="hidden" id="rating" name="rating">
+                                                                <div id="rating-stars" class="rating-stars">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        <span class="rating-star"
+                                                                            data-value="{{ $i }}">☆</span>
+                                                                    @endfor
+                                                                </div>
+                                                                @error('rating')
+                                                                    <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                                                </form>
+                                            @else
+                                                <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận.</p>
+                                            @endauth
                                         </div>
-                                    </div>
 
-                                </div>
-                                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel"
-                                    aria-labelledby="contact-tab" tabindex="0">
-                                    <p>Contact section here...</p>
-                                </div>
-                                <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel"
-                                    aria-labelledby="disabled-tab" tabindex="0">
-                                    <p>Disabled section here...</p>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+                    <div id="productId" data-product-id="{{ $product->id }}"></div>
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+                    <!-- Modal sửa bình luận -->
+                    <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editCommentModalLabel">Chỉnh sửa bình luận</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editCommentForm">
+                                        <input type="hidden" id="editCommentId" name="comment_id">
+                                        <div class="mb-3">
+                                            <label for="editCommentText" class="form-label">Bình luận</label>
+                                            <textarea class="form-control" id="editCommentText" name="comment"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editRating" class="form-label">Đánh giá</label>
+                                            <div id="editRatingStars">
+                                                <!-- Các ngôi sao đánh giá -->
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <span class="rating-star" data-value="{{ $i }}">☆</span>
+                                                @endfor
+                                            </div>
+                                            <input type="hidden" id="editRating" name="rating">
+                                        </div>
+                                        <div id="editCommentError" class="text-danger"></div>
+                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     @if ($relatedproducts->count())
                         <section class="related-products py-5">
                             <div class="container">
@@ -286,4 +337,6 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/some-cdn-script@1.0.0/dist/script.min.js"></script>
     <script src="{{ asset('js/description.js') }}"></script>
+    <script src="{{ asset('js/productdetail.js') }}"></script>
+
 @endpush

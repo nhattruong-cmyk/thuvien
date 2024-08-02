@@ -14,14 +14,11 @@ use App\Http\Controllers\PhieuMuonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CartController;
-
-
-
-
+use App\Http\Controllers\CommentController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
-Route::get('/home', [HomeController::class, 'home'])->name('home');
+Route::get('/home', [HomeController::class, 'home'])->name('home.page');
 
 Route::get('/products', [ProductController::class, 'products'])->name('products');
 Route::get('/products/{id}', [ProductController::class, 'productsdetail'])->name('products.detail');
@@ -103,6 +100,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::get('/admin/phieumuon/details/{id}', [PhieuMuonController::class, 'getDetails'])->name('admin.phieumuon.getDetails');
 
+//comment
+Route::post('/comments/load-more', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');
+
 
 // verifycation email
 
@@ -110,6 +110,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //Route comment
+    Route::post('/comments/send', [CommentController::class, 'send'])->name('comments.send');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/comments/reply', [CommentController::class, 'reply'])->name('comments.reply');
+
+
 });
 Route::get('/dashboard', function () {
     return view('email-verified');

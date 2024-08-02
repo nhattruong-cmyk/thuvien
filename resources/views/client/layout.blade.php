@@ -5,6 +5,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ Auth::id() }}">
     <link rel="icon" href="{{ asset('image/icons8-book-94.png') }}" type="image/png">
     <title>@yield('title', 'Thư viện sách')</title>
     <!-- Bootstrap CSS -->

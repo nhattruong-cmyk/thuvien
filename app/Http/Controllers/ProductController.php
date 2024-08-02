@@ -19,11 +19,11 @@ class ProductController extends Controller
         $products = Product::paginate(6);
         $pageTitle = 'Sản phẩm';
         $categories = Category::all();
-        return view('client.products', compact('products', 'categories','pageTitle'));
+        return view('client.products', compact('products', 'categories', 'pageTitle'));
     }
     public function productsdetail($id)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with(['category', 'comments.user'])->findOrFail($id);
 
         // Lấy sản phẩm liên quan cùng danh mục, loại trừ sản phẩm hiện tại
         $relatedproducts = Product::where('category_id', $product->category_id)
@@ -33,7 +33,12 @@ class ProductController extends Controller
 
         $pageTitle = $product->name;
 
-        return view('client.productsdetail', compact('product', 'relatedproducts','pageTitle'));
+        // Lấy 5 bình luận mới nhất
+        $comments = $product->comments()->orderBy('created_at', 'desc')->take(5)->get();
+
+        $totalComments = $product->comments()->count();
+
+        return view('client.productsdetail', compact('product', 'relatedproducts', 'pageTitle', 'comments', 'totalComments'));
     }
     public function productsByCategory($id)
     {
@@ -63,7 +68,7 @@ class ProductController extends Controller
         $getOnePM = PhieuMuon::orderBy('id', 'ASC')->paginate(15);
 
 
-        return view('admin.phieumuon.list', compact('phieumuon', 'users', 'products','getOnePM', 'categories'));
+        return view('admin.phieumuon.list', compact('phieumuon', 'users', 'products', 'getOnePM', 'categories'));
     }
 
 
@@ -73,7 +78,7 @@ class ProductController extends Controller
         $users = User::orderBy('id', 'ASC')->get();
         $products = Product::orderBy('id', 'ASC')->get();
         $phieumuon = PhieuMuon::orderBy('id', 'ASC')->paginate(15);
-        return view('admin.phieumuon.add', compact('phieumuon', 'users','products', 'categories'));
+        return view('admin.phieumuon.add', compact('phieumuon', 'users', 'products', 'categories'));
     }
 
     public function insertPhieuMuon(InsertPMRequest $request)
@@ -95,7 +100,7 @@ class ProductController extends Controller
         $products = Product::orderBy('id', 'ASC')->get();
         $users = User::orderBy('id', 'ASC')->get();
         $phieumuons = PhieuMuon::orderBy('id', 'ASC')->paginate(15);
-        return view('admin.phieumuon.edit', compact('phieumuons','phieumuon', 'users','products', 'categories'));
+        return view('admin.phieumuon.edit', compact('phieumuons', 'phieumuon', 'users', 'products', 'categories'));
     }
     public function updatePhieuMuon(UpdatePMRequest $request)
     {
