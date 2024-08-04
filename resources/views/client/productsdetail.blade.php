@@ -349,5 +349,4 @@
     <script src="https://cdn.jsdelivr.net/npm/some-cdn-script@1.0.0/dist/script.min.js"></script>
     <script src="{{ asset('js/description.js') }}"></script>
     <script src="{{ asset('js/productdetail.js') }}"></script>
-
 @endpush
