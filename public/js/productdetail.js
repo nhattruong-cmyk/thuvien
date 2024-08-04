@@ -4,19 +4,29 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Element with id "productId" not found.');
         return;
     }
+
     const productId = productIdElement.dataset.productId;
     const csrfToken = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
     let skip = 5;
+
     // Xử lý sự kiện nút "Thu gọn"
+
     document
         .getElementById("collapse-comments")
         .addEventListener("click", function () {
-            document.getElementById("comment-list").innerHTML = "";
-            skip = 5;
-            loadComments();
-            this.style.display = "none";
+            const commentList = document.getElementById("comment-list");
+            let comments = Array.from(commentList.children);
+            if (comments.length > 5) {
+                for (let i = 0; i < 5; i++) {
+                    commentList.removeChild(commentList.lastChild);
+                }
+                skip -= 5;
+            }
+            if (skip <= 5) {
+                this.style.display = "none";
+            }
             document.getElementById("load-more-comments").style.display =
                 "block";
         });
@@ -29,9 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const commentId = document.getElementById("editCommentId").value;
             const formData = new FormData(form);
             const commentText = formData.get("comment");
+            const rating = formData.get("rating");
 
             if (!commentText.trim()) {
-                document.getElementById("editCommentError").textContent =
+                document.getElementById("error-message").textContent =
                     "Bình luận không được để trống.";
                 return;
             }
@@ -43,26 +54,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    comment: formData.get("comment"),
-                    rating: formData.get("rating"),
+                    comment: commentText,
+                    rating: rating,
                 }),
             })
-                .then((response) =>
-                    response.ok ? response.json() : Promise.reject(response)
-                )
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        return Promise.reject(response);
+                    }
+                })
                 .then((data) => {
                     if (data.success) {
                         location.reload();
                     } else {
-                        // Xử lý lỗi
+                        console.error(data.message);
                     }
                 })
-                .catch((error) =>
+                .catch((error) => {
                     console.error(
                         "There was a problem with the fetch operation:",
                         error
-                    )
-                );
+                    );
+                });
         });
 
     document.querySelectorAll(".rating-star").forEach((star) => {
@@ -83,18 +98,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const commentText = this.dataset.comment;
                 const commentRating = this.dataset.rating;
 
-                // Cập nhật giá trị cho các trường trong modal
                 document.getElementById("editCommentId").value = commentId;
                 document.getElementById("editCommentText").value = commentText;
                 document.getElementById("editRating").value = commentRating;
 
-                // Cập nhật đánh giá sao trong modal
-                document.querySelectorAll(".rating-star").forEach((star) => {
-                    star.textContent =
-                        star.dataset.value <= commentRating ? "★" : "☆";
+                document.querySelectorAll("#rating-stars-modal .rating-star").forEach((star) => {
+                    star.textContent = star.dataset.value <= commentRating ? "★" : "☆";
                 });
 
-                // Hiển thị modal
+                if (userStatus === 1) {
+                    document.getElementById("ratingFields").style.display = "block";
+                } else {
+                    document.getElementById("ratingFields").style.display = "none";
+                }
+
                 const editCommentModal = new bootstrap.Modal(document.getElementById("editCommentModal"));
                 editCommentModal.show();
             });
@@ -142,20 +159,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const headers = {
-                "Content-Type": "application/json",
-            };
-
-            const csrfTokenMeta = document.querySelector(
-                'meta[name="csrf-token"]'
-            );
-            if (csrfTokenMeta) {
-                headers["X-CSRF-TOKEN"] = csrfTokenMeta.getAttribute("content");
-            }
-
             fetch(`/comments/load-more`, {
                 method: "POST",
-                headers: headers,
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
                 body: JSON.stringify({
                     product_id: productId,
                     skip: skip,
@@ -171,9 +180,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             commentItem.classList.add("comment-item");
                             commentItem.innerHTML = `
                         <div class="comment-avatar">
-                            <img src="/avata/${
-                                comment.user.img
-                            }" class="avatar online" />
+                            <img src="/avata/${comment.user.img
+                                }" class="avatar online" />
                         </div>
                         <div class="comment-content">
                             <div class="comment-username">
@@ -181,23 +189,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ${Array.from({ length: 5 })
                                     .map(
                                         (_, i) =>
-                                            `<span class="rating-star-display">${
-                                                i < comment.rating ? "★" : "☆"
+                                            `<span class="rating-star-display">${i < comment.rating ? "★" : "☆"
                                             }</span>`
                                     )
                                     .join("")}
                             </div>
                             <div class="comment-text">${comment.text}</div>
                             <div class="comment-time">
-                                ${comment.created_at} 
-                                ${
-                                    comment.created_at !== comment.updated_at
-                                        ? `<span class="comment-edited"> (Đã chỉnh sửa lúc ${comment.updated_at})</span>`
-                                        : ""
+                                ${comment.created_at}
+                                ${comment.created_at !== comment.updated_at
+                                    ? `<span class="comment-edited"> (Đã chỉnh sửa lúc ${comment.updated_at})</span>`
+                                    : ""
                                 }
                             </div>
-                            ${
-                                comment.is_user_comment
+                            ${comment.is_user_comment
                                     ? `
                                 <div class="comment-actions">
                                     <button class="btn btn-warning btn-sm btn-edit-comment" data-id="${comment.id}" data-comment="${comment.text}" data-rating="${comment.rating}">
@@ -208,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     </button>
                                 </div>`
                                     : ""
-                            }
+                                }
                         </div>`;
                             commentList.appendChild(commentItem);
                         });
@@ -221,9 +226,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             ).style.display = "none";
                         }
 
-                        document.getElementById(
-                            "collapse-comments"
-                        ).style.display = "block";
+                        if (skip > 5) {
+                            document.getElementById(
+                                "collapse-comments"
+                            ).style.display = "block";
+                        }
+
                         attachEditDeleteEvents();
                     }
                 })
@@ -268,20 +276,18 @@ document.addEventListener("DOMContentLoaded", function () {
         new bootstrap.Tab(document.querySelector("#summary-tab")).show();
     }
 
-    document
-        .querySelectorAll("#rating-stars-form .rating-star")
-        .forEach((star) => {
-            star.addEventListener("click", function () {
-                const rating = this.getAttribute("data-value");
-                document.getElementById("rating").value = rating;
-                document
-                    .querySelectorAll("#rating-stars-form .rating-star")
-                    .forEach((s) => {
-                        s.textContent =
-                            s.getAttribute("data-value") <= rating ? "★" : "☆";
-                    });
-            });
+    document.querySelectorAll("#rating-stars .rating-star").forEach((star) => {
+        star.addEventListener("click", function () {
+            const rating = this.getAttribute("data-value");
+            document.getElementById("rating").value = rating;
+            document
+                .querySelectorAll("#rating-stars .rating-star")
+                .forEach((s) => {
+                    s.textContent =
+                        s.getAttribute("data-value") <= rating ? "★" : "☆";
+                });
         });
+    });
 
     const flashActiveTab = "{{ session('activeTab') }}";
     if (flashActiveTab) {

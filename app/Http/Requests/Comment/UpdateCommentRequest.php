@@ -23,16 +23,16 @@ class UpdateCommentRequest extends FormRequest
     {
         return [
             'comment' => 'required|string|max:255',
-            'rating' => 'required|integer|between:1,5',
+            'rating' => 'nullable|integer|between:1,5',
         ];
     }
-    
+
     public function messages()
     {
         return [
             'comment.required' => 'Vui lòng nhập bình luận.',
             'comment.max' => 'Bình luận không được vượt quá 255 ký tự.',
-            'rating.required' => 'Vui lòng chọn đánh giá.',
+            'rating.nullable' => 'Vui lòng chọn đánh giá.',
             'rating.integer' => 'Đánh giá phải là số nguyên.',
             'rating.between' => 'Đánh giá phải từ 1 đến 5 sao.',
 

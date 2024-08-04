@@ -11,6 +11,8 @@ use App\Http\Requests\PhieuMuon\UpdatePMRequest;
 use App\Http\Requests\PhieuMuon\InsertPMRequest;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -24,22 +26,35 @@ class ProductController extends Controller
     public function productsdetail($id)
     {
         $product = Product::with(['category', 'comments.user'])->findOrFail($id);
-
+    
         // Lấy sản phẩm liên quan cùng danh mục, loại trừ sản phẩm hiện tại
         $relatedproducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $id)
             ->limit(4)
             ->get();
-
+    
         $pageTitle = $product->name;
-
+    
+        $user = Auth::user();
+        $canRate = false;
+        $userStatus = null;
+        
+        if ($user) {
+            $userStatus = DB::table('phieu_muons')
+                ->where('userId', $user->id)
+                ->value('trangthai'); // Lấy trạng thái của người dùng
+    
+            $canRate = $userStatus == 1;
+        }
+    
         // Lấy 5 bình luận mới nhất
         $comments = $product->comments()->orderBy('created_at', 'desc')->take(5)->get();
-
+    
         $totalComments = $product->comments()->count();
-
-        return view('client.productsdetail', compact('product', 'relatedproducts', 'pageTitle', 'comments', 'totalComments'));
+    
+        return view('client.productsdetail', compact('product', 'relatedproducts', 'pageTitle', 'comments', 'canRate', 'totalComments', 'userStatus'));
     }
+    
     public function productsByCategory($id)
     {
         $category = Category::findOrFail($id);

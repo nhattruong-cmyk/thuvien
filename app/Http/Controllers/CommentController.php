@@ -35,24 +35,24 @@ class CommentController extends Controller
     public function update(UpdateCommentRequest $request, $id)
     {
         $comment = Comment::find($id);
-    
+
         if (!$comment || $comment->user_id !== Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
-    
+
         $validated = $request->validated();
-    
+
         // Cập nhật bình luận và rating
         $comment->update([
             'comment' => $validated['comment'],
             'rating' => $validated['rating'],
             'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
         ]);
-    
+
         // Lấy thời gian cập nhật mới nhất
         $updatedTime = $comment->updated_at->format('H:i:s d/m/Y');
         $createdTime = $comment->created_at->format('H:i:s d/m/Y');
-    
+
         return response()->json([
             'success' => true,
             'updated_at' => $updatedTime,
@@ -64,7 +64,7 @@ class CommentController extends Controller
             ]
         ]);
     }
-    
+
 
     public function destroy(Comment $comment)
     {
@@ -82,11 +82,14 @@ class CommentController extends Controller
 
         try {
             $comments = Comment::where('product_id', $productId)
-                ->with('user') // Load thông tin người dùng liên quan
+                ->with('user')
                 ->orderBy('created_at', 'desc')
                 ->skip($skip)
                 ->take(5)
                 ->get();
+
+            $totalComments = Comment::where('product_id', $productId)->count();
+            $hasMoreComments = ($totalComments > ($skip + 5));
 
             $formattedComments = $comments->map(function ($comment) {
                 return [
@@ -95,29 +98,27 @@ class CommentController extends Controller
                     'rating' => $comment->rating,
                     'created_at' => $comment->created_at->setTimezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s'),
                     'updated_at' => $comment->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s'),
-
                     'user' => [
                         'name' => $comment->user->name,
                         'img' => $comment->user->img,
                     ],
-                    'is_user_comment' => Auth::check() && Auth::id() === $comment->user_id, // Hiển thị nút sửa/xóa cho bình luận của người dùng đã đăng nhập
+                    'is_user_comment' => Auth::check() && Auth::id() == $comment->user_id,
                 ];
             });
-
-            $totalComments = Comment::where('product_id', $productId)->count();
-            $hasMoreComments = ($totalComments > ($skip + 5));
 
             return response()->json([
                 'comments' => $formattedComments,
                 'hasMoreComments' => $hasMoreComments,
+                'totalComments' => $totalComments,
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Có lỗi xảy ra khi tải thêm bình luận.',
-                'message' => $e->getMessage()
+                'error' => 'Lỗi trong quá trình tải bình luận.',
             ], 500);
         }
     }
+
+
 
 
 

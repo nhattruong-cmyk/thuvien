@@ -210,6 +210,7 @@
                                             </div>
                                             <button id="load-more-comments" class="btn btn-secondary mt-3">Tải thêm bình
                                                 luận</button>
+
                                             <button id="collapse-comments" class="btn btn-secondary mt-3"
                                                 style="display: none;">Thu gọn bình luận</button>
 
@@ -227,7 +228,8 @@
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
-                                                    @if ($product->is_approved)
+
+                                                    @if ($canRate)
                                                         <div class="mb-3">
                                                             <div class="rating-stars">
                                                                 <label for="rating" class="form-label">Đánh giá</label>
@@ -244,12 +246,14 @@
                                                             </div>
                                                         </div>
                                                     @endif
+
                                                     <button type="submit" class="btn btn-primary">Gửi bình luận</button>
                                                 </form>
                                             @else
                                                 <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận.</p>
                                             @endauth
                                         </div>
+
 
                                     </div>
                                 </div>
@@ -259,35 +263,38 @@
                     <div id="productId" data-product-id="{{ $product->id }}"></div>
                     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-                    <!-- Modal sửa bình luận -->
+                    <!-- Modal Sửa Bình Luận -->
                     <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editCommentModalLabel">Chỉnh sửa bình luận</h5>
+                                    <h5 class="modal-title" id="editCommentModalLabel">Sửa Bình Luận</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form id="editCommentForm">
-                                        <input type="hidden" id="editCommentId" name="comment_id">
+                                        <input type="hidden" id="editCommentId" name="id">
+
                                         <div class="mb-3">
-                                            <label for="editCommentText" class="form-label">Bình luận</label>
-                                            <textarea class="form-control" id="editCommentText" name="comment"></textarea>
+                                            <label for="editCommentText" class="form-label">Nội dung bình luận</label>
+                                            <textarea class="form-control" id="editCommentText" name="comment" rows="2"></textarea>
                                         </div>
-                                        <div class="mb-3">
+
+                                        <div class="mb-3" id="ratingFields">
                                             <label for="editRating" class="form-label">Đánh giá</label>
-                                            <div id="editRatingStars">
-                                                <!-- Các ngôi sao đánh giá -->
+                                            <input type="hidden" id="editRating" name="rating">
+                                            <div id="rating-stars-modal" class="rating-stars">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <span class="rating-star" data-value="{{ $i }}">☆</span>
                                                 @endfor
                                             </div>
-                                            <input type="hidden" id="editRating" name="rating">
                                         </div>
-                                        <div id="editCommentError" class="text-danger"></div>
-                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+
+                                        <div id="error-message" class="text-danger"></div>
+
+                                        <button type="submit" class="btn btn-primary">Cập nhật bình luận</button>
                                     </form>
                                 </div>
                             </div>
@@ -333,6 +340,10 @@
 
 
 @endsection
+
+<script>
+    const userStatus = @json($userStatus);
+</script>
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/some-cdn-script@1.0.0/dist/script.min.js"></script>
