@@ -27,6 +27,7 @@ Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
 
+Route::get('create-phieu-muon', [PhieuMuonController::class, 'showCreatePhieuMuonForm'])->name('create.phieu.muon.form');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');

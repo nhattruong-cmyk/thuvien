@@ -190,7 +190,7 @@
                         <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
                             <thead>
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">Mã phiếu mượn</th>
+                                    <th class="min-w-125px">Mã phiếu</th>
                                     <th class="min-w-125px">Trạng thái</th>
                                     <th class="min-w-125px">Tên khách hàng</th>
                                     <th class="min-w-125px">Ngày mượn</th>
@@ -206,7 +206,7 @@
                                 @foreach ($phieumuon as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->trangthai == '1' ? 'Chưa xát nhận' : ($item->trangthai == '2' ? 'Kiểm duyệt' : 'Xát nhận') }}
+                                        <td>{{ $item->trangthai == '1' ? 'Chưa xát nhận' : ($item->trangthai == '2' ? 'Đang mượn' : 'Đã trả') }}
                                         </td>
                                         <td>{{ $item->userName }}</td>
                                         <td>{{ Carbon::parse($item->ngayMuon)->format('d/m/Y') }}</td>
@@ -334,7 +334,7 @@
                                                 <span class="">Trạng Thái</span>
                                             </label>
                                                  <input type="text" name="trangthai" class="form-control form-control-solid" 
-                                                        value="${data.trangthai == '1' ? 'Chưa xác nhận' : (data.trangthai == '2' ? 'Kiểm duyệt' : 'Xác nhận')}" readonly />
+                                                        value="${data.trangthai == '1' ? 'Chưa xác nhận' : (data.trangthai == '2' ? 'Đang mượn' : 'Đã trả')}" readonly />
                                   
                                             </select>
                                             @error('userId')

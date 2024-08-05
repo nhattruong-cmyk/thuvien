@@ -62,8 +62,9 @@
                                 </a>
                                 <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
                                     thích</a>
-                                <a href="#" class="btn btn-outline-info me-2"><i class="fa fa-book"></i> Yêu cầu
-                                    mượn sách</a>
+                                    <button class="btn btn-outline-info me-2" id="request-borrow" data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">
+                                        <i class="fa fa-book"></i> Yêu cầu mượn sách
+                                    </button>
                             </div>
 
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

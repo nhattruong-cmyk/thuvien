@@ -153,6 +153,7 @@
                                     {{ session('info') }}
                                 </div>
                             @endif
+
                             <!--end::Search-->
                         </div>
                         <!--end::Card title-->
@@ -172,143 +173,111 @@
 
 
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+
                             <!--begin::Form-->
-                            <form class="form" action="{{ route('admin.phieumuon.insertPhieuMuon') }}"
-                                method="post"name="formadd">
+                            <form class="form" action="{{ route('admin.phieumuon.insertPhieuMuon') }}" method="post"
+                                name="formadd">
                                 @csrf
-                                <div class="d-flex justify-content-between">
-                                    <div class="w-50 pe-3">
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="required">Mã Khách Hàng</span>
-                                            </label>
-                                            <select name="userId" class="form-control form-control-solid mb-3 mb-lg-0"
-                                                id="userSelect">
-                                                <option value="">Vui lòng mã khách hàng</option>
-                                                @foreach ($users as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        data-user-name="{{ $item->name }}"
-                                                        {{ old('userId') == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->id }} - {{ $item->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('userId')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                                <div class="d-flex flex-column" id="booksContainer">
+                                    <div class="d-flex justify-content-between align-items-center mb-7">
+                                        <div class="w-50 pe-3">
+                                            <div class="fv-row mb-7">
+                                                <label class="form-label fs-6 fw-bold">
+                                                    <span class="required">Mã Khách Hàng</span>
+                                                </label>
+                                                <select name="userId"
+                                                    class="form-control form-control-solid mb-3 mb-lg-0" id="userSelect">
+                                                    <option value="">Vui lòng mã khách hàng</option>
+                                                    @foreach ($users as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            data-user-name="{{ $item->name }}"
+                                                            {{ old('userId') == $item->id ? 'selected' : '' }}>
+                                                            {{ $item->id }} - {{ $item->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('userId')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="fv-row mb-7">
+                                                <label class="form-label required fw-bold fs-6 mb-2">Tên Khách Hàng</label>
+                                                <input type="text" name="userName" id="userName"
+                                                    class="form-control form-control-solid" placeholder="Tên khách hàng"
+                                                    value="{{ old('userName') }}" readonly />
+                                                @error('userName')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="fv-row mb-7">
+                                                <label class="form-label required fw-bold fs-6 mb-2">Số điện thoại</label>
+                                                <input type="number" name="phone"
+                                                    class="form-control form-control-solid" placeholder="số điện thoại"
+                                                    value="{{ old('phone') }}" />
+                                                @error('phone')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Tên Khách Hàng</label>
-                                            <input type="text" name="userName" id="userName"
-                                                class="form-control form-control-solid" placeholder="Tên khách hàng"
-                                                value="{{ old('userName') }}" readonly />
-                                            @error('userName')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Số điện thoại</label>
-                                            <input type="number" name="phone" class="form-control form-control-solid"
-                                                placeholder="số điện thoại" value="{{ old('phone') }}" />
-                                            @error('phone')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="required">Mã Sách</span>
-                                            </label>
-                                            <select name="maSach" class="form-control form-control-solid mb-3 mb-lg-0"
-                                                id="bookSelect">
-                                                <option value="">Vui lòng chọn mã sách</option>
-                                                @foreach ($products as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        data-ten-sach="{{ $item->name }}"
-                                                        {{ old('maSach') == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->id }} - {{ $item->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('maSach')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Tên Sách</label>
-                                            <input type="text" name="tenSach" id="bookTitle"
-                                                class="form-control form-control-solid" placeholder="Tên sách"
-                                                value="{{ old('tenSach') }}" readonly />
-                                            @error('tenSach')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-
-
-
-                                    </div>
-
-                                    <div class="w-50 ps-3">
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
-                                            <input type="number" name="soluong" class="form-control form-control-solid"
-                                                placeholder="Số lượng" value="{{ old('soluong') }}" />
-                                            @error('soluong')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
-                                            <input type="date" name="ngayMuon" class="form-control form-control-solid"
-                                                placeholder="ngày mượn" value="{{ old('ngayMuon') }}" />
-                                            @error('ngayMuon')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
-                                            <input type="date" name="hanTra" class="form-control form-control-solid"
-                                                placeholder="ngày trả" value="{{ old('hanTra') }}" />
-                                            @error('hanTra')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="required">Trạng thái</span>
-                                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
-                                                    title="Country of origination"></i>
-                                            </label>
-                                            <select name="trangthai" class="form-control form-control-solid mb-3 mb-lg-0">
-                                                <option value="0" {{ old('trangthai') == 0 ? 'selected' : '' }}>Vui
-                                                    lòng chọn trạng thái</option>
-                                                <option value="1" {{ old('trangthai') == 1 ? 'selected' : '' }}>Chưa
-                                                    xác nhận</option>
-                                                <option value="2" {{ old('trangthai') == 2 ? 'selected' : '' }}>Kiểm
-                                                    duyệt</option>
-                                                <option value="3" {{ old('trangthai') == 3 ? 'selected' : '' }}>Xát
-                                                    nhận</option>
-                                            </select>
-                                            @error('trangthai')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                                        <div class="w-50 ps-3">
+                                            <button type="button" class="btn btn-primary" id="addBookBtn">Thêm
+                                                sách</button>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="text-center pt-15">
-                                    <button type="reset" class="btn btn-light me-3"
-                                        data-kt-permissions-modal-action="cancel">Hủy</button>
-                                    <input type="submit" value="Thêm mới" class="btn btn-primary">
+                                    <div id="booksList">
+                                        <!-- Existing book fields will be rendered here by JavaScript -->
+                                    </div>
+
+                                    <div class="fv-row mb-7">
+                                        <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
+                                        <input type="date" name="ngayMuon" class="form-control form-control-solid"
+                                            placeholder="ngày mượn" value="{{ old('ngayMuon') }}" />
+                                        @error('ngayMuon')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="fv-row mb-7">
+                                        <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
+                                        <input type="date" name="hanTra" class="form-control form-control-solid"
+                                            placeholder="ngày trả" value="{{ old('hanTra') }}" />
+                                        @error('hanTra')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="fv-row mb-7">
+                                        <label class="form-label fs-6 fw-bold">
+                                            <span class="required">Trạng thái</span>
+                                            <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
+                                                title="Country of origination"></i>
+                                        </label>
+                                        <select name="trangthai" class="form-control form-control-solid mb-3 mb-lg-0">
+                                            <option value="0" {{ old('trangthai') == 0 ? 'selected' : '' }}>Vui lòng
+                                                chọn trạng thái</option>
+                                            <option value="1" {{ old('trangthai') == 1 ? 'selected' : '' }}>Chưa xác
+                                                nhận</option>
+                                            <option value="2" {{ old('trangthai') == 2 ? 'selected' : '' }}>Đạng mượn
+                                            </option>
+                                            <option value="3" {{ old('trangthai') == 3 ? 'selected' : '' }}>Đã trả
+                                            </option>
+                                        </select>
+                                        @error('trangthai')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="text-center pt-15">
+                                        <button type="reset" class="btn btn-light me-3"
+                                            data-kt-permissions-modal-action="cancel">Hủy</button>
+                                        <input type="submit" value="Thêm mới" class="btn btn-primary">
+                                    </div>
                                 </div>
                             </form>
+                            <!--end::Form-->
+
+
 
 
 
@@ -383,6 +352,100 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const maxBooks = 3; // Maximum number of books
+            let bookCount = 0;
+
+            function addBookField() {
+                if (bookCount >= maxBooks) {
+                    alert('Bạn chỉ có thể thêm tối đa 3 quyển sách.');
+                    return;
+                }
+
+                bookCount++;
+                const bookList = document.getElementById('booksList');
+
+                // Create new book fields
+                const bookHtml = `
+            <div class="d-flex flex-column mb-7 book-entry">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="w-50 pe-3">
+                        <div class="fv-row mb-7">
+                            <label class="form-label fs-6 fw-bold">
+                                <span class="required">Mã Sách</span>
+                            </label>
+                            <select name="maSach[]" class="form-control form-control-solid mb-3 mb-lg-0 bookSelect">
+                                <option value="">Vui lòng chọn mã sách</option>
+                                @foreach ($products as $item)
+                                    <option value="{{ $item->id }}" data-ten-sach="{{ $item->name }}">
+                                        {{ $item->id }} - {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('maSach')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="form-label required fw-bold fs-6 mb-2">Tên Sách</label>
+                            <input type="text" name="tenSach[]" class="form-control form-control-solid bookTitle" placeholder="Tên sách" readonly />
+                            @error('tenSach')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="w-50 ps-3">
+                        <div class="fv-row mb-7">
+                            <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
+                            <input type="number" name="soluong[]" class="form-control form-control-solid" placeholder="Số lượng" />
+                            @error('soluong')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-danger removeBookBtn">Hủy</button>
+                </div>
+            </div>
+        `;
+
+                bookList.insertAdjacentHTML('beforeend', bookHtml);
+            }
+
+            // Initially add the first book field
+            addBookField();
+
+            // Handle book title update
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('bookSelect')) {
+                    const select = e.target;
+                    const bookTitle = select.closest('.d-flex').querySelector('.bookTitle');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const tenSach = selectedOption.getAttribute('data-ten-sach');
+                    bookTitle.value = tenSach || '';
+                }
+            });
+
+            // Handle removing book fields
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('removeBookBtn')) {
+                    const bookEntry = e.target.closest('.book-entry');
+                    bookEntry.remove();
+                    bookCount--;
+                }
+            });
+
+            document.getElementById('addBookBtn').addEventListener('click', addBookField);
+        });
+    </script>
+
+
+
 
 
 @endsection

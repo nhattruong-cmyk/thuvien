@@ -72,18 +72,14 @@
                                         fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->
                             <span class="d-none d-md-inline">New Member</span>
                         </a>
                     </div>
-                    <!--end::Invite user-->
-                    <!--begin::Create app-->
                     <div class="d-flex ms-3">
                         <a href="#"
                             class="btn btn-flex flex-center bg-body btn-color-gray-700 btn-active-color-primary w-40px w-md-auto h-40px px-0 px-md-6"
                             tooltip="New App" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app"
                             id="kt_toolbar_primary_button">
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
                             <span class="svg-icon svg-icon-2 svg-icon-primary me-0 me-md-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none">
@@ -93,16 +89,11 @@
                                     <path d="M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->
                             <span class="d-none d-md-inline">New App</span>
                         </a>
                     </div>
-                    <!--end::Create app-->
-                    <!--begin::Chat-->
                     <div class="d-flex align-items-center ms-3">
-                        <!--begin::Menu wrapper-->
                         <div class="btn btn-icon btn-primary w-40px h-40px pulse pulse-white" id="kt_drawer_chat_toggle">
-                            <!--begin::Svg Icon | path: icons/duotune/communication/com012.svg-->
                             <span class="svg-icon svg-icon-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none">
@@ -113,65 +104,47 @@
                                     <rect x="6" y="7" width="12" height="2" rx="1" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->
                             <span class="pulse-ring"></span>
                         </div>
-                        <!--end::Menu wrapper-->
                     </div>
-                    <!--end::Chat-->
                 </div>
-                <!--end::Toolbar wrapper-->
             </div>
-            <!--end::Container-->
         </div>
-        <!--end::Header-->
-        <!--begin::Content-->
         <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-            <!--begin::Container-->
             <div class="container-xxl" id="kt_content_container">
-                <!--begin::Card-->
                 <div class="card card-flush">
-                    <!--begin::Card header-->
                     <div class="card-header mt-6">
-                        <!--begin::Card title-->
                         <div class="card-title">
-                            <!--begin::Search-->
                             @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        
-                        @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                        
-                        @if (session('info'))
-                            <div class="alert alert-info">
-                                {{ session('info') }}
-                            </div>
-                        @endif
-                            <!--end::Search-->
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                         </div>
-                        <!--end::Card title-->
-                        <!--begin::Card toolbar-->
                         <div class="card-toolbar">
-                            <!--begin::Button-->
-                            <a href="{{ route('admin.phieumuon.listPhieuMuon') }}"><input type="button" value="Danh sách phiếu mượn"
-                                    class="btn btn-light-primary">
+                            <a href="{{ route('admin.phieumuon.listPhieuMuon') }}"><input type="button"
+                                    value="Danh sách phiếu mượn" class="btn btn-light-primary">
 
                             </a>
-                            <!--end::Button-->
                         </div>
-                        <!--end::Card toolbar-->
                     </div>
 
                     <div class="card-body pt-0">
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                            <!--begin::Form-->
-                            <form class="form" action="{{ route('admin.phieumuon.updatePhieuMuon') }}" method="post" name="formupdate">
+                            <form class="form" action="{{ route('admin.phieumuon.updatePhieuMuon') }}" method="post"
+                                name="formupdate">
                                 @csrf
                                 <div class="d-flex justify-content-between">
                                     <div class="w-50 pe-3">
@@ -179,23 +152,28 @@
                                             <label class="form-label fs-6 fw-bold">
                                                 <span class="required">Mã Khách Hàng</span>
                                             </label>
-                                            <select name="userId" class="form-control form-control-solid mb-3 mb-lg-0" id="userSelect">
+                                            <select name="userId" class="form-control form-control-solid mb-3 mb-lg-0"
+                                                id="userSelect">
                                                 <option value="">Vui lòng mã khách hàng</option>
                                                 @foreach ($users as $item)
-                                                <option value="{{ $item->id }}" data-user-name="{{ $item->name }}" {{ old('userId', $phieumuon->userId) == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->id }} - {{ $item->name }}
-                                                </option>
+                                                    <option value="{{ $item->id }}"
+                                                        data-user-name="{{ $item->name }}"
+                                                        {{ old('userId', $phieumuon->userId) == $item->id ? 'selected' : '' }}>
+                                                        {{ $item->id }} - {{ $item->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             @error('userId')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Tên Khách Hàng</label>
-                                            <input type="text" name="userName" id="userName" class="form-control form-control-solid" placeholder="Tên khách hàng" value="{{ old('userName') }}" readonly />
+                                            <input type="text" name="userName" id="userName"
+                                                class="form-control form-control-solid" placeholder="Tên khách hàng"
+                                                value="{{ old('userName') }}" readonly />
                                             @error('userName')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
@@ -211,85 +189,94 @@
                                             <label class="form-label fs-6 fw-bold">
                                                 <span class="required">Mã Sách</span>
                                             </label>
-                                            <select name="maSach" class="form-control form-control-solid mb-3 mb-lg-0" id="bookSelect">
+                                            <select name="maSach" class="form-control form-control-solid mb-3 mb-lg-0"
+                                                id="bookSelect">
                                                 <option value="{{ $phieumuon->maSach }}">Vui lòng chọn mã sách</option>
                                                 @foreach ($products as $item)
-                                                <option value="{{ $item->id }}" data-ten-sach="{{ $item->name }}" {{ old('maSach', $phieumuon->maSach) == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->id }} - {{ $item->name }}
-                                                </option>
+                                                    <option value="{{ $item->id }}"
+                                                        data-ten-sach="{{ $item->name }}"
+                                                        {{ old('maSach', $phieumuon->maSach) == $item->id ? 'selected' : '' }}>
+                                                        {{ $item->id }} - {{ $item->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             @error('maSach')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Tên Sách</label>
-                                            <input type="text" name="tenSach" id="bookTitle" class="form-control form-control-solid" placeholder="Tên sách" value="{{ $phieumuon->tenSach }}" readonly />
+                                            <input type="text" name="tenSach" id="bookTitle"
+                                                class="form-control form-control-solid" placeholder="Tên sách"
+                                                value="{{ $phieumuon->tenSach }}" readonly />
                                             @error('tenSach')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label fs-6 fw-bold">
                                                 <span class="required">Trạng thái</span>
-                                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Country of origination"></i>
+                                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
+                                                    title="Country of origination"></i>
                                             </label>
                                             <select name="trangthai" class="form-control form-control-solid mb-3 mb-lg-0">
-                                                <option value="0" {{ old('trangthai', $phieumuon->trangthai) == 0 ? 'selected' : '' }}>Vui lòng chọn trạng thái</option>
-                                                <option value="1" {{ old('trangthai', $phieumuon->trangthai) == 1 ? 'selected' : '' }}>Chưa xác nhận</option>
-                                                <option value="2" {{ old('trangthai', $phieumuon->trangthai) == 2 ? 'selected' : '' }}>Kiểm duyệt</option>
-                                                <option value="3" {{ old('trangthai', $phieumuon->trangthai) == 3 ? 'selected' : '' }}>Xát nhận</option>    
+                                                <option value="0"
+                                                    {{ old('trangthai', $phieumuon->trangthai) == 0 ? 'selected' : '' }}>
+                                                    Vui lòng chọn trạng thái</option>
+                                                <option value="1"
+                                                    {{ old('trangthai', $phieumuon->trangthai) == 1 ? 'selected' : '' }}>
+                                                    Chưa xác nhận</option>
+                                                <option value="2"
+                                                    {{ old('trangthai', $phieumuon->trangthai) == 2 ? 'selected' : '' }}>
+                                                    Đang mượn</option>
+                                                <option value="3"
+                                                    {{ old('trangthai', $phieumuon->trangthai) == 3 ? 'selected' : '' }}>
+                                                    Đã trả</option>
                                             </select>
                                             @error('trangthai')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="w-50 ps-3">
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
-                                            <input type="number" name="soluong" class="form-control form-control-solid" placeholder="Số lượng" value="{{ $phieumuon->soluong }}" />
+                                            <input type="number" name="soluong" class="form-control form-control-solid"
+                                                placeholder="Số lượng" value="{{ $phieumuon->soluong }}" />
                                             @error('soluong')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
-                                            <input type="date" name="ngayMuon" class="form-control form-control-solid" placeholder="ngày mượn" value="{{ $phieumuon->ngayMuon }}" />
+                                            <input type="date" name="ngayMuon" class="form-control form-control-solid"
+                                                placeholder="ngày mượn" value="{{ $phieumuon->ngayMuon }}" />
                                             @error('ngayMuon')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
-                                            <input type="date" name="hanTra" class="form-control form-control-solid" placeholder="ngày trả" value="{{ $phieumuon->hanTra }}" />
+                                            <input type="date" name="hanTra" class="form-control form-control-solid"
+                                                placeholder="ngày trả" value="{{ $phieumuon->hanTra }}" />
                                             @error('hanTra')
-                                            <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-center pt-15">
-                                    <button type="reset" class="btn btn-light me-3" data-kt-permissions-modal-action="cancel">Hủy</button>
+                                    <button type="reset" class="btn btn-light me-3"
+                                        data-kt-permissions-modal-action="cancel">Hủy</button>
                                     <input type="hidden" name="id" value="{{ $phieumuon->id }}">
                                     <input type="submit" value="Cập nhật" class="btn btn-primary">
                                 </div>
                             </form>
-                           <!--end::Form-->
                         </div>
-                      </div>
-                    <!--end::Card body-->
+                    </div>
                 </div>
-
-                <!--end::Modals-->
             </div>
-            <!--end::Container-->
         </div>
-        <!--end::Content-->
-        <!--begin::Footer-->
-
-        <!--end::Footer-->
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -307,44 +294,43 @@
     </script>
 
     <script>
-        
-    document.addEventListener("DOMContentLoaded", function() {
-        const userSelect = document.getElementById('userSelect');
-        const userNameInput = document.getElementById('userName');
+        document.addEventListener("DOMContentLoaded", function() {
+            const userSelect = document.getElementById('userSelect');
+            const userNameInput = document.getElementById('userName');
 
-        userSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const userName = selectedOption.getAttribute('data-user-name');
-            userNameInput.value = userName || '';
+            userSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const userName = selectedOption.getAttribute('data-user-name');
+                userNameInput.value = userName || '';
+            });
+
+            // Optionally, initialize the userName input on page load if there is a pre-selected value
+            if (userSelect.value) {
+                const selectedOption = userSelect.options[userSelect.selectedIndex];
+                const userName = selectedOption.getAttribute('data-user-name');
+                userNameInput.value = userName || '';
+            }
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const bookSelect = document.getElementById('bookSelect');
+            const bookTitleInput = document.getElementById('bookTitle');
 
-        // Optionally, initialize the userName input on page load if there is a pre-selected value
-        if (userSelect.value) {
-            const selectedOption = userSelect.options[userSelect.selectedIndex];
-            const userName = selectedOption.getAttribute('data-user-name');
-            userNameInput.value = userName || '';
-        }
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const bookSelect = document.getElementById('bookSelect');
-        const bookTitleInput = document.getElementById('bookTitle');
+            bookSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const tenSach = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = tenSach || '';
+            });
 
-        bookSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const tenSach = selectedOption.getAttribute('data-ten-sach');
-            bookTitleInput.value = tenSach || '';
+            // Optionally, initialize the tenSach input on page load if there is a pre-selected value
+            if (bookSelect.value) {
+                const selectedOption = bookSelect.options[bookSelect.selectedIndex];
+                const tenSach = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = tenSach || '';
+            }
         });
-
-        // Optionally, initialize the tenSach input on page load if there is a pre-selected value
-        if (bookSelect.value) {
-            const selectedOption = bookSelect.options[bookSelect.selectedIndex];
-            const tenSach = selectedOption.getAttribute('data-ten-sach');
-            bookTitleInput.value = tenSach || '';
-        }
-    });
-</script>
+    </script>
 
 
 @endsection
