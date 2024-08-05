@@ -66,14 +66,10 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="website">Mật khẩu</label>
-                                        <input type="password" name="password" class="form-control" id="website"
-                                            placeholder="Website url" value="{{ old('email', $user->email) }}" disabled
-                                            required>
-                                    </div>
-                                </div>
+                                
+                                <a href="{{ route('password.reset', ['token' => $user->id]) }}">Đổi mật kh</a>
+
+ 
                             </div>
                             <button type="submit" class="btn btn-primary">Cập Nhật</button>
 
