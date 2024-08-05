@@ -56,10 +56,7 @@
                             <div class="d-flex mt-3">
                                 <input type="number" class="btn border rounded me-2" id="quantity" value="1"
                                     name="quantity" min="1" max="5">
-                                <a href="#" class="btn btn-primary me-2">
-
-                                    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
-                                </a>
+                         
                                 <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
                                     thích</a>
                                     <button class="btn btn-outline-info me-2" id="request-borrow" data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">

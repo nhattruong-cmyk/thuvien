@@ -18,7 +18,7 @@ use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Http\Requests\Role\InsertRoleRequest;
 use App\Http\Requests\User\InsertUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-
+use App\Models\Comment;
 
 class AdminController extends Controller
 {
@@ -154,7 +154,22 @@ class AdminController extends Controller
         return view('admin.productlist', compact('categories', 'products', 'query'));
     }
 
-
+    // COMMENT --------------------------------------------------------------------------------------------------------------------------
+    public function listComment()
+    {
+        $comments = Comment::with('user', 'product')->orderBy('created_at', 'desc')->paginate(100);
+        return view('admin.comment.list', compact('comments'));
+    }
+    public function delComment($id)
+    {
+        $comment = Comment::find($id);
+        if ($comment) {
+            $comment->delete();
+            return response()->json(['success' => true, 'message' => 'Bình luận đã được xóa thành công.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy bình luận.']);
+        }
+    }
     // USERS -----------------------------------------------------------------------------------------------------------------------
     public function listUser()
     {
