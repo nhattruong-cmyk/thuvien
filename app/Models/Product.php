@@ -15,6 +15,8 @@ class Product extends Model
         'img',
         'quantity',
         'description',
+        'author',
+        'publication_year',
         'category_id'
     ];
     public function category()

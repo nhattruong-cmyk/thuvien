@@ -20,6 +20,7 @@ use App\Http\Requests\Role\InsertRoleRequest;
 use App\Http\Requests\User\InsertUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -154,6 +155,30 @@ class AdminController extends Controller
 
         return view('admin.productlist', compact('categories', 'products', 'query'));
     }
+    // AdminController.php
+
+    public function productDetails($id)
+    {
+        try {
+            $product = Product::with('category')->findOrFail($id); // Với mối quan hệ category
+            return response()->json([
+                'name' => $product->name,
+                'price' => $product->price,
+                'author' => $product->author,
+                'quantity' => $product->quantity,
+                'publication_year' => $product->publication_year,
+                'description' => $product->description,
+                'img' => $product->img,
+                'category_id' => $product->category_id,
+                'category_name' => $product->category ? $product->category->name : 'Chưa có danh mục'
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
+    }
+    
+
 
     // COMMENT --------------------------------------------------------------------------------------------------------------------------
     public function listComment()
@@ -288,15 +313,15 @@ class AdminController extends Controller
     public function approveDelete(User $user)
     {
         $requestedAt = Carbon::parse($user->delete_requested_at);
-    
+
         if ($user->delete_request && $requestedAt->diffInDays(now()) <= 3) {
             $user->delete();
             return redirect()->route('admin.user.listUser')->with('status', 'Tài khoản đã được xóa.');
         }
-    
+
         return redirect()->route('admin.user.listUser')->with('error', 'Yêu cầu xóa tài khoản đã hết hạn hoặc không hợp lệ.');
     }
-    
+
 
 
 }

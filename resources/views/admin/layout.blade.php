@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <base href="">
     <title>Quản lý Thư viện</title>
@@ -31,6 +32,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @stack('styles')
+
 </head>
 
 
@@ -51,6 +54,7 @@
 
 
                 @include('admin.footer')
+    @stack('scripts')
 
 </body>
 

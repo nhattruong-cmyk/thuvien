@@ -1,0 +1,37 @@
+/* public/css/styles.css */
+.description {
+    max-height: 100px;
+    /* Chiều cao tối đa khi thu gọn */
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 1;
+}
+
+.description.expanded {
+    max-height: 1000px;
+    /* Chiều cao khi mở rộng */
+    opacity: 1;
+}
+
+.description.expanding {
+    transition: none;
+    /* Để không có hiệu ứng khi đang mở rộng */
+}
+
+.see-more {
+    color: #007bff;
+    /* Màu xanh lam cho nút Xem thêm */
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+.see-more:hover {
+    color: #0056b3;
+    /* Màu xanh đậm hơn khi hover */
+}
+
+.description p {
+    margin-bottom: 0;
+}

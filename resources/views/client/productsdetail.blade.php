@@ -47,11 +47,8 @@
                                 descriptions address your ideal buyer directly and personally.</p>
                             <ul class="list-unstyled">
                                 <li><strong>Danh mục:</strong> {{ $product->category->name }}</li>
-                                <li><strong>Tác giả:</strong> Nguyễn Thanh Phong</li>
-                                <li><strong>Khổ sách:</strong> 15.5x23 cm</li>
-                                <li><strong>Số trang:</strong> 368 trang</li>
-                                <li><strong>Trọng lượng:</strong> 200 g</li>
-                                <li><strong>Năm xuất bản:</strong> 2024</li>
+                                <li><strong>Tác giả:</strong> {{ $product->author }}</li>
+                                <li><strong>Năm xuất bản:</strong>{{ $product->publication_year }}</li>
                             </ul>
                             <div class="d-flex mt-3">
                                 <input type="number" class="btn border rounded me-2" id="quantity" value="1"

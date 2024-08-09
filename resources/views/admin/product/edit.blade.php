@@ -176,35 +176,49 @@
                             <form class="form" action="{{ route('admin.product.updatePro') }}" method="post" enctype="multipart/form-data" name="formadd">
                                 @csrf
                                 <div class="d-flex justify-content-between">
+                                  
                                     <div class="w-50 pe-3">
+                                    
                                         <div class="fv-row mb-7">
                                             <label class="required fw-bold fs-6 mb-2">Tên sản phẩm</label>
                                             <input type="text" name="name" class="form-control form-control-solid" placeholder="Tên sản phẩm" value="{{ old('name', $product->name) }}" />
                                             @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                             
+                                      
                                         <div class="fv-row mb-7">
                                             <label class="required fw-bold fs-6 mb-2">Giá</label>
                                             <input type="number" name="price" class="form-control form-control-solid" placeholder="Giá tiền" value="{{ old('price', $product->price) }}" />
                                             @error('price')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                            
+                                      
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-bold fs-6 mb-2">Tác giả</label>
+                                            <input type="text" name="author" class="form-control form-control-solid" placeholder="Tác giả" value="{{ old('author', $product->author) }}" />
+                                            @error('author')
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                             
+                             
                                     <div class="w-50 ps-3">
+                                      
                                         <div class="fv-row mb-7">
                                             <label class="required fw-bold fs-6 mb-2">Số lượng</label>
                                             <input type="number" name="quantity" class="form-control form-control-solid" placeholder="Số lượng" value="{{ old('quantity', $product->quantity) }}" />
                                             @error('quantity')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                             
-                                        <div class="d-flex flex-column mb-7 fv-row">
                                         
+                                        <div class="d-flex flex-column mb-7 fv-row">
                                             <label class="fs-6 fw-bold mb-2">
                                                 <span class="required">Danh mục</span>
                                                 <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Country of origination"></i>
@@ -212,25 +226,36 @@
                                             <select name="category_id" class="form-control form-control-solid mb-3 mb-lg-0">
                                                 <option value="0" selected>Vui lòng chọn danh mục</option>
                                                 @foreach ($categories as $item)
-                                                    <option value="{{ $item->id }}" {{ old('category_id', $product->category_id) == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->name }}
-                                                    </option>
+                                                <option value="{{ $item->id }}" {{ old('category_id', $product->category_id) == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->name }}
+                                                </option>
                                                 @endforeach
                                             </select>
                                             @error('category_id')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                            
+                                     
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-bold fs-6 mb-2">Năm xuất bản</label>
+                                            <input type="text" name="publication_year" class="form-control form-control-solid" placeholder="Năm xuất bản" value="{{ old('publication_year', $product->publication_year) }}" />
+                                            @error('publication_year')
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
                             
+                             
                                 <div class="d-flex justify-content-between">
+                        
                                     <div class="w-50 pe-3">
+                             
                                         <div class="fv-row mb-7">
                                             <label class="d-block fw-bold fs-6 mb-5">Ảnh sản phẩm</label>
                                             <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(../assets/media/avatars/blank.png)">
                                                 <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('uploaded/' . $product->img) }});"></div>
-                            
                                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
                                                     <i class="bi bi-pencil-fill fs-7"></i>
                                                     <input type="file" name="img" accept=".png, .jpg, .jpeg" />
@@ -244,30 +269,34 @@
                                             </div>
                                             <div class="form-text">Các loại tệp được phép: png, jpg, jpeg.</div>
                                             @error('img')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                             
+                                    <!-- Cột phải -->
                                     <div class="w-50 ps-3">
+                                        <!-- Mô tả -->
                                         <div class="d-flex flex-column mb-7 fv-row">
                                             <div class="fs-5 fw-bolder form-label mb-3">Mô tả
                                                 <i class="cursor-pointer fas fa-exclamation-circle ms-2 fs-7"></i>
                                             </div>
                                             <textarea class="form-control form-control-solid rounded-3" name="description" rows="4">{{ old('description', $product->description) }}</textarea>
                                             @error('description')
-                                                <span class="text-danger">{{ $message }}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
                             
+                                <!-- Nút hành động -->
                                 <div class="text-center pt-15">
                                     <button type="reset" class="btn btn-light me-3" data-kt-permissions-modal-action="cancel">Hủy</button>
                                     <input type="hidden" name="id" value="{{ $product->id }}">
                                     <input type="submit" value="Cập nhật" class="btn btn-primary">
                                 </div>
                             </form>
+                            
                             
                             
                             

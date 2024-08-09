@@ -40,11 +40,19 @@ class ProductController extends Controller
         $userStatus = null;
         
         if ($user) {
-            $userStatus = DB::table('phieu_muons')
+            // Kiểm tra trạng thái phieumuon của người dùng đối với sản phẩm này
+            $phieumuon = DB::table('phieu_muons')
                 ->where('userId', $user->id)
-                ->value('trangthai'); // Lấy trạng thái của người dùng
+                ->where('maSach', $product->id)
+                ->where('trangthai', 3)
+                ->exists();
     
-            $canRate = $userStatus == 1;
+            if ($phieumuon) {
+                $canRate = true;
+                $userStatus = 3; // Đặt userStatus thành 3 để dùng cho các điều kiện trong view
+            } else {
+                $canRate = false;
+            }
         }
     
         // Lấy 5 bình luận mới nhất
@@ -55,6 +63,7 @@ class ProductController extends Controller
         return view('client.productsdetail', compact('product', 'relatedproducts', 'pageTitle', 'comments', 'canRate', 'totalComments', 'userStatus'));
     }
     
+  
     public function productsByCategory($id)
     {
         $category = Category::findOrFail($id);
@@ -62,17 +71,6 @@ class ProductController extends Controller
         $categories = Category::all();
         return view('client.products', compact('products', 'categories', 'category'));
     }
-
-
-
-
-
-
-
-
-
-
-
 
     public function listPhieuMuon()
     {

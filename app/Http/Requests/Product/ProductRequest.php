@@ -29,6 +29,8 @@ class ProductRequest extends FormRequest
             'quantity' => 'required|numeric',
             'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
+            'author' => 'required|string|max:255',
+            'publication_year' => 'required|digits:4|integer',
         ];
         
     }
@@ -48,6 +50,11 @@ class ProductRequest extends FormRequest
             'img.file' => 'File tải lên phải là định dạng hình ảnh.',
             'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
             'img.max' => 'Kích thước hình ảnh tối đa là 2MB.',
+            'author.required' => 'Vui lòng nhập tên tác giả.',
+            'author.max' => 'Tên tác giả không được vượt quá 255 ký tự.',
+            'publication_year.required' => 'Vui lòng nhập năm xuất bản.',
+            'publication_year.digits' => 'Năm xuất bản phải có 4 chữ số.',
+            'publication_year.integer' => 'Năm xuất bản phải là một số nguyên.',
         ];
         
     }

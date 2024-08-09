@@ -62,6 +62,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
         Route::get('formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
         Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
+
     });
 
     //category
@@ -117,6 +118,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 Route::get('/admin/phieumuon/details/{id}', [PhieuMuonController::class, 'getDetails'])->name('admin.phieumuon.getDetails');
+
+
+Route::get('/admin/product/details/{id}', [AdminController::class, 'productDetails']);
+
+
 
 //comment
 Route::post('/comments/load-more', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');

@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     star.textContent = star.dataset.value <= commentRating ? "★" : "☆";
                 });
 
-                if (userStatus === 1) {
+                if (userStatus === 3) {
                     document.getElementById("ratingFields").style.display = "block";
                 } else {
                     document.getElementById("ratingFields").style.display = "none";
@@ -276,18 +276,21 @@ document.addEventListener("DOMContentLoaded", function () {
         new bootstrap.Tab(document.querySelector("#summary-tab")).show();
     }
 
-    document.querySelectorAll("#rating-stars .rating-star").forEach((star) => {
-        star.addEventListener("click", function () {
-            const rating = this.getAttribute("data-value");
-            document.getElementById("rating").value = rating;
-            document
-                .querySelectorAll("#rating-stars .rating-star")
-                .forEach((s) => {
-                    s.textContent =
-                        s.getAttribute("data-value") <= rating ? "★" : "☆";
-                });
+    if (userStatus === 3) {
+        document.querySelectorAll("#rating-stars .rating-star").forEach((star) => {
+            star.addEventListener("click", function () {
+                const rating = this.getAttribute("data-value");
+                document.getElementById("rating").value = rating;
+                document
+                    .querySelectorAll("#rating-stars .rating-star")
+                    .forEach((s) => {
+                        s.textContent =
+                            s.getAttribute("data-value") <= rating ? "★" : "☆";
+                    });
+            });
         });
-    });
+    }
+    
 
     const flashActiveTab = "{{ session('activeTab') }}";
     if (flashActiveTab) {

@@ -2,6 +2,9 @@
 
 @section('titlepage', 'Danh sách sản phẩm')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/adminPro.css') }}">
+@endpush
 
 @section('content')
 
@@ -162,8 +165,8 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('admin.product.formaddPro') }}"><input type="button" value="Thêm mới sản phẩm"
-                                    class="btn btn-light-primary">
+                            <a href="{{ route('admin.product.formaddPro') }}"><input type="button"
+                                    value="Thêm mới sản phẩm" class="btn btn-light-primary">
 
                             </a>
                             <!--end::Button-->
@@ -228,16 +231,17 @@
                                                 Ảnh không tìm thấy
                                             @endif
                                         </td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }} vnđ</td>
+                                        <td>{{ number_format($item->price, 0, ',', '.') }} ₫</td>
                                         <td>{{ $item->quantity }}</td>
-                                        {{-- <td>{{ $item->sold }}</td> --}}
-                                        {{-- <td>{{ $item->description }}</td> --}}
                                         <td>
                                             <a href="{{ route('admin.product.formupdatePro', $item->id) }}"><input
                                                     class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
                                                     class="btn btn-danger btn-sm" value="Xóa"></a>
+                                            <button type="button" class="btn btn-info mt-2"
+                                                onclick="showProductDetails({{ $item->id }})">Xem chi tiết</button>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -255,14 +259,45 @@
         <!--end::Content-->
         <!--end::Footer-->
     </div>
-    <script>
-        function confirmDelete(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-                window.location.href = "{{ url('admin/product/delPro') }}/" + id;
-            } else {
-                alert("Thao tác đã được hủy");
-            }
-        }
-    </script>
-    
+
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Chi tiết sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="productImage" src="" alt="Ảnh sản phẩm" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Tên:</strong> <span id="productName"></span></p>
+                            <p><strong>Giá:</strong> <span id="productPrice"></span></p>
+                            <p><strong>Tác giả:</strong> <span id="productAuthor"></span></p>
+                            <p><strong>Số lượng:</strong> <span id="productQuantity"></span></p>
+                            <p><strong>Năm xuất bản:</strong> <span id="productPublicationYear"></span></p>
+                            <p><strong>Danh mục:</strong> <span id="productCategory"></span></p>
+                            <div class="mb-3">
+                                <label for="productDescription" class="form-label">Mô tả:</label>
+                                <div class="description" id="description">
+                                    <p id="productDescription"></p>
+                                </div>
+                                <p class="see-more" id="see-more">Xem thêm</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @endsection
+@push('scripts')
+    <script src="{{ asset('js/adminPro.js') }}"></script>
+@endpush
