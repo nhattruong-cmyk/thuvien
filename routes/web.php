@@ -102,6 +102,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/delPhieuMuon/{id}', [PhieuMuonController::class, 'delPhieuMuon'])->name('delPhieuMuon');
         Route::get('formupdatePhieuMuon/{id}', [PhieuMuonController::class, 'formupdatePhieuMuon'])->name('formupdatePhieuMuon');
         Route::post('/updatePhieuMuon', [PhieuMuonController::class, 'updatePhieuMuon'])->name('updatePhieuMuon');
+        Route::post('/updateStatus/{id}', [PhieuMuonController::class, 'updateStatus'])->name('updateStatus');
+        // web.php
+        Route::delete('/phieumuon/bulk-delete', [PhieuMuonController::class, 'bulkDelete'])->name('bulkDelete');
+
+
 
     });
     //comment
@@ -123,7 +128,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/request-delete', [ProfileController::class, 'requestDelete'])->name('profile.requestDelete');
 
+    Route::post('/admin/users/{user}/approve-delete', [AdminController::class, 'approveDelete'])->name('admin.approveDelete');
+
+
+    Route::get('/change-password', [ProfileController::class, 'change_password'])->name('auth.change-password');
+    Route::post('/change-password', [ProfileController::class, 'check_change_password']);
 
     //Route comment
     Route::post('/comments/send', [CommentController::class, 'send'])->name('comments.send');
@@ -135,35 +146,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
-Route::get('/reset-password/{token}', function ($token) {
-    return view('auth.reset-password', ['token' => $token]);
-})->name('password.reset');
 
-
-Route::post('/reset-password', function (Request $request) {
-    $request->validate([
-        'token' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $status = Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function (User $user, string $password) {
-            $user->forceFill([
-                'password' => Hash::make($password)
-            ])->setRememberToken(Str::random(60));
-
-            $user->save();
-
-            event(new PasswordReset($user));
-        }
-    );
-
-    return $status === Password::PASSWORD_RESET
-        ? redirect()->route('login')->with('status', __($status))
-        : back()->withErrors(['email' => [__($status)]]);
-})->middleware('guest')->name('password.update');
 
 
 Route::get('/dashboard', function () {

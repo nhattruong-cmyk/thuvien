@@ -22,7 +22,7 @@
                             </div>
                             <div class="about">
                                 <ul class="nav navbar-nav menu_nav ml-auto">
-                                    <li class="nav-item"> <a class="nav-link" href="#"
+                                    <li class="nav-item"> <a class="btn btn-danger" href="#"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng
                                             xuất</a></li>
                                 </ul>
@@ -44,7 +44,7 @@
                         <div class="card-body">
                             <div class="row gutters">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <h6 class="mb-2 text-primary">Thông tin cá nhân</h6>
+                                    <h4 class="mb-2 text-primary">Thông tin cá nhân</h4>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
@@ -66,21 +66,22 @@
                                         @enderror
                                     </div>
                                 </div>
-                                
-                                <a href="{{ route('password.reset', ['token' => $user->id]) }}">Đổi mật kh</a>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <a href="{{ route('auth.change-password') }}">Đổi mật khẩu</a>
+                                </div>
 
- 
+                                <button type="submit" class="btn btn-primary btn-sm mt-2">Cập Nhật</button>
+
                             </div>
-                            <button type="submit" class="btn btn-primary">Cập Nhật</button>
 
                         </div>
                     </div>
                 </form>
-                <form method="POST" action="{{ route('profile.destroy') }}" class="mt-4">
+                <form method="POST" action="{{ route('profile.requestDelete') }}" class="mt-4">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Xóa Tài Khoản</button>
+                    <button type="submit" class="btn btn-warning">Gửi Yêu Cầu Xóa Tài Khoản</button>
                 </form>
+                
             </div>
 
 

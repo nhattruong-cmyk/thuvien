@@ -33,4 +33,8 @@ class PhieuMuon extends Model
     {
         return $this->belongsTo(User::class, 'userId');
     }
+    public function phieuMuonDetails()
+    {
+        return $this->hasMany(PhieuMuon::class, 'id');
+    }
 }

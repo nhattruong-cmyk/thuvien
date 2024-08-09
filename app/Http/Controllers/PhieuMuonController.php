@@ -19,17 +19,24 @@ use Illuminate\Support\Facades\Auth;
 class PhieuMuonController extends Controller
 {  
 
-    public function listPhieuMuon()
+    public function listPhieuMuon(Request $request)
     {
         $categories = Category::orderBy('id', 'DESC')->get();
         $users = User::orderBy('id', 'DESC')->get();
-        $phieumuon = PhieuMuon::orderBy('id', 'DESC')->paginate(100);
         $products = Product::orderBy('id', 'DESC')->get();
+        $query = PhieuMuon::orderBy('id', 'DESC');
+    
+        // Kiểm tra nếu có yêu cầu lọc theo trạng thái
+        if ($request->has('trangthai') && $request->trangthai != '') {
+            $query->where('trangthai', $request->trangthai);
+        }
+    
+        $phieumuon = $query->paginate(100);
         $getOnePM = PhieuMuon::orderBy('id', 'DESC')->paginate(100);
-
-
-        return view('admin.phieumuon.list', compact('phieumuon', 'users', 'products','getOnePM', 'categories'));
+    
+        return view('admin.phieumuon.list', compact('phieumuon', 'users', 'products', 'getOnePM', 'categories'));
     }
+    
 
     public function formaddPhieuMuon()
     {
@@ -219,7 +226,68 @@ class PhieuMuonController extends Controller
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật phiếu mượn: ' . $e->getMessage());
         }
     }
+
+
+    public function updateStatus($id)
+    {
+        $phieumuon = PhieuMuon::findOrFail($id);
     
+        DB::beginTransaction();
+    
+        try {
+            // Kiểm tra nếu phiếu mượn đã có trạng thái 3 thì không làm gì cả
+            if ($phieumuon->trangthai == 3) {
+                DB::rollBack();
+                return redirect()->back()->with('info', 'Phiếu mượn đã có trạng thái 3.');
+            }
+    
+            // Nếu trạng thái là 1 hoặc 2, cập nhật trạng thái và số lượng sản phẩm
+            if ($phieumuon->trangthai != 3) {
+                // Cập nhật trạng thái phiếu mượn
+                $phieumuon->trangthai = 3;
+                $phieumuon->save();
+    
+                // Cập nhật số lượng sản phẩm trong kho
+                $product = Product::find($phieumuon->maSach);
+    
+                if ($product) {
+                    // Thay vì kiểm tra điều kiện phức tạp, chỉ cần cộng số lượng
+                    $product->quantity += $phieumuon->soluong;
+                    $product->save();
+                } else {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+                }
+            }
+    
+            DB::commit();
+            return redirect()->route('admin.phieumuon.listPhieuMuon')->with('success', 'Trạng thái phiếu mượn đã được cập nhật thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật phiếu mượn: ' . $e->getMessage());
+        }
+    }
+    
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+    
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Chưa chọn phiếu mượn nào để xóa.');
+        }
+    
+        DB::beginTransaction();
+    
+        try {
+            PhieuMuon::whereIn('id', $ids)->delete();
+            DB::commit();
+    
+            return redirect()->route('admin.phieumuon.listPhieuMuon')->with('success', 'Xóa đồng loạt thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi xóa phiếu mượn: ' . $e->getMessage());
+        }
+    }
     
     
 

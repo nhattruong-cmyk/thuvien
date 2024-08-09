@@ -162,7 +162,6 @@
 
                             <a href="{{ route('admin.phieumuon.formaddPhieuMuon') }}"><input type="button"
                                     value="Thêm mới phiếu mượn" class="btn btn-light-primary">
-
                             </a>
 
                         </div>
@@ -187,74 +186,135 @@
                             </div>
                         @endif
 
-                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
-                            <thead>
-                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">Mã phiếu</th>
-                                    <th class="min-w-125px">Trạng thái</th>
-                                    <th class="min-w-125px">Tên khách hàng</th>
-                                    <th class="min-w-125px">Ngày mượn</th>
-                                    <th class="min-w-125px">Hạn Trả</th>
-                                    <th class="min-w-125px">Hành động</th>
-                                </tr>
-                            </thead>
-                            @php
-                                use Carbon\Carbon;
-                            @endphp
+                        <form action="{{ route('admin.phieumuon.listPhieuMuon') }}" class="d-flex justify-content-start"
+                            method="GET">
+                            <div class="mb-3">
+                                <select name="trangthai" id="trangthai" class="form-control form-control-solid mb-3 mb-lg-0 form-select">
+                                    <option value="" {{ request('trangthai') == '' ? 'selected' : '' }}>Tất cả
+                                    </option>
+                                    <option value="1" {{ request('trangthai') == '1' ? 'selected' : '' }}>Chưa xác
+                                        nhận</option>
+                                    <option value="2" {{ request('trangthai') == '2' ? 'selected' : '' }}>Đang mượn
+                                    </option>
+                                    <option value="3" {{ request('trangthai') == '3' ? 'selected' : '' }}>Đã trả
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-funnel"></i></button>
+                            </div>
+                        </form>
 
-                            <tbody class="fw-bold text-gray-600">
-                                @foreach ($phieumuon as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->trangthai == '1' ? 'Chưa xát nhận' : ($item->trangthai == '2' ? 'Đang mượn' : 'Đã trả') }}
-                                        </td>
-                                        <td>{{ $item->userName }}</td>
-                                        <td>{{ Carbon::parse($item->ngayMuon)->format('d/m/Y') }}</td>
-                                        <td>{{ Carbon::parse($item->hanTra)->format('d/m/Y') }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
-                                                <input class="btn btn-warning btn-sm" type="button" value="Sửa">
-                                            </a>
-                                            <a href="javascript:void(0);" onclick="confirmDelete({{ $item->id }})">
-                                                <input type="button" class="btn btn-danger btn-sm" value="Xóa">
-                                            </a>
-                                            <a href="javascript:void(0);" onclick="showDetails({{ $item->id }})">
-                                                <input type="button" class="btn btn-info btn-sm" value="...">
-                                            </a>
+                        <form action="{{ route('admin.phieumuon.bulkDelete') }}" method="POST" id="bulk-delete-form">
+                            @csrf
+                            @method('DELETE')
 
-                                        </td>
-                                        <!-- Modal -->
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="detailsModal" tabindex="-1"
-                                            aria-labelledby="detailsModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu mượn
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body" id="detailsContent">
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Đóng</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <button type="submit" class="btn btn-danger btn-sm" id="bulk-delete-btn"><i class="bi bi-trash"></i></button>
 
 
+                            <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
 
-                                        {{--  end modal --}}
-
+                                <thead>
+                                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                        <th><input type="checkbox" id="select-all"></th>
+                                        <th class="min-w-125px">Mã phiếu</th>
+                                        <th class="min-w-125px">Trạng thái</th>
+                                        <th class="min-w-125px">Tên khách hàng</th>
+                                        <th class="min-w-125px">Ngày mượn</th>
+                                        <th class="min-w-125px">Hạn Trả</th>
+                                        <th class="min-w-125px">Hành động</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
+                                </thead>
+                                @php
+                                    use Carbon\Carbon;
+                                @endphp
+
+                                <tbody class="fw-bold text-gray-600">
+                                    @foreach ($phieumuon as $item)
+                                        @php
+                                            $hanTra = \Carbon\Carbon::parse($item->hanTra);
+                                            $now = now();
+                                            $isLate = $hanTra->isPast() && $item->trangthai == '2';
+                                            $daysLate = $isLate ? round($now->diffInDays($hanTra, false)) : 0;
+                                        @endphp
+                                        <tr class="{{ $isLate ? 'text-danger' : '' }}">
+                                            <td><input type="checkbox" name="ids[]" value="{{ $item->id }}"></td>
+                                            <td>{{ $item->id }}</td>
+                                            <td>{{ $item->trangthai == '1' ? 'Chưa xát nhận' : ($item->trangthai == '2' ? 'Đang mượn' : 'Đã trả') }}
+                                            </td>
+                                            <td>{{ $item->userName }}</td>
+                                            <td>{{ Carbon::parse($item->ngayMuon)->format('d/m/Y') }}</td>
+                                            <td>
+                                                {{ Carbon::parse($item->hanTra)->format('d/m/Y') }}
+                                                @if ($isLate)
+                                                    <br><span class="text-danger">Đã trễ {{ $daysLate }} ngày</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{-- <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
+                                                    <input class="btn btn-warning btn-sm" value="Sửa" type="button">
+                                                </a> --}}
+                                                {{-- <a href="javascript:void(0);"
+                                                    onclick="confirmDelete({{ $item->id }})">
+                                                    <input type="button" class="btn btn-danger btn-sm" value="Xóa">
+                                                </a> --}}
+                                                <a href="javascript:void(0);" onclick="showDetails({{ $item->id }})">
+                                                    <input type="button" class="btn btn-info btn-sm" value="...">
+                                                </a>
+                        </form>
+                        <!-- Nút Trả -->
+                        <form action="{{ route('admin.phieumuon.updateStatus', $item->id) }}" method="POST"
+                            style="display:inline;" onsubmit="return confirmStatusChange();">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-sm">Trả</button>
+                        </form>
+
+                        <script>
+                            function confirmStatusChange() {
+                                return confirm("Bạn có chắc chắn muốn thay đổi trạng thái?");
+                            }
+                        </script>
+
+                        </td>
+                        </tr>
+                        <!-- Modal -->
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu
+                                            mượn
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" id="detailsContent">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
+                                            <input class="btn btn-warning btn-sm" value="Sửa" type="button">
+                                        </a>
+                                        {{-- <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Đóng</button> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        {{--  end modal --}}
+
+                        </tr>
+                        @endforeach
+                        </tbody>
                         </table>
+
+
 
 
 
@@ -265,11 +325,36 @@
     </div>
 
     <style>
+        .text-danger {
+            color: red !important;
+            font-weight: bold;
+        }
+
+        .text-warning {
+            color: rgb(152, 147, 9) !important;
+            font-weight: bold;
+        }
+
         .modal-dialog {
             max-width: 90%;
             width: 70%;
         }
     </style>
+
+    <script>
+        document.getElementById('select-all').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('bulk-delete-btn').addEventListener('click', function(event) {
+            event.preventDefault(); // Ngăn chặn form gửi tự động
+
+            if (confirm('Bạn có chắc chắn muốn xóa các mục đã chọn?')) {
+                document.getElementById('bulk-delete-form').submit(); // Gửi form nếu người dùng xác nhận
+            }
+        });
+    </script>
 
     <script>
         function confirmDelete(id) {

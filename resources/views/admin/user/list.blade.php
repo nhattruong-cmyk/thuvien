@@ -242,6 +242,18 @@
 
                         </table>
                         <!--end::Table-->
+
+
+                        @foreach ($usersWithDeleteRequest as $user)
+                        <form method="POST" action="{{ route('admin.approveDelete', $user->id) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Phê Duyệt Xóa Tài Khoản</button>
+                        </form>
+                    @endforeach
+                    
+                    
+                    
+                        
                     </div>
                     <!--end::Card body-->
                 </div>

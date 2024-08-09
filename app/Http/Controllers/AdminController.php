@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Models\PhieuMuon;
 use App\Http\Requests\Product\ProductRequest;
 use App\Http\Requests\Category\CategoryRequest;
@@ -174,8 +175,9 @@ class AdminController extends Controller
     public function listUser()
     {
         $roles = Role::orderBy('role_name', 'ASC')->get();
+        $usersWithDeleteRequest = User::where('delete_request', true)->paginate(10);
         $users = User::orderBy('id', 'ASC')->paginate(15);
-        return view('admin.user.list', compact('roles', 'users'));
+        return view('admin.user.list', compact('roles', 'users', 'usersWithDeleteRequest'));
     }
     public function formaddUser()
     {
@@ -279,5 +281,22 @@ class AdminController extends Controller
         // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
         return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
     }
+
+
+
+
+    public function approveDelete(User $user)
+    {
+        $requestedAt = Carbon::parse($user->delete_requested_at);
+    
+        if ($user->delete_request && $requestedAt->diffInDays(now()) <= 3) {
+            $user->delete();
+            return redirect()->route('admin.user.listUser')->with('status', 'Tài khoản đã được xóa.');
+        }
+    
+        return redirect()->route('admin.user.listUser')->with('error', 'Yêu cầu xóa tài khoản đã hết hạn hoặc không hợp lệ.');
+    }
+    
+
 
 }
