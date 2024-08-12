@@ -43,6 +43,7 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Tài khoản của
                                         tôi</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{{ route('cart') }}">Tủ sách của tôi</a></li>
                                 <li class="nav-item"> <a class="nav-link" href="#"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng
                                         xuất</a></li>

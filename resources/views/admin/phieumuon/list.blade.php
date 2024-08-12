@@ -189,14 +189,15 @@
                         <form action="{{ route('admin.phieumuon.listPhieuMuon') }}" class="d-flex justify-content-start"
                             method="GET">
                             <div class="mb-3">
-                                <select name="trangthai" id="trangthai" class="form-control form-control-solid mb-3 mb-lg-0 form-select">
-                                    <option value="" {{ request('trangthai') == '' ? 'selected' : '' }}>Tất cả
+                                <select name="status" id="status"
+                                    class="form-control form-control-solid mb-3 mb-lg-0 form-select">
+                                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>Tất cả
                                     </option>
-                                    <option value="1" {{ request('trangthai') == '1' ? 'selected' : '' }}>Chưa xác
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Chưa xác
                                         nhận</option>
-                                    <option value="2" {{ request('trangthai') == '2' ? 'selected' : '' }}>Đang mượn
+                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Đang mượn
                                     </option>
-                                    <option value="3" {{ request('trangthai') == '3' ? 'selected' : '' }}>Đã trả
+                                    <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>Đã trả
                                     </option>
                                 </select>
                             </div>
@@ -209,7 +210,8 @@
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger btn-sm" id="bulk-delete-btn"><i class="bi bi-trash"></i></button>
+                            <button type="submit" class="btn btn-danger btn-sm" id="bulk-delete-btn"><i
+                                    class="bi bi-trash"></i></button>
 
 
                             <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
@@ -217,12 +219,13 @@
                                 <thead>
                                     <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                         <th><input type="checkbox" id="select-all"></th>
-                                        <th class="min-w-125px">Mã phiếu</th>
+                                        <th class="min-w-50px">Mã</th>
                                         <th class="min-w-125px">Trạng thái</th>
-                                        <th class="min-w-125px">Tên khách hàng</th>
-                                        <th class="min-w-125px">Ngày mượn</th>
-                                        <th class="min-w-125px">Hạn Trả</th>
-                                        <th class="min-w-125px">Hành động</th>
+                                        <th class="min-w-125px">khách hàng</th>
+                                        <th class="min-w-140px">Tên Sách</th>
+                                        <th class="min-w-75px">Ngày mượn</th>
+                                        <th class="min-w-50px">Hạn Trả</th>
+                                        <th class="min-w-150px">Hành động</th>
                                     </tr>
                                 </thead>
                                 @php
@@ -232,32 +235,31 @@
                                 <tbody class="fw-bold text-gray-600">
                                     @foreach ($phieumuon as $item)
                                         @php
-                                            $hanTra = \Carbon\Carbon::parse($item->hanTra);
+                                            $returned_at = \Carbon\Carbon::parse($item->returned_at);
                                             $now = now();
-                                            $isLate = $hanTra->isPast() && $item->trangthai == '2';
-                                            $daysLate = $isLate ? round($now->diffInDays($hanTra, false)) : 0;
+                                            $isLate = $returned_at->isPast() && $item->status == '2';
+                                            $daysLate = $isLate ? round($now->diffInDays($returned_at, false)) : 0;
                                         @endphp
                                         <tr class="{{ $isLate ? 'text-danger' : '' }}">
                                             <td><input type="checkbox" name="ids[]" value="{{ $item->id }}"></td>
                                             <td>{{ $item->id }}</td>
-                                            <td>{{ $item->trangthai == '1' ? 'Chưa xát nhận' : ($item->trangthai == '2' ? 'Đang mượn' : 'Đã trả') }}
+                                            <td>{{ $item->status == '1' ? 'Chưa xác nhận' : ($item->status == '2' ? 'Đang mượn' : 'Đã trả') }}
                                             </td>
                                             <td>{{ $item->userName }}</td>
-                                            <td>{{ Carbon::parse($item->ngayMuon)->format('d/m/Y') }}</td>
+                                            <td>{{ $item->bookName }}</td>
+
+                                            <td>{{ Carbon::parse($item->borrowed_at)->format('d/m/Y') }}</td>
                                             <td>
-                                                {{ Carbon::parse($item->hanTra)->format('d/m/Y') }}
+                                                {{ Carbon::parse($item->returned_at)->format('d/m/Y') }}
                                                 @if ($isLate)
                                                     <br><span class="text-danger">Đã trễ {{ $daysLate }} ngày</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                {{-- <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
+                                                <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
                                                     <input class="btn btn-warning btn-sm" value="Sửa" type="button">
-                                                </a> --}}
-                                                {{-- <a href="javascript:void(0);"
-                                                    onclick="confirmDelete({{ $item->id }})">
-                                                    <input type="button" class="btn btn-danger btn-sm" value="Xóa">
-                                                </a> --}}
+                                                </a>
+
                                                 <a href="javascript:void(0);" onclick="showDetails({{ $item->id }})">
                                                     <input type="button" class="btn btn-info btn-sm" value="...">
                                                 </a>
@@ -288,6 +290,8 @@
                                         <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu
                                             mượn
                                         </h5>
+                                        
+                                        <div class="ms-5"><a href="#"><i class="bi bi-printer"></i></a></div>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -295,11 +299,8 @@
 
                                     </div>
                                     <div class="modal-footer">
-                                        <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
-                                            <input class="btn btn-warning btn-sm" value="Sửa" type="button">
-                                        </a>
-                                        {{-- <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Đóng</button> --}}
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Đóng</button>
                                     </div>
                                 </div>
                             </div>
@@ -372,94 +373,105 @@
             fetch(`{{ url('/admin/phieumuon/details') }}/${id}`)
                 .then(response => response.json())
                 .then(data => {
+
+
+                    const createdAt = new Date(data.created_at);
+
+                // Định dạng ngày tháng đơn giản
+                const day = String(createdAt.getDate()).padStart(2, '0');
+                const month = String(createdAt.getMonth() + 1).padStart(2, '0'); // Tháng từ 0 đến 11
+                const year = createdAt.getFullYear();
+                const hours = String(createdAt.getHours()).padStart(2, '0');
+                const minutes = String(createdAt.getMinutes()).padStart(2, '0');
+                const seconds = String(createdAt.getSeconds()).padStart(2, '0');
+
+                const formattedCreatedAt = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+
                     const detailsContent = `
 
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                            <!--begin::Form-->
-                            <form class="form" action="{{ route('admin.phieumuon.insertPhieuMuon') }}" method="post"name="formadd">
-                                @csrf
-                                <div class="d-flex justify-content-between">
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="">Mã Khách Hàng</span>
-                                            </label>
-                                                 <input type="text" name="userId" class="form-control form-control-solid" value="${data.userId}" readonly />
-                                                
-                                            </select>
-
-                                        </div>
-                            
-                                                                    <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="">Tên Khách Hàng</span>
-                                            </label>
-                                                 <input type="text" name="userName" class="form-control form-control-solid" value="${data.userName}" readonly />
-                                                
-                                            </select>
-                                            @error('userId')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="">Số điện thoại</span>
-                                            </label>
-                                                 <input type="text" name="phone" class="form-control form-control-solid" value="${data.phone}" readonly />
-                                                
-                                            </select>
-                                            @error('userId')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                            <div class="fv-row mb-7">
-                                            <label class="form-label fs-6 fw-bold">
-                                                <span class="">Trạng Thái</span>
-                                            </label>
-                                                 <input type="text" name="trangthai" class="form-control form-control-solid" 
-                                                        value="${data.trangthai == '1' ? 'Chưa xác nhận' : (data.trangthai == '2' ? 'Đang mượn' : 'Đã trả')}" readonly />
-                                  
-                                            </select>
-                                            @error('userId')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
+                            <div class="row text-center mb-5">
+                                <h1 class="mb-5">PHIẾU MƯỢN TÀI LIỆU</h1>
+                                <div class="row mt-5">
+                                   
                                 </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-6">
+                                    <h3 class="mb-5 mt-3">
+                                        Thư Viện: CMT
+                                    </h3>
+                                    <h3 class="mb-5">
+                                        Số Phiếu: ${data.id}
+                                    </h3>
+                                    <h3 class="mt-5" >
+                                        <p>Khởi Tạo: ${formattedCreatedAt}</p>
+                                    </h3>
+                                </div>
+
+                                <div class="col-3">
+
+                                    <div class="fv-row">
+                                        <label class="form-label fs-6 fw-bold">
+                                            <span class="">Số điện thoại:</span>
+                                        </label>
+                                            <h4>${data.phone}</h4>
+                                    </div>
+
+                                    <div class="fv-row">
+                                        <label class="form-label fs-6 fw-bold">
+                                            <span class="">Trạng thái:</span>
+                                        </label>
+                                            <h4>${data.status == '1' ? 'Chưa xác nhận' : (data.status == '2' ? 'Đang mượn' : 'Đã trả')}</h4>
+                                    </div>
+
+                                </div>
+                                <div class="col-3">
+
+                                    <div class="fv-row">
+                                        <label class="form-label fs-6 fw-bold">
+                                            <span class="">Mã khách hàng:</span>
+                                        </label>
+                                            <h4>${data.userId}</h4>
+                                    </div>
                             
-                            </form>
-                            
-                            <!--end::Form-->
+                                    <div class="fv-row">
+                                        <label class="form-label fs-6 fw-bold">
+                                            <span class="">Tên khách hàng:</span>
+                                        </label>
+                                            <h4>${data.userName}</h4>
+                                    </div>
+
+                                </div>  
 
 
-                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
-                            <thead>
-                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">Mã Sách</th>
-                                    <th class="min-w-125px">Tên Sách</th>
-                                    <th class="min-w-125px">Số lượng</th>
-                                    <th class="min-w-125px">Ngày mượn</th>
-                                    <th class="min-w-125px">Hạn Trả</th>
+                            </div>
 
-                                </tr>
-                            </thead>
-
-                            <tbody class="fw-bold text-gray-600">
-                                
-                                    <tr>
-                                        <td>${data.maSach}</td>
-                                        <td>${data.tenSach}</td>
-                                        <td>${data.soluong}</td>
-                                        <td>${data.ngayMuon}</td>
-                                        <td>${data.hanTra}</td>
-
+                            <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
+                                <thead>
+                                    <tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                        <th class="min-w-70px">Mã Sách</th>
+                                        <th class="min-w-100px">Tên Sách</th>
+                                        <th class="min-w-100px">Tác Giả</th>
+                                        <th class="min-w-100px">Xuất Bản</th>
+                                        <th class="min-w-70px">Số lượng</th>
+                                        <th class="min-w-70px">Ngày mượn</th>
+                                        <th class="min-w-70px">Hạn Trả</th>
                                     </tr>
-                             
-                            </tbody>
-
-
+                                </thead>
+                                <tbody class="fw-bold text-gray-600">
+                                    <tr class="text-center">
+                                        <td>${data.bookId}</td>
+                                        <td>${data.bookName}</td>
+                                        <td>${data.author}</td>
+                                        <td>${data.publication_year}</td>
+                                        <td>${data.quantity_in_card}</td>
+                                        <td>${data.borrowed_at}</td>
+                                        <td>${data.returned_at}</td>
+                                    </tr>
+                                </tbody>
                         </div>
 
                     `;

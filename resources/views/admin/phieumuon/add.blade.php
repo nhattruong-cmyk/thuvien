@@ -180,7 +180,9 @@
                                 @csrf
                                 <div class="d-flex flex-column" id="booksContainer">
                                     <div class="d-flex justify-content-between align-items-center mb-7">
+
                                         <div class="w-50 pe-3">
+
                                             <div class="fv-row mb-7">
                                                 <label class="form-label fs-6 fw-bold">
                                                     <span class="required">Mã Khách Hàng</span>
@@ -220,53 +222,60 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
+
                                         </div>
                                         <div class="w-50 ps-3">
-                                            <button type="button" class="btn btn-primary" id="addBookBtn">Thêm
-                                                sách</button>
+
+                                                <div class="fv-row mb-7">
+                                                    <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
+                                                    <input type="date" name="borrowed_at" class="form-control form-control-solid"
+                                                        placeholder="ngày mượn" value="{{ old('borrowed_at') }}" />
+                                                    @error('borrowed_at')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <div class="fv-row mb-7">
+                                                    <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
+                                                    <input type="date" name="returned_at" class="form-control form-control-solid"
+                                                        placeholder="ngày trả" value="{{ old('returned_at') }}" />
+                                                    @error('returned_at')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <div class="fv-row mb-7">
+                                                    <label class="form-label fs-6 fw-bold">
+                                                        <span class="required">Trạng thái</span>
+                                                        <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
+                                                            title="Country of origination"></i>
+                                                    </label>
+                                                    <select name="status" class="form-control form-control-solid mb-3 mb-lg-0">
+                                                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Vui lòng
+                                                            chọn trạng thái</option>
+                                                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Chưa xác
+                                                            nhận</option>
+                                                        <option value="2" {{ old('status') == 2 ? 'selected' : '' }}>Đạng mượn
+                                                        </option>
+                                                        <option value="3" {{ old('status') == 3 ? 'selected' : '' }}>Đã trả
+                                                        </option>
+                                                    </select>
+                                                    @error('status')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+
+
                                         </div>
+
+
                                     </div>
 
-                                    <div id="booksList">
-                                        <!-- Existing book fields will be rendered here by JavaScript -->
-                                    </div>
+                                    <button type="button" class="btn btn-primary" id="addBookBtn">Thêm
+                                        sách</button>
+                                        <div id="booksList">
+                                            <!-- Existing book fields will be rendered here by JavaScript -->
+                                        </div>
 
-                                    <div class="fv-row mb-7">
-                                        <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
-                                        <input type="date" name="ngayMuon" class="form-control form-control-solid"
-                                            placeholder="ngày mượn" value="{{ old('ngayMuon') }}" />
-                                        @error('ngayMuon')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="fv-row mb-7">
-                                        <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
-                                        <input type="date" name="hanTra" class="form-control form-control-solid"
-                                            placeholder="ngày trả" value="{{ old('hanTra') }}" />
-                                        @error('hanTra')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="fv-row mb-7">
-                                        <label class="form-label fs-6 fw-bold">
-                                            <span class="required">Trạng thái</span>
-                                            <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
-                                                title="Country of origination"></i>
-                                        </label>
-                                        <select name="trangthai" class="form-control form-control-solid mb-3 mb-lg-0">
-                                            <option value="0" {{ old('trangthai') == 0 ? 'selected' : '' }}>Vui lòng
-                                                chọn trạng thái</option>
-                                            <option value="1" {{ old('trangthai') == 1 ? 'selected' : '' }}>Chưa xác
-                                                nhận</option>
-                                            <option value="2" {{ old('trangthai') == 2 ? 'selected' : '' }}>Đạng mượn
-                                            </option>
-                                            <option value="3" {{ old('trangthai') == 3 ? 'selected' : '' }}>Đã trả
-                                            </option>
-                                        </select>
-                                        @error('trangthai')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+ 
 
                                     <div class="text-center pt-15">
                                         <button type="reset" class="btn btn-light me-3"
@@ -340,15 +349,15 @@
 
             bookSelect.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
-                const tenSach = selectedOption.getAttribute('data-ten-sach');
-                bookTitleInput.value = tenSach || '';
+                const bookName = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = bookName || '';
             });
 
-            // Optionally, initialize the tenSach input on page load if there is a pre-selected value
+            // Optionally, initialize the bookName input on page load if there is a pre-selected value
             if (bookSelect.value) {
                 const selectedOption = bookSelect.options[bookSelect.selectedIndex];
-                const tenSach = selectedOption.getAttribute('data-ten-sach');
-                bookTitleInput.value = tenSach || '';
+                const bookName = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = bookName || '';
             }
         });
     </script>
@@ -376,7 +385,7 @@
                             <label class="form-label fs-6 fw-bold">
                                 <span class="required">Mã Sách</span>
                             </label>
-                            <select name="maSach[]" class="form-control form-control-solid mb-3 mb-lg-0 bookSelect">
+                            <select name="bookId[]" class="form-control form-control-solid mb-3 mb-lg-0 bookSelect">
                                 <option value="">Vui lòng chọn mã sách</option>
                                 @foreach ($products as $item)
                                     <option value="{{ $item->id }}" data-ten-sach="{{ $item->name }}">
@@ -384,15 +393,15 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('maSach')
+                            @error('bookId.*')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="fv-row mb-7">
                             <label class="form-label required fw-bold fs-6 mb-2">Tên Sách</label>
-                            <input type="text" name="tenSach[]" class="form-control form-control-solid bookTitle" placeholder="Tên sách" readonly />
-                            @error('tenSach')
+                            <input type="text" name="bookName[]" class="form-control form-control-solid bookTitle" placeholder="Tên sách" readonly />
+                            @error('bookName.*')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -401,8 +410,8 @@
                     <div class="w-50 ps-3">
                         <div class="fv-row mb-7">
                             <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
-                            <input type="number" name="soluong[]" class="form-control form-control-solid" placeholder="Số lượng" />
-                            @error('soluong')
+                            <input type="number" name="quantity_in_card[]" class="form-control form-control-solid" placeholder="Số lượng" />
+                            @error('quantity_in_card.*')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -426,8 +435,8 @@
                     const select = e.target;
                     const bookTitle = select.closest('.d-flex').querySelector('.bookTitle');
                     const selectedOption = select.options[select.selectedIndex];
-                    const tenSach = selectedOption.getAttribute('data-ten-sach');
-                    bookTitle.value = tenSach || '';
+                    const bookName = selectedOption.getAttribute('data-ten-sach');
+                    bookTitle.value = bookName || '';
                 }
             });
 

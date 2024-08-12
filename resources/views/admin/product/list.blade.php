@@ -206,12 +206,12 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Mã sản phẩm</th>
+                                    <th class="min-w-90px">Mã sản phẩm</th>
                                     <th class="min-w-125px">Tên sản phẩm</th>
                                     <th class="min-w-125px">Hình ảnh</th>
                                     <th class="min-w-125px">Giá</th>
-                                    <th class="min-w-125px">Số lượng</th>
-                                    <th class="min-w-125px">Hành động</th>
+                                    <th class="min-w-90px">Số lượng</th>
+                                    <th class="min-w-150px">Hành động</th>
 
                                 </tr>
                                 <!--end::Table row-->
@@ -239,8 +239,8 @@
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete({{ $item->id }})"><input type="button"
                                                     class="btn btn-danger btn-sm" value="Xóa"></a>
-                                            <button type="button" class="btn btn-info mt-2"
-                                                onclick="showProductDetails({{ $item->id }})">Xem chi tiết</button>
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                onclick="showProductDetails({{ $item->id }})">...</button>
 
                                         </td>
                                     </tr>

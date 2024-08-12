@@ -9,23 +9,23 @@ class PhieuMuon extends Model
 {
     use HasFactory;
 
-    protected $table = 'phieu_muons';
+    protected $table = 'cards';
     protected $fillable = [
         'userId',
         'userName',
         'phone',
-        'maSach',
-        'tenSach',
-        'trangthai',
-        'soluong',
-        'ngayMuon',
-        'hanTra',
+        'bookId',
+        'bookName',
+        'status',
+        'quantity_in_card',
+        'borrowed_at',
+        'returned_at',
     ];
 
     // Thiết lập quan hệ với model Product
     public function product()
     {
-        return $this->belongsTo(Product::class, 'maSach');
+        return $this->belongsTo(Product::class, 'bookId');
     }
 
     // Thiết lập quan hệ với model User

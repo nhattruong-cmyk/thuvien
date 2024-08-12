@@ -17,7 +17,7 @@ class CommentController extends Controller
     public function send(CommentRequest $request)
     {
         $validated = $request->validated();
-
+        
         Comment::create([
             'user_id' => Auth::id(),
             'product_id' => $request->product_id,

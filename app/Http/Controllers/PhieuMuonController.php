@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Cart;
 use App\Models\PhieuMuon;
+use Illuminate\Support\Arr;
 
 use App\Http\Requests\PhieuMuon\UpdatePMRequest;
 use App\Http\Requests\PhieuMuon\InsertPMRequest;
@@ -27,8 +28,8 @@ class PhieuMuonController extends Controller
         $query = PhieuMuon::orderBy('id', 'DESC');
     
         // Kiểm tra nếu có yêu cầu lọc theo trạng thái
-        if ($request->has('trangthai') && $request->trangthai != '') {
-            $query->where('trangthai', $request->trangthai);
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
         }
     
         $phieumuon = $query->paginate(100);
@@ -61,28 +62,28 @@ class PhieuMuonController extends Controller
             $userId = $request->input('userId');
             $userName = $request->input('userName');
             $phone = $request->input('phone');
-            $trangthai = $request->input('trangthai');
-            $ngayMuon = $request->input('ngayMuon');
-            $hanTra = $request->input('hanTra');
+            $status = $request->input('status');
+            $borrowed_at = $request->input('borrowed_at');
+            $returned_at = $request->input('returned_at');
     
-            $maSachList = $request->input('maSach', []);
-            $tenSachList = $request->input('tenSach', []);
-            $soLuongList = $request->input('soluong', []);
+            $maSachList = $request->input('bookId', []);
+            $tenSachList = $request->input('bookName', []);
+            $quantityList = $request->input('quantity_in_card', []);
     
             // Kiểm tra nếu trạng thái là 3 thì không cho phép
-            if ($trangthai == 3) {
+            if ($status == 3) {
                 return redirect()->back()->with('error', 'Không thể chọn trạng thái 3 khi thêm phiếu mượn mới.');
             }
     
             // Kiểm tra số lượng sách trước khi tạo phiếu mượn nếu trạng thái là 2
-            if ($trangthai == 2) {
-                foreach ($maSachList as $index => $maSach) {
-                    if ($maSach && isset($soLuongList[$index]) && $soLuongList[$index] > 0) {
-                        $product = Product::find($maSach);
+            if ($status == 2) {
+                foreach ($maSachList as $index => $bookId) {
+                    if ($bookId && isset($quantityList[$index]) && $quantityList[$index] > 0) {
+                        $product = Product::find($bookId);
                         if (!$product) {
-                            return redirect()->back()->with('error', 'Sách với mã ' . $maSach . ' không tồn tại.');
+                            return redirect()->back()->with('error', 'Sách với mã ' . $bookId . ' không tồn tại.');
                         }
-                        if ($soLuongList[$index] > $product->quantity) {
+                        if ($quantityList[$index] > $product->quantity) {
                             return redirect()->back()->with('error', 'Số lượng sách ' . $product->name . ' không đủ. Chỉ còn ' . $product->quantity . ' sách trong kho.')->with('alert', true);
                         }
                     }
@@ -90,26 +91,26 @@ class PhieuMuonController extends Controller
             }
     
             // Tạo phiếu mượn và cập nhật số lượng sách nếu trạng thái là 2
-            foreach ($maSachList as $index => $maSach) {
-                if ($maSach && isset($soLuongList[$index]) && $soLuongList[$index] > 0) {
+            foreach ($maSachList as $index => $bookId) {
+                if ($bookId && isset($quantityList[$index]) && $quantityList[$index] > 0) {
                     $phieumuonData = [
                         'userId' => $userId,
                         'userName' => $userName,
                         'phone' => $phone,
-                        'maSach' => $maSach,
-                        'tenSach' => $tenSachList[$index],
-                        'trangthai' => $trangthai,
-                        'soluong' => $soLuongList[$index],
-                        'ngayMuon' => $ngayMuon,
-                        'hanTra' => $hanTra,
+                        'bookId' => $bookId,
+                        'bookName' => $tenSachList[$index],
+                        'status' => $status,
+                        'quantity_in_card' => $quantityList[$index],
+                        'borrowed_at' => $borrowed_at,
+                        'returned_at' => $returned_at,
                     ];
     
                     PhieuMuon::create($phieumuonData);
     
-                    if ($trangthai == 2) {
-                        $product = Product::find($maSach);
+                    if ($status == 2) {
+                        $product = Product::find($bookId);
                         if ($product) {
-                            $product->quantity -= $soLuongList[$index];
+                            $product->quantity -= $quantityList[$index];
                             $product->save();
                         }
                     }
@@ -132,6 +133,7 @@ class PhieuMuonController extends Controller
     }
     
     
+    
     public function formupdatePhieuMuon($id)
     {
         $phieumuon = PhieuMuon::find($id);
@@ -143,80 +145,87 @@ class PhieuMuonController extends Controller
     }
 
 
-
     public function updatePhieuMuon(UpdatePMRequest $request)
     {
         $id = $request->id;
         $phieumuon = PhieuMuon::findOrFail($id);
         $validatedData = $request->validated();
-        $isChanged = false;
-    
-        foreach ($validatedData as $key => $value) {
-            if ($phieumuon[$key] != $value) {
-                $isChanged = true;
-                break;
-            }
-        }
-    
-        if (!$isChanged) {
-            return redirect()->route('admin.phieumuon.listPhieuMuon')->with('info', 'Không có gì thay đổi');
-        }
     
         DB::beginTransaction();
     
         try {
-            if ($phieumuon->trangthai == 1 && isset($validatedData['trangthai']) && $validatedData['trangthai'] != 2) {
-                return redirect()->back()->with('error', 'Chỉ có thể thay đổi trạng thái từ 1 sang 2.');
+            // Nếu trạng thái là 3, không thể cập nhật bất kỳ thuộc tính nào
+            if ($phieumuon->status == 3) {
+                DB::rollBack();
+                return redirect()->back()->with('error', 'Không thể cập nhật phiếu mượn khi đã trả sách.');
             }
     
-            if ($phieumuon->trangthai == 2 && isset($validatedData['trangthai']) && !in_array($validatedData['trangthai'], [1, 3])) {
-                return redirect()->back()->with('error', 'Chỉ có thể thay đổi trạng thái từ 2 sang 1 hoặc 3.');
-            }
+            // Nếu trạng thái hiện tại là 1
+            if ($phieumuon->status == 1) {
+                if (isset($validatedData['status'])) {
+                    // Chỉ cho phép cập nhật trạng thái lên 2
+                    if ($validatedData['status'] == 2) {
+                        // Xử lý cập nhật trạng thái
+                        $product = Product::find($phieumuon->bookId);
     
-            if ($phieumuon->trangthai == 3) {
-                return redirect()->back()->with('error', 'Không thể thay đổi trạng thái từ 3.');
-            }
+                        if ($product) {
+                            $product->quantity -= $phieumuon->quantity_in_card;
     
-            if (isset($validatedData['trangthai']) && $validatedData['trangthai'] == 2) {
-                $product = Product::find($phieumuon->maSach);
+                            if ($product->quantity < 0) {
+                                DB::rollBack();
+                                return redirect()->back()->with('error', 'Số lượng sản phẩm không đủ.');
+                            }
     
-                if ($product) {
-                    $product->quantity -= $phieumuon->soluong;
+                            $product->save();
     
-                    if ($product->quantity < 0) {
+                            // Cập nhật trạng thái
+                            $phieumuon->update(['status' => $validatedData['status']]);
+                        } else {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+                        }
+                    } elseif ($validatedData['status'] == 3) {
                         DB::rollBack();
-                        return redirect()->back()->with('error', 'Số lượng sản phẩm không đủ.');
+                        return redirect()->back()->with('error', 'Không thể trả sách khi khách hàng chưa mượn.');
+                    }
+                }
+    
+                // Cập nhật các thuộc tính khác khi trạng thái là 1
+                $otherAttributes = Arr::except($validatedData, ['status']);
+    
+                if (!empty($otherAttributes)) {
+                    $phieumuon->update($otherAttributes);
+                }
+            } elseif ($phieumuon->status == 2) {
+                // Nếu trạng thái hiện tại là 2, chỉ cho phép thay đổi trạng thái sang 3
+                if (isset($validatedData['status'])) {
+                    if ($validatedData['status'] != 3) {
+                        DB::rollBack();
+                        return redirect()->back()->with('error', 'Không thể thay đổi trạng thái khác ngoài 3 khi phiếu mượn đang trong trạng thái cho mượn.');
                     }
     
-                    $product->save();
-                } else {
-                    DB::rollBack();
-                    return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
-                }
-            }
+                    // Xử lý chuyển trạng thái từ 2 sang 3
+                    $product = Product::find($phieumuon->bookId);
     
-            if (isset($validatedData['trangthai']) && $validatedData['trangthai'] == 3) {
-                $product = Product::find($phieumuon->maSach);
-    
-                if ($product) {
-                    $soluongtrongkho = $product->quantity;
-                    $soluongmuon = $soluongtrongkho + $phieumuon->soluong;
-    
-                    if ($soluongmuon < $soluongtrongkho) {
-                        DB::rollBack();
-                        return redirect()->back()->with('error', 'Lỗi trạng thái, vui lòng xem lại.');
-                    } else {
-                        $product->quantity = $soluongmuon;
+                    if ($product) {
+                        $product->quantity += $phieumuon->quantity_in_card;
                         $product->save();
+                    } else {
+                        DB::rollBack();
+                        return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
                     }
+    
+                    // Cập nhật trạng thái
+                    $phieumuon->update(['status' => $validatedData['status']]);
                 } else {
                     DB::rollBack();
-                    return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+                    return redirect()->back()->with('error', 'Trạng thái không được để trống.');
                 }
+            } else {
+                // Trạng thái không hợp lệ hoặc không được phép cập nhật
+                DB::rollBack();
+                return redirect()->back()->with('error', 'Trạng thái không hợp lệ hoặc không được phép cập nhật.');
             }
-    
-            // Cập nhật phiếu mượn
-            $phieumuon->update($validatedData);
     
             DB::commit();
     
@@ -226,7 +235,8 @@ class PhieuMuonController extends Controller
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật phiếu mượn: ' . $e->getMessage());
         }
     }
-
+    
+    
 
     public function updateStatus($id)
     {
@@ -236,23 +246,29 @@ class PhieuMuonController extends Controller
     
         try {
             // Kiểm tra nếu phiếu mượn đã có trạng thái 3 thì không làm gì cả
-            if ($phieumuon->trangthai == 3) {
+            if ($phieumuon->status == 3) {
                 DB::rollBack();
-                return redirect()->back()->with('info', 'Phiếu mượn đã có trạng thái 3.');
+                return redirect()->back()->with('info', 'Không thể sửa khi đã trả sách.');
             }
     
-            // Nếu trạng thái là 1 hoặc 2, cập nhật trạng thái và số lượng sản phẩm
-            if ($phieumuon->trangthai != 3) {
+            // Nếu trạng thái ban đầu là 1 thì không thể đổi sang 3
+            if ($phieumuon->status == 1) {
+                DB::rollBack();
+                return redirect()->back()->with('info', 'trạng thái không phù hợp');
+            }
+    
+            // Nếu trạng thái ban đầu là 2, cập nhật trạng thái và số lượng sản phẩm
+            if ($phieumuon->status == 2) {
                 // Cập nhật trạng thái phiếu mượn
-                $phieumuon->trangthai = 3;
+                $phieumuon->status = 3;
                 $phieumuon->save();
     
                 // Cập nhật số lượng sản phẩm trong kho
-                $product = Product::find($phieumuon->maSach);
+                $product = Product::find($phieumuon->bookId);
     
                 if ($product) {
                     // Thay vì kiểm tra điều kiện phức tạp, chỉ cần cộng số lượng
-                    $product->quantity += $phieumuon->soluong;
+                    $product->quantity += $phieumuon->quantity_in_card;
                     $product->save();
                 } else {
                     DB::rollBack();
@@ -267,6 +283,7 @@ class PhieuMuonController extends Controller
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật phiếu mượn: ' . $e->getMessage());
         }
     }
+    
     
     public function bulkDelete(Request $request)
     {

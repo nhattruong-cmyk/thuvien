@@ -20,4 +20,17 @@ class ProfileUpdateRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
         ];
     }
+
+    public function messages(){
+        return [
+
+
+            'name.required' => 'Tên tài khoản không được để trống',
+            'email.required' => 'Địa chỉ email không được để trống',
+            'email.email' => 'Địa chỉ email phải đúng định dạng',
+            'email.unique' => 'Địa chỉ email này đã được sử dụng',
+
+
+        ];
+    }
 }

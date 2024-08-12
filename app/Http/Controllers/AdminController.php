@@ -322,6 +322,18 @@ class AdminController extends Controller
         return redirect()->route('admin.user.listUser')->with('error', 'Yêu cầu xóa tài khoản đã hết hạn hoặc không hợp lệ.');
     }
 
+    public function cancelDelete(User $user)
+    {
+        $user->delete_request = false;
+        $user->delete_requested_at = null;
+        $user->delete_request_cancelled = true;
+        $user->save();
+    
+        return redirect()->route('admin.user.listUser')->with('status', 'Yêu cầu xóa tài khoản đã bị hủy.');
+    }
+    
+    
+
 
 
 }

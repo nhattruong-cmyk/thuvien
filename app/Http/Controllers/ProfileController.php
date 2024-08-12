@@ -20,11 +20,22 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+
+        // Kiểm tra nếu yêu cầu xóa tài khoản đã bị hủy
+        if ($user->delete_request_cancelled) {
+            // Hiển thị thông báo
+            session()->flash('cancelDeleteMessage', 'Yêu cầu xóa tài khoản của bạn đã bị hủy bởi quản trị viên.');
+
+            // Đặt lại trạng thái để chỉ hiển thị một lần
+            $user->delete_request_cancelled = false;
+            $user->save();
+        }
+
+        // Trả về view với dữ liệu người dùng
+        return view('profile.edit', compact('user'));
     }
 
     /**
@@ -40,7 +51,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', 'Cập nhật hồ sơ thành công');
     }
 
     /**

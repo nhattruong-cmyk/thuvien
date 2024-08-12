@@ -41,10 +41,10 @@ class ProductController extends Controller
         
         if ($user) {
             // Kiểm tra trạng thái phieumuon của người dùng đối với sản phẩm này
-            $phieumuon = DB::table('phieu_muons')
+            $phieumuon = DB::table('cards')
                 ->where('userId', $user->id)
-                ->where('maSach', $product->id)
-                ->where('trangthai', 3)
+                ->where('bookId', $product->id)
+                ->where('status', 3)
                 ->exists();
     
             if ($phieumuon) {

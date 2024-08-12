@@ -119,6 +119,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::get('/admin/phieumuon/details/{id}', [PhieuMuonController::class, 'getDetails'])->name('admin.phieumuon.getDetails');
 
+// routes/web.php
+
 
 Route::get('/admin/product/details/{id}', [AdminController::class, 'productDetails']);
 
@@ -139,6 +141,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/users/{user}/approve-delete', [AdminController::class, 'approveDelete'])->name('admin.approveDelete');
 
 
+
     Route::get('/change-password', [ProfileController::class, 'change_password'])->name('auth.change-password');
     Route::post('/change-password', [ProfileController::class, 'check_change_password']);
 
@@ -149,9 +152,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/comments/reply', [CommentController::class, 'reply'])->name('comments.reply');
 
+    Route::post('/admin/cancelDelete/{user}', [AdminController::class, 'cancelDelete'])->name('admin.cancelDelete');
 
 });
-
 
 
 

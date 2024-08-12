@@ -245,11 +245,35 @@
 
 
                         @foreach ($usersWithDeleteRequest as $user)
-                        <form method="POST" action="{{ route('admin.approveDelete', $user->id) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Phê Duyệt Xóa Tài Khoản</button>
-                        </form>
+                        <div class="user-delete-request">
+                            <p>{{ $user->name }}</p> <!-- Hiển thị tên tài khoản -->
+                            
+                            @if (auth()->id() !== $user->id) <!-- Kiểm tra nếu không phải tài khoản đang đăng nhập -->
+                                <form id="approve-delete-form-{{ $user->id }}" method="POST" action="{{ route('admin.approveDelete', $user->id) }}" style="display: none;">
+                                    @csrf
+                                </form>
+                                <form id="cancel-delete-form-{{ $user->id }}" method="POST" action="{{ route('admin.cancelDelete', $user->id) }}" style="display: none;">
+                                    @csrf
+                                </form>
+                                <a href="#" class="text-danger"
+                                   onclick="event.preventDefault(); document.getElementById('approve-delete-form-{{ $user->id }}').submit();">
+                                   Phê Duyệt Xóa Tài Khoản
+                                </a>
+                                |
+                                <a href="#" class="text-warning"
+                                   onclick="event.preventDefault(); document.getElementById('cancel-delete-form-{{ $user->id }}').submit();">
+                                   Hủy Yêu Cầu
+                                </a>
+                            @else
+                                <a href="#" class="text-primary"
+                                   onclick="event.preventDefault(); alert('Bạn không thể xóa tài khoản của chính mình!');">
+                                   Phê Duyệt Xóa Tài Khoản
+                                </a>
+                            @endif
+                        </div>
                     @endforeach
+                    
+                    
                     
                     
                     

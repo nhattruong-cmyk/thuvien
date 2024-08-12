@@ -189,27 +189,54 @@
                                             <label class="form-label fs-6 fw-bold">
                                                 <span class="required">Mã Sách</span>
                                             </label>
-                                            <select name="maSach" class="form-control form-control-solid mb-3 mb-lg-0"
+                                            <select name="bookId" class="form-control form-control-solid mb-3 mb-lg-0"
                                                 id="bookSelect">
-                                                <option value="{{ $phieumuon->maSach }}">Vui lòng chọn mã sách</option>
+                                                <option value="{{ $phieumuon->bookId }}">Vui lòng chọn mã sách</option>
                                                 @foreach ($products as $item)
                                                     <option value="{{ $item->id }}"
                                                         data-ten-sach="{{ $item->name }}"
-                                                        {{ old('maSach', $phieumuon->maSach) == $item->id ? 'selected' : '' }}>
+                                                        {{ old('bookId', $phieumuon->bookId) == $item->id ? 'selected' : '' }}>
                                                         {{ $item->id }} - {{ $item->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('maSach')
+                                            @error('bookId')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="form-label required fw-bold fs-6 mb-2">Tên Sách</label>
-                                            <input type="text" name="tenSach" id="bookTitle"
+                                            <input type="text" name="bookName" id="bookTitle"
                                                 class="form-control form-control-solid" placeholder="Tên sách"
-                                                value="{{ $phieumuon->tenSach }}" readonly />
-                                            @error('tenSach')
+                                                value="{{ $phieumuon->bookName }}" readonly />
+                                            @error('bookName')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+                                    <div class="w-50 ps-3">
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
+                                            <input type="number" name="quantity_in_card" class="form-control form-control-solid"
+                                                placeholder="Số lượng" value="{{ $phieumuon->quantity_in_card }}" />
+                                            @error('quantity_in_card')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
+                                            <input type="date" name="borrowed_at" class="form-control form-control-solid"
+                                                placeholder="ngày mượn" value="{{ $phieumuon->borrowed_at }}" />
+                                            @error('borrowed_at')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
+                                            <input type="date" name="returned_at" class="form-control form-control-solid"
+                                                placeholder="ngày trả" value="{{ $phieumuon->returned_at }}" />
+                                            @error('returned_at')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -219,47 +246,21 @@
                                                 <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"
                                                     title="Country of origination"></i>
                                             </label>
-                                            <select name="trangthai" class="form-control form-control-solid mb-3 mb-lg-0">
+                                            <select name="status" class="form-control form-control-solid mb-3 mb-lg-0">
                                                 <option value="0"
-                                                    {{ old('trangthai', $phieumuon->trangthai) == 0 ? 'selected' : '' }}>
+                                                    {{ old('status', $phieumuon->status) == 0 ? 'selected' : '' }}>
                                                     Vui lòng chọn trạng thái</option>
                                                 <option value="1"
-                                                    {{ old('trangthai', $phieumuon->trangthai) == 1 ? 'selected' : '' }}>
+                                                    {{ old('status', $phieumuon->status) == 1 ? 'selected' : '' }}>
                                                     Chưa xác nhận</option>
                                                 <option value="2"
-                                                    {{ old('trangthai', $phieumuon->trangthai) == 2 ? 'selected' : '' }}>
+                                                    {{ old('status', $phieumuon->status) == 2 ? 'selected' : '' }}>
                                                     Đang mượn</option>
                                                 <option value="3"
-                                                    {{ old('trangthai', $phieumuon->trangthai) == 3 ? 'selected' : '' }}>
+                                                    {{ old('status', $phieumuon->status) == 3 ? 'selected' : '' }}>
                                                     Đã trả</option>
                                             </select>
-                                            @error('trangthai')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="w-50 ps-3">
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Số lượng</label>
-                                            <input type="number" name="soluong" class="form-control form-control-solid"
-                                                placeholder="Số lượng" value="{{ $phieumuon->soluong }}" />
-                                            @error('soluong')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Mượn</label>
-                                            <input type="date" name="ngayMuon" class="form-control form-control-solid"
-                                                placeholder="ngày mượn" value="{{ $phieumuon->ngayMuon }}" />
-                                            @error('ngayMuon')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="form-label required fw-bold fs-6 mb-2">Ngày Trả</label>
-                                            <input type="date" name="hanTra" class="form-control form-control-solid"
-                                                placeholder="ngày trả" value="{{ $phieumuon->hanTra }}" />
-                                            @error('hanTra')
+                                            @error('status')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -319,15 +320,15 @@
 
             bookSelect.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
-                const tenSach = selectedOption.getAttribute('data-ten-sach');
-                bookTitleInput.value = tenSach || '';
+                const bookName = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = bookName || '';
             });
 
-            // Optionally, initialize the tenSach input on page load if there is a pre-selected value
+            // Optionally, initialize the bookName input on page load if there is a pre-selected value
             if (bookSelect.value) {
                 const selectedOption = bookSelect.options[bookSelect.selectedIndex];
-                const tenSach = selectedOption.getAttribute('data-ten-sach');
-                bookTitleInput.value = tenSach || '';
+                const bookName = selectedOption.getAttribute('data-ten-sach');
+                bookTitleInput.value = bookName || '';
             }
         });
     </script>

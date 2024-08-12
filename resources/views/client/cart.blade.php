@@ -126,27 +126,27 @@
                                             <div class="w-50 pe-3 mx-1">
                                                 <div class="mb-3">
                                                     <label class="form-label">Ngày Mượn</label>
-                                                    <input type="date" name="ngayMuon" class="form-control"
-                                                        value="{{ old('ngayMuon') }}" />
-                                                    @error('ngayMuon')
+                                                    <input type="date" name="borrowed_at" class="form-control"
+                                                        value="{{ old('borrowed_at') }}" />
+                                                    @error('borrowed_at')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Ngày Trả</label>
-                                                    <input type="date" name="hanTra" class="form-control"
-                                                        value="{{ old('hanTra') }}" />
-                                                    @error('hanTra')
+                                                    <input type="date" name="returned_at" class="form-control"
+                                                        value="{{ old('returned_at') }}" />
+                                                    @error('returned_at')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-none">
                                                 <label class="form-label">Trạng thái</label>
-                                                <select name="trangthai" class="form-control">
+                                                <select name="status" class="form-control">
                                                     <option value="1" selected>Chưa xác nhận</option>
                                                 </select>
-                                                @error('trangthai')
+                                                @error('status')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -169,11 +169,11 @@
                                                         <td>{{ $item['maSach'] }}</td>
                                                         <td>{{ $item['tenSach'] }}</td>
                                                         <td>
-                                                            <input type="number" name="soluong[]" class="form-control"
+                                                            <input type="number" name="quantity_in_card[]" class="form-control"
                                                                 value="{{ $item['soLuong'] }}" min="1" />
-                                                            <input type="hidden" name="maSach[]"
+                                                            <input type="hidden" name="bookId[]"
                                                                 value="{{ $item['maSach'] }}" />
-                                                            <input type="hidden" name="tenSach[]"
+                                                            <input type="hidden" name="bookName[]"
                                                                 value="{{ $item['tenSach'] }}" />
                                                         </td>
                                                         <td><input type="checkbox" name="addBook[]"
