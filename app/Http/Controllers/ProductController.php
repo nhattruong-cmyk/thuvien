@@ -21,24 +21,28 @@ class ProductController extends Controller
         $products = Product::paginate(6);
         $pageTitle = 'Sản phẩm';
         $categories = Category::all();
-        return view('client.products', compact('products', 'categories', 'pageTitle'));
+        $authors = Product::select('author')->distinct()->get();
+        $publicationYears = Product::select('publication_year')->distinct()->get();
+
+        return view('client.products', compact('products', 'authors', 'publicationYears', 'categories', 'pageTitle'));
     }
+
     public function productsdetail($id)
     {
         $product = Product::with(['category', 'comments.user'])->findOrFail($id);
-    
+
         // Lấy sản phẩm liên quan cùng danh mục, loại trừ sản phẩm hiện tại
         $relatedproducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $id)
             ->limit(4)
             ->get();
-    
+
         $pageTitle = $product->name;
-    
+
         $user = Auth::user();
         $canRate = false;
         $userStatus = null;
-        
+
         if ($user) {
             // Kiểm tra trạng thái phieumuon của người dùng đối với sản phẩm này
             $phieumuon = DB::table('cards')
@@ -46,7 +50,7 @@ class ProductController extends Controller
                 ->where('bookId', $product->id)
                 ->where('status', 3)
                 ->exists();
-    
+
             if ($phieumuon) {
                 $canRate = true;
                 $userStatus = 3; // Đặt userStatus thành 3 để dùng cho các điều kiện trong view
@@ -54,23 +58,73 @@ class ProductController extends Controller
                 $canRate = false;
             }
         }
-    
+
         // Lấy 5 bình luận mới nhất
         $comments = $product->comments()->orderBy('created_at', 'desc')->take(5)->get();
-    
+
         $totalComments = $product->comments()->count();
-    
+
         return view('client.productsdetail', compact('product', 'relatedproducts', 'pageTitle', 'comments', 'canRate', 'totalComments', 'userStatus'));
     }
+
+
+    public function search(Request $request)
+    {
+        $query = Product::query();
+        
+        // Lọc theo tên sách hoặc tác giả
+        if ($request->filled('query')) {
+            $searchQuery = $request->input('query'); // Lấy giá trị của trường 'query'
+            $query->where(function($q) use ($searchQuery) {
+                $q->where('name', 'like', '%' . $searchQuery . '%')
+                  ->orWhere('author', 'like', '%' . $searchQuery . '%');
+            });
+        }
     
-  
+        // Lọc theo năm xuất bản
+        if ($request->filled('publication_year')) {
+            $query->where('publication_year', $request->input('publication_year'));
+        }
+    
+        // Lọc theo thể loại
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+    
+        // Lọc theo tác giả
+        if ($request->filled('author')) {
+            $query->where('author', 'like', '%' . $request->input('author') . '%');
+        }
+    
+        $products = $query->paginate(6);
+    
+        $categories = Category::all();
+        $publicationYears = Product::select('publication_year')->distinct()->get();
+        $authors = Product::select('author')->distinct()->get();
+    
+        $pageTitle = 'Kết quả tìm kiếm';
+    
+        return view('client.products', compact('products', 'categories', 'publicationYears', 'authors', 'pageTitle'));
+    }
+    
+    
+
+
+
+
+
     public function productsByCategory($id)
     {
         $category = Category::findOrFail($id);
         $products = Product::where('category_id', $id)->paginate(6);
         $categories = Category::all();
-        return view('client.products', compact('products', 'categories', 'category'));
+        $publicationYears = Product::select('publication_year')->distinct()->get();
+        $authors = Product::select('author')->distinct()->get();
+
+        return view('client.products', compact('products', 'categories', 'publicationYears', 'authors', 'category'));
     }
+
+
 
     public function listPhieuMuon()
     {

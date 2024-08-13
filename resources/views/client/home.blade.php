@@ -27,74 +27,107 @@
                     </div>
                     <div class="col-md-9">
                         <div class="boking_table">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="book_tabel_item">
+                            <form action="{{ route('search') }}" method="GET" id="searchForm">
+                                <div class="row">
+                                
+                                    <!-- Input cho tên sách và tác giả -->
+                                    <div class="col-md-12 mb-3">
                                         <div class="form-group">
-                                            <div class="input-group">
-                                                <select class="wide">
-                                                    <option data-display="Ngôn ngữ">Ngôn ngữ</option>
-                                                    <option value="1">Tiếng Việt</option>
-                                                    <option value="2">Tiếng Anh</option>
-                                                    <option value="3">Tiếng Pháp</option>
+                                            <input type="text" name="query" class="form-control"
+                                                placeholder="Nhập tên sách hoặc tác giả" value="{{ request('query') }}">
+                                        </div>
+                                    </div>
+                                    <!-- Select cho năm xuất bản -->
+                                    <div class="col-md-4">
+                                        <div class="book_tabel_item">
+                                            <div class="form-group">
+                                                <select class="wide" name="publication_year">
+                                                    <option value=""
+                                                        {{ request('publication_year') == '' ? 'selected' : '' }}>Chọn năm
+                                                    </option>
+                                                    @foreach ($publicationYears as $year)
+                                                        <option value="{{ $year->publication_year }}"
+                                                            {{ request('publication_year') == $year->publication_year ? 'selected' : '' }}>
+                                                            {{ $year->publication_year }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            {{-- <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control" placeholder="Ngày đi" />
-                                                <span class="input-group-addon">
-                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                                                </span>
-                                            </div> --}}
-                                            <select class="wide">
-                                                <option data-display="Chọn năm">Chọn năm</option>
-                                                <!-- Bạn có thể thêm nhiều năm khác vào danh sách này -->
-                                                <option value="2024">2024</option>
-                                                <option value="2023">2023</option>
-                                                <option value="2022">2022</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2020">2020</option>
-                                            </select>
+                                    </div>
+
+                                    <!-- Select cho thể loại -->
+                                    <div class="col-md-4">
+                                        <div class="book_tabel_item">
+                                            <div class="form-group">
+                                                <select class="wide" name="category_id">
+                                                    <option value=""
+                                                        {{ request('category_id') == '' ? 'selected' : '' }}>Thể loại
+                                                    </option>
+                                                    @foreach ($categories as $category)
+                                                        <option value="{{ $category->id }}"
+                                                            {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                                            {{ $category->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Select cho tác giả -->
+                                    <div class="col-md-4">
+                                        <div class="book_tabel_item">
+                                            <div class="form-group">
+                                                <select class="wide" name="author">
+                                                    <option value="" {{ request('author') == '' ? 'selected' : '' }}>
+                                                        Tác
+                                                        giả</option>
+                                                    @foreach ($authors as $author)
+                                                        <option value="{{ $author->author }}"
+                                                            {{ request('author') == $author->author ? 'selected' : '' }}>
+                                                            {{ $author->author }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-                                        </div>
+                                    <div class="col-md-12">
+                                        <button type="submit" class="book_now_btn button_hover mt-3">Tìm kiếm</button>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="book_tabel_item">
-                                        <div class="input-group">
-                                            <select class="wide">
-                                                <option data-display="Thể loại">Thể loại</option>
-                                                <option value="1">Tiểu thuyết</option>
-                                                <option value="2">Khoa học</option>
-                                                <option value="3">Lịch sử</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-group">
-                                            <select class="wide">
-                                                <option data-display="Tác giả">Tác giả</option>
-                                                <option value="1">Nguyễn Nhật Ánh</option>
-                                                <option value="2">J.K. Rowling</option>
-                                                <option value="3">George Orwell</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="book_tabel_item">
-                                        <div class="input-group">
-                                            <input type='text' class="form-control" placeholder="Tên sách" />
-                                        </div>
-                                        <a class="book_now_btn button_hover" href="#">Tìm kiếm</a>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- JavaScript để kiểm tra biểu mẫu -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('searchForm');
+
+                // Xử lý kiểm tra trước khi gửi form
+                form.addEventListener('submit', function(event) {
+                    const query = document.querySelector('input[name="query"]').value;
+                    const publicationYear = document.querySelector('select[name="publication_year"]').value;
+                    const categoryId = document.querySelector('select[name="category_id"]').value;
+                    const author = document.querySelector('select[name="author"]').value;
+
+                    if (!query && !publicationYear && !categoryId && !author) {
+                        alert('Vui lòng chọn ít nhất một thông tin để tìm kiếm.');
+                        event.preventDefault(); // Ngăn không cho gửi biểu mẫu
+                    }
+                });
+            });
+        </script>
+
+
     </section>
     <!--================Banner Area =================-->
 
@@ -105,11 +138,6 @@
                 <p>Chúng ta đang sống trong một thời đại thuộc về những người trẻ tuổi. Cuộc sống đang trở nên cực kỳ nhanh
                     chóng,</p>
             </div>
-{{-- @php
-use App\Models\Product;
-$newbook = Product::paginate(12);
-@endphp --}}
-
             <div class="row mb_30">
                 <!-- resources/views/client/home.blade.php -->
                 @foreach ($newBooks as $item)

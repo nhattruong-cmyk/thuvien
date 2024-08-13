@@ -30,6 +30,8 @@ Route::get('/home', [HomeController::class, 'home'])->name('home.page');
 Route::get('/products', [ProductController::class, 'products'])->name('products');
 Route::get('/products/{id}', [ProductController::class, 'productsdetail'])->name('products.detail');
 Route::get('/category/{id}/products', [ProductController::class, 'productsByCategory'])->name('category.products');
+Route::get('/search', [ProductController::class, 'search'])->name('search');
+
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
