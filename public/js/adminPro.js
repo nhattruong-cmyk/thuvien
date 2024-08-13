@@ -1,4 +1,5 @@
 // public/js/scripts.js
+
 function confirmDelete(id) {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
         window.location.href = "{{ url('admin/product/delPro') }}/" + id;

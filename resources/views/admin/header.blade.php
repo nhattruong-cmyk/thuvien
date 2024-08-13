@@ -1506,6 +1506,14 @@
 														<span class="menu-title">Thêm mới sản phẩm</span>
 													</a>
 												</div>
+												<div class="menu-item">
+													<a class="menu-link" href="{{ route('admin.product.listDeletedProducts') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+														<span class="menu-title">Sản phẩm đã xóa</span>
+													</a>
+												</div>
 											</div>
 
 										</div>
@@ -1551,6 +1559,14 @@
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Thêm mới phân quyền</span>
+												</a>
+											</div>
+											<div class="menu-item">
+												<a class="menu-link" href="{{ route('admin.role.listDeletedRoles') }}">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Phân quyền đã xóa</span>
 												</a>
 											</div>
 
@@ -1630,6 +1646,14 @@
 														<span class="menu-title">Thêm mới tài khoản</span>
 													</a>
 												</div>
+												<div class="menu-item">
+													<a class="menu-link" href="{{ route('admin.user.listDeletedUsers') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+														<span class="menu-title">Tài khoản đã xóa</span>
+													</a>
+												</div>
 											</div>
 
 
@@ -1675,6 +1699,14 @@
 															<span class="bullet bullet-dot"></span>
 														</span>
 														<span class="menu-title">Thêm mới phiếu mượn</span>
+													</a>
+												</div>
+												<div class="menu-item">
+													<a class="menu-link" href="{{ route('admin.phieumuon.listDeletedCards') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+														<span class="menu-title">Phiếu mượn đã xóa</span>
 													</a>
 												</div>
 											</div>

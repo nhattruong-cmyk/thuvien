@@ -47,4 +47,21 @@ class CartController extends Controller
         return response()->json(['success' => true]);
     }
 
+
+    public function delOneCart($id)
+    {
+        $cartItem = Cart::find($id);
+    
+        if ($cartItem) {
+            $cartItem->delete();
+
+            return redirect()->route('cart')->with('success', 'Sản phẩm đã được xóa khỏi giỏ hàng.');
+        } else {
+            return redirect()->route('cart')->with('error', 'Sản phẩm không tồn tại trong giỏ hàng.');
+        }
+    }
+    
+    
+    
+    
 }

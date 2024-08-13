@@ -24,6 +24,51 @@
         }
     </style>
 
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .table thead th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .table tbody tr {
+            border-bottom: 2px solid #f2f2f2;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody td {
+            padding: 10px 15px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #eaf6e8;
+            cursor: pointer;
+        }
+
+        .table thead th:first-child,
+        .table tbody td:first-child {
+            padding-left: 20px;
+        }
+
+        .table thead th:last-child,
+        .table tbody td:last-child {
+            padding-right: 20px;
+        }
+    </style>
+
     <div class="container">
         <div class="my-5">
             <div class="row">
@@ -51,33 +96,54 @@
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Mã Sách</th>
-                                            <th>Tên Sách</th>
-                                            <th>Số lượng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($cart as $item)
+                                @if(count($cart) > 0)
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $item['maSach'] }}</td>
-                                                <td>{{ $item['tenSach'] }}</td>
-                                                <td>{{ $item['soLuong'] }}</td>
+                                                <th class="text-center">Mã Sách</th>
+                                                <th class="text-center">Tên Sách</th>
+                                                <th class="text-center">Tác giả</th>
+                                                <th class="text-center">Số lượng</th>
+                                                <th class="text-center">Hành động</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($cart as $item)
+                                                <tr>
+                                                    <td>{{ $item['maSach'] }}</td>
+                                                    <td>{{ $item['tenSach'] }}</td>
+                                                    <td>{{ $item['author'] }}</td>
+                                                    <td>{{ $item['soLuong'] }}</td>
+                                                    <td class="text-center">
+                                                        <form action="{{ route('cart.delete', $item['id']) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="alert alert-info text-center">
+                                        Bạn chưa quan tâm sách nào.
+                                    </div>
+                                @endif
                             </div>
+                            
                         </div>
                     </div>
                     <a href="{{ route('products') }}" class="btn btn-success">
                         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Quay về
                     </a>
-
-                    <a href="#" class="btn btn-primary pull-right" data-bs-toggle="modal"
+                    
+                    <a href="#" class="btn btn-primary pull-right @if(count($cart) === 0) disabled @endif" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">Tạo phiếu <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    
+
+
+
 
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -89,6 +155,9 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
+
+
+
                                 <div class="modal-body">
                                     <form class="form" action="{{ route('admin.phieumuon.insertPhieuMuon') }}"
                                         method="post">
@@ -169,8 +238,9 @@
                                                         <td>{{ $item['maSach'] }}</td>
                                                         <td>{{ $item['tenSach'] }}</td>
                                                         <td>
-                                                            <input type="number" name="quantity_in_card[]" class="form-control"
-                                                                value="{{ $item['soLuong'] }}" min="1" />
+                                                            <input type="number" name="quantity_in_card[]"
+                                                                class="form-control" value="{{ $item['soLuong'] }}"
+                                                                min="1" />
                                                             <input type="hidden" name="bookId[]"
                                                                 value="{{ $item['maSach'] }}" />
                                                             <input type="hidden" name="bookName[]"
@@ -198,3 +268,39 @@
         </div>
     </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy tất cả các nút xóa
+        var deleteButtons = document.querySelectorAll('.delete-item');
+
+        // Thêm sự kiện click cho mỗi nút xóa
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var itemId = this.getAttribute('data-id');
+
+                // Gửi yêu cầu Ajax để xóa sản phẩm
+                if (confirm('Bạn có chắc muốn xóa sản phẩm này không?')) {
+                    fetch('/cart/' + itemId, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Xóa dòng sản phẩm khỏi bảng
+                            this.closest('tr').remove();
+                            alert(data.success);
+                        } else {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    });
+</script>

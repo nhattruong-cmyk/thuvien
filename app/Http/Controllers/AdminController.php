@@ -122,27 +122,21 @@ class AdminController extends Controller
     {
         // Tìm sản phẩm theo ID
         $product = Product::find($id);
-
+    
         // Kiểm tra nếu sản phẩm tồn tại
         if ($product) {
-            // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
-            $imagePath = public_path("uploaded/" . $product->img);
-            if (file_exists($imagePath)) {
-                // Xóa tệp hình ảnh
-                unlink($imagePath);
-            }
-
-            // Xóa sản phẩm khỏi cơ sở dữ liệu
+    
+            // Xóa mềm sản phẩm khỏi cơ sở dữ liệu
             $product->delete();
-
-            // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
+    
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
             return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
         } else {
             // Sản phẩm không tồn tại
             return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
         }
     }
-
+    
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -155,8 +149,6 @@ class AdminController extends Controller
 
         return view('admin.productlist', compact('categories', 'products', 'query'));
     }
-    // AdminController.php
-
     public function productDetails($id)
     {
         try {
@@ -176,6 +168,34 @@ class AdminController extends Controller
             Log::error($e->getMessage());
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
+    }
+
+    public function listDeletedProducts()
+    {
+        // Lấy danh sách người dùng đã bị xóa mềm
+        $deletedProducts = Product::onlyTrashed()->get();
+
+        // Truyền dữ liệu sang view
+        return view('admin.product.deletedProducts', compact('deletedProducts'));
+    }
+
+
+    public function restoreProduct($id)
+    {
+        // Tìm người dùng đã bị xóa mềm theo ID
+        $product = Product::withTrashed()->find($id);
+
+        // Kiểm tra nếu người dùng tồn tại
+        if ($product) {
+            // Khôi phục người dùng
+            $product->restore();
+
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.product.listPro')->with('success', 'Sản phảm đã được khôi phục thành công.');
+        }
+
+        // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
     }
     
 
@@ -288,27 +308,53 @@ class AdminController extends Controller
 
     public function delUser($id)
     {
-        // Tìm sản phẩm theo ID
+        // Tìm người dùng theo ID
         $user = User::find($id);
-
-        // Kiểm tra nếu sản phẩm tồn tại
-
-        // Kiểm tra nếu có tệp hình ảnh và tệp tồn tại trên hệ thống
-        $imagePath = "public/avata/" . $user->img;
-        if (file_exists($imagePath)) {
-            // Xóa tệp hình ảnh
-            unlink($imagePath);
+    
+        // Kiểm tra nếu người dùng tồn tại
+        if ($user) {
+            // Kiểm tra xem người dùng có đang mượn sách hay không
+            $isMuon = PhieuMuon::where('userId', $id)->count();
+            if ($isMuon > 0) {
+                return redirect()->route('admin.user.listUser')->with('error', 'Người dùng này vẫn đang mượn sách và không thể xóa.');
+            }
+            // Xóa mềm người dùng khỏi cơ sở dữ liệu
+            $user->delete();
+    
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
         }
+    
+        // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.user.listUser')->with('error', 'Tài khoản không tồn tại.');
+    }
+    
+    public function listDeletedUsers()
+    {
+        // Lấy danh sách người dùng đã bị xóa mềm
+        $deletedUsers = User::onlyTrashed()->get();
 
-        // Xóa sản phẩm khỏi cơ sở dữ liệu
-        $user->delete();
-
-        // Bạn có thể trả về thông báo thành công hoặc chuyển hướng đến trang khác
-        return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
+        // Truyền dữ liệu sang view
+        return view('admin.user.deletedUsers', compact('deletedUsers'));
     }
 
+    public function restoreUser($id)
+    {
+        // Tìm người dùng đã bị xóa mềm theo ID
+        $user = User::withTrashed()->find($id);
 
+        // Kiểm tra nếu người dùng tồn tại
+        if ($user) {
+            // Khôi phục người dùng
+            $user->restore();
 
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được khôi phục thành công.');
+        }
+
+        // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.user.listUser')->with('error', 'Tài khoản không tồn tại.');
+    }
 
     public function approveDelete(User $user)
     {

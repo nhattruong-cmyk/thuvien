@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\ChangePassRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,21 +81,12 @@ class ProfileController extends Controller
         return view('auth.change-password');
     }
 
-    public function check_change_password(Request $request)
+    public function check_change_password(ChangePassRequest $request)
     {
-        // Xác thực dữ liệu đầu vào
-        $request->validate([
-            'old_password' => ['required', function ($attribute, $value, $fail) {
-                if (!Hash::check($value, Auth::user()->password)) {
-                    $fail('Mật khẩu không trùng khớp');
-                }
-            }],
-            'password' => 'required|min:4',
-            'password_confirmation' => 'required|same:password',
-        ]);
-    
-        // Cập nhật mật khẩu cho người dùng hiện tại
+        // Lấy thông tin người dùng hiện tại
         $user = Auth::user();
+        
+        // Cập nhật mật khẩu mới
         $user->password = bcrypt($request->password);
         
         if($user->save()) {
@@ -103,6 +95,7 @@ class ProfileController extends Controller
     
         return redirect()->back()->with('error', 'Đổi mật khẩu không thành công, vui lòng thử lại');
     }
+    
 
     public function requestDelete(Request $request)
     {

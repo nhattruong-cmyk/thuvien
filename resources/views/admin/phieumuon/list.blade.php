@@ -5,7 +5,57 @@
 
 @section('content')
 
+    <style>
+        #invoiceModal .modal-content {
+            width: 210mm;
+            /* Kích thước A5 nằm ngang: 210mm x 148mm */
+            padding: 5mm;
+            /* Giảm padding để tiết kiệm không gian */
+            font-size: 10px;
+            /* Tiếp tục giảm kích thước font */
+        }
 
+        #invoiceModal h1,
+        #invoiceModal h2,
+        #invoiceModal h3,
+
+        #invoiceModal h5,
+        #invoiceModal h6 {
+            font-size: 14px;
+            /* Giảm kích thước font tiêu đề */
+        }
+
+        #invoiceModal h4 {
+            font-size: 10px;
+        }
+
+        #invoiceModal p,
+        #invoiceModal span,
+        #invoiceModal td,
+        #invoiceModal th {
+            font-size: 8px;
+            /* Giảm kích thước font các phần tử nhỏ hơn */
+        }
+
+        #invoiceModal table {
+            width: 100%;
+            font-size: 8px;
+            /* Đảm bảo bảng không chiếm quá nhiều không gian */
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+            }
+
+            #invoiceModal .modal-content {
+                margin: auto;
+                width: 210mm;
+                /* A5 nằm ngang */
+                padding: 5mm;
+            }
+        }
+    </style>
     <div class=" d-flex flex-column flex-row-fluid" id="kt_wrapper">
 
         <div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header"
@@ -284,24 +334,25 @@
                         <!-- Modal -->
                         <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel"
                             aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog" id="invoiceModal">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="detailsModalLabel">Chi tiết phiếu
                                             mượn
                                         </h5>
-                                        
-                                        <div class="ms-5"><a href="#"><i class="bi bi-printer"></i></a></div>
+
+                                        <div class="ms-5"><a href="#" id="print-invoice"><i class="bi bi-printer"></i></a>
+                                        </div>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body" id="detailsContent">
 
                                     </div>
-                                    <div class="modal-footer">
+                                    {{-- <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Đóng</button>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -377,15 +428,15 @@
 
                     const createdAt = new Date(data.created_at);
 
-                // Định dạng ngày tháng đơn giản
-                const day = String(createdAt.getDate()).padStart(2, '0');
-                const month = String(createdAt.getMonth() + 1).padStart(2, '0'); // Tháng từ 0 đến 11
-                const year = createdAt.getFullYear();
-                const hours = String(createdAt.getHours()).padStart(2, '0');
-                const minutes = String(createdAt.getMinutes()).padStart(2, '0');
-                const seconds = String(createdAt.getSeconds()).padStart(2, '0');
+                    // Định dạng ngày tháng đơn giản
+                    const day = String(createdAt.getDate()).padStart(2, '0');
+                    const month = String(createdAt.getMonth() + 1).padStart(2, '0'); // Tháng từ 0 đến 11
+                    const year = createdAt.getFullYear();
+                    const hours = String(createdAt.getHours()).padStart(2, '0');
+                    const minutes = String(createdAt.getMinutes()).padStart(2, '0');
+                    const seconds = String(createdAt.getSeconds()).padStart(2, '0');
 
-                const formattedCreatedAt = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+                    const formattedCreatedAt = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 
                     const detailsContent = `
 
@@ -481,6 +532,30 @@
         }
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#print-invoice').on('click', function(event) {
+                event.preventDefault();
+
+                // Lấy nội dung của modal
+                var printContents = document.getElementById('invoiceModal').innerHTML;
+
+                // Tạo cửa sổ in mới với kích thước A5 nằm ngang và áp dụng CSS
+                var originalContents = document.body.innerHTML;
+                document.body.innerHTML = '<div style="width: 210mm; padding: 5mm; font-size: 10px;">' +
+                    printContents + '</div>';
+
+                // Thực hiện in
+                window.print();
+
+                // Khôi phục nội dung gốc của trang
+                document.body.innerHTML = originalContents;
+                location.reload(); // Reload trang để khôi phục lại sự kiện và trạng thái ban đầu
+            });
+        });
+    </script>
 
 
 @endsection

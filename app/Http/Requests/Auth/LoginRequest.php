@@ -27,8 +27,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'email', 'exists:users,email'],
             'password' => ['required', 'string'],
+        ];
+    }
+
+    public function messages(){
+        return [
+            'email.required' => 'Vui lòng nhập Địa chỉ Email',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'email.email' => 'Địa chỉ email phải đúng định dạng',
+            'email.exists' => 'Địa chỉ Email không tồn tại trong hệ thống.',
+
         ];
     }
 
@@ -40,17 +50,28 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+    
+        $credentials = $this->only('email', 'password');
+    
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
+    
+            // Kiểm tra nếu email có tồn tại nhưng mật khẩu sai
+            $user = \App\Models\User::where('email', $this->input('email'))->first();
+            if ($user) {
+                throw ValidationException::withMessages([
+                    'password' => 'Mật khẩu không đúng.', // Thêm thông báo lỗi cho mật khẩu
+                ]);
+            }
+    
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
-
+    
         RateLimiter::clear($this->throttleKey());
     }
+    
 
     /**
      * Ensure the login request is not rate limited.

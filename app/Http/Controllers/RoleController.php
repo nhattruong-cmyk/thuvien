@@ -72,4 +72,35 @@ class RoleController extends Controller
         $roles->delete();
         return redirect()->route('admin.role.listRole')->with('success', 'Xóa phân quyền thành công');
     }
+
+    
+    public function listDeletedRoles()
+    {
+        // Lấy danh sách người dùng đã bị xóa mềm
+        $deletedRoles = Role::onlyTrashed()->get();
+
+        // Truyền dữ liệu sang view
+        return view('admin.role.deletedRoles', compact('deletedRoles'));
+    }
+
+
+    public function restoreRole($id)
+    {
+        // Tìm người dùng đã bị xóa mềm theo ID
+        $role = Role::withTrashed()->find($id);
+
+        // Kiểm tra nếu người dùng tồn tại
+        if ($role) {
+            // Khôi phục người dùng
+            $role->restore();
+
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.role.listRole')->with('success', 'Phân quyền đã được khôi phục thành công.');
+        }
+
+        // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.role.listRole')->with('error', 'Phân quyền không tồn tại.');
+    }
+
+
 }

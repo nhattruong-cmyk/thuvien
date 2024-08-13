@@ -39,6 +39,10 @@ Route::get('create-phieu-muon', [PhieuMuonController::class, 'showCreatePhieuMuo
 Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart');
+    Route::delete('/cart/{id}', [CartController::class, 'delOneCart'])->name('cart.delete');
+
+
+
 });
 
 
@@ -62,7 +66,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
         Route::get('formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
         Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
-
+        Route::get('listDeletedProducts', [AdminController::class, 'listDeletedProducts'])->name('listDeletedProducts');
+        Route::post('/admin/product/restore/{id}', [AdminController::class, 'restoreProduct'])->name('restoreProduct');
     });
 
     //category
@@ -83,6 +88,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/insertRole', [RoleController::class, 'insertRole'])->name('insertRole');
         Route::post('/updateRole', [RoleController::class, 'updateRole'])->name('updateRole');
         Route::get('/delRole/{id}', [RoleController::class, 'delRole'])->name('delRole');
+        Route::get('listDeletedRoles', [RoleController::class, 'listDeletedRoles'])->name('listDeletedRoles');
+        Route::post('/admin/role/restore/{id}', [RoleController::class, 'restoreRole'])->name('restoreRole');
+
+
     });
 
     //user
@@ -93,6 +102,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/delUser/{id}', [AdminController::class, 'delUser'])->name('delUser');
         Route::get('formupdateUser/{id}', [AdminController::class, 'formupdateUser'])->name('formupdateUser');
         Route::post('/updateUser', [AdminController::class, 'updateUser'])->name('updateUser');
+        Route::post('/admin/user/restore/{id}', [AdminController::class, 'restoreUser'])->name('restoreUser');
+        Route::get('listDeletedUsers', [AdminController::class, 'listDeletedUsers'])->name('listDeletedUsers');
+
+
     });
 
     //phiếu mượn
@@ -104,6 +117,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('formupdatePhieuMuon/{id}', [PhieuMuonController::class, 'formupdatePhieuMuon'])->name('formupdatePhieuMuon');
         Route::post('/updatePhieuMuon', [PhieuMuonController::class, 'updatePhieuMuon'])->name('updatePhieuMuon');
         Route::post('/updateStatus/{id}', [PhieuMuonController::class, 'updateStatus'])->name('updateStatus');
+        Route::post('/admin/phieumuon/restore/{id}', [PhieuMuonController::class, 'restoreCard'])->name('restoreCard');
+        Route::get('listDeletedCards', [PhieuMuonController::class, 'listDeletedCards'])->name('listDeletedCards');
         // web.php
         Route::delete('/phieumuon/bulk-delete', [PhieuMuonController::class, 'bulkDelete'])->name('bulkDelete');
 

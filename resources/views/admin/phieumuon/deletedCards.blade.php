@@ -2,9 +2,6 @@
 
 @section('titlepage', 'Danh sách sản phẩm')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/adminPro.css') }}">
-@endpush
 
 @section('content')
 
@@ -20,15 +17,15 @@
                     data-kt-swapper="true" data-kt-swapper-mode="prepend"
                     data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
                     <!--begin::Heading-->
-                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý sản phẩm</h1>
+                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý Tài Khoản</h1>
                     <!--end::Heading-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
                             <a href="index.php" class="text-muted">Home</a>
                         </li>
-                        <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
-                        <li class="breadcrumb-item text-dark">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item text-muted">Quản lý Tài Khoản</li>
+                        <li class="breadcrumb-item text-dark">Danh sách Tài Khoản</li>
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>
@@ -156,7 +153,7 @@
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-permissions-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-15"
-                                    placeholder="Tìm kiếm sản phẩm" />
+                                    placeholder="Tìm kiếm tài khoản" />
                             </div>
 
                             <!--end::Search-->
@@ -165,8 +162,8 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Button-->
-                            <a href="{{ route('admin.product.formaddPro') }}"><input type="button"
-                                    value="Thêm mới sản phẩm" class="btn btn-light-primary">
+                            <a href="{{ route('admin.user.formaddUser') }}"><input type="button"
+                                    value="Thêm mới tài khoản" class="btn btn-light-primary">
 
                             </a>
                             <!--end::Button-->
@@ -195,54 +192,66 @@
                             </div>
                         @endif
 
+
+
+                        @php
+                        use Carbon\Carbon;
+                    @endphp
+
+
                         <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
                             <!--begin::Table head-->
                             <thead>
-                                <!--begin::Table row-->
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-
-                                    <th class="min-w-90px">Mã sản phẩm</th>
-                                    <th class="min-w-125px">Tên sản phẩm</th>
-                                    <th class="min-w-125px">Hình ảnh</th>
-                                    <th class="min-w-125px">Giá</th>
-                                    <th class="min-w-90px">Số lượng</th>
+                                    <th><input type="checkbox" id="select-all"></th>
+                                    <th class="min-w-50px">Mã</th>
+                                    <th class="min-w-125px">Trạng thái</th>
+                                    <th class="min-w-125px">khách hàng</th>
+                                    <th class="min-w-140px">Tên Sách</th>
+                                    <th class="min-w-75px">Ngày mượn</th>
+                                    <th class="min-w-50px">Hạn Trả</th>
                                     <th class="min-w-150px">Hành động</th>
-
                                 </tr>
-                                <!--end::Table row-->
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
                             <tbody class="fw-bold text-gray-600">
-                                @foreach ($products as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td>
-                                            @if ($item->img && file_exists(public_path('uploaded/' . $item->img)))
-                                                <img src="{{ asset('uploaded/' . $item->img) }}" width="80"
-                                                    alt="">
-                                            @else
-                                                Ảnh không tìm thấy
-                                            @endif
-                                        </td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }} ₫</td>
-                                        <td>{{ $item->quantity }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.product.formupdatePro', $item->id) }}"><input
-                                                    class="btn btn-warning btn-sm" type="button" value="Sửa"></a>
-                                            <a href="{{ route('admin.product.delPro', $item->id) }}" class="btn btn-danger btn-sm" type="button"
-                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">Xóa</a>
-                                            <button type="button" class="btn btn-info btn-sm"
-                                                onclick="showProductDetails({{ $item->id }})">...</button>
+                                
+                                @foreach ($deletedCards as $item)
+                                        @php
+                                            $returned_at = \Carbon\Carbon::parse($item->returned_at);
+                                            $now = now();
+                                            $isLate = $returned_at->isPast() && $item->status == '2';
+                                            $daysLate = $isLate ? round($now->diffInDays($returned_at, false)) : 0;
+                                        @endphp
+                                <tr class="">
+                                    <td><input type="checkbox" name="ids[]" value="{{ $item->id }}"></td>
+                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->status == '1' ? 'Chưa xác nhận' : ($item->status == '2' ? 'Đang mượn' : 'Đã trả') }}
+                                    </td>
+                                    <td>{{ $item->userName }}</td>
+                                    <td>{{ $item->bookName }}</td>
 
-                                        </td>
-                                    </tr>
+                                    <td>{{ Carbon::parse($item->borrowed_at)->format('d/m/Y') }}</td>
+                                    <td>
+                                        {{ Carbon::parse($item->returned_at)->format('d/m/Y') }}
+                                        @if ($isLate)
+                                            <br><span class="text-danger">Đã trễ {{ $daysLate }} ngày</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('admin.phieumuon.restoreCard', $item->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Khôi phục</button>
+                                        </form>
+                                    </td>
                                 @endforeach
                             </tbody>
 
                         </table>
                         <!--end::Table-->
+
                     </div>
                     <!--end::Card body-->
                 </div>
@@ -254,44 +263,4 @@
         <!--end::Footer-->
     </div>
 
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Chi tiết sản phẩm</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img id="productImage" src="" alt="Ảnh sản phẩm" class="img-fluid">
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Tên:</strong> <span id="productName"></span></p>
-                            <p><strong>Giá:</strong> <span id="productPrice"></span></p>
-                            <p><strong>Tác giả:</strong> <span id="productAuthor"></span></p>
-                            <p><strong>Số lượng:</strong> <span id="productQuantity"></span></p>
-                            <p><strong>Năm xuất bản:</strong> <span id="productPublicationYear"></span></p>
-                            <p><strong>Danh mục:</strong> <span id="productCategory"></span></p>
-                            <div class="mb-3">
-                                <label for="productDescription" class="form-label">Mô tả:</label>
-                                <div class="description" id="description">
-                                    <p id="productDescription"></p>
-                                </div>
-                                <p class="see-more" id="see-more">Xem thêm</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 @endsection
-@push('scripts')
-    <script src="{{ asset('js/adminPro.js') }}"></script>
-@endpush

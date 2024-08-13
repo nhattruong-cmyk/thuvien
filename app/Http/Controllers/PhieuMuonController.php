@@ -325,4 +325,33 @@ class PhieuMuonController extends Controller
         return response()->json($phieuMuon);
     }
     
+
+    public function listDeletedCards()
+    {
+        // Lấy danh sách người dùng đã bị xóa mềm
+        $deletedCards= PhieuMuon::onlyTrashed()->get();
+
+        // Truyền dữ liệu sang view
+        return view('admin.phieumuon.deletedCards', compact('deletedCards'));
+    }
+
+
+    public function restoreCard($id)
+    {
+        // Tìm người dùng đã bị xóa mềm theo ID
+        $phieumuon = PhieuMuon::withTrashed()->find($id);
+
+        // Kiểm tra nếu người dùng tồn tại
+        if ($phieumuon) {
+            // Khôi phục người dùng
+            $phieumuon->restore();
+
+            // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
+            return redirect()->route('admin.phieumuon.listPhieuMuon')->with('success', 'Phiếu mượn đã được khôi phục thành công.');
+        }
+
+        // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.phieumuon.listPhieuMuon')->with('error', 'Phiếu mượn không tồn tại.');
+    }
+
 }
