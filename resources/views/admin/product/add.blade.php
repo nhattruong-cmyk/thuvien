@@ -21,7 +21,7 @@
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="../../demo7/dist/index.html" class="text-muted">Home</a>
+                            <a href="../../demo7/dist/index.html" class="text-muted">Danh sách</a>
                         </li>
                         <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
                         <li class="breadcrumb-item text-dark">Thêm mới sản phẩm</li>

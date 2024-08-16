@@ -240,11 +240,27 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <form action="{{ route('admin.phieumuon.restoreCard', $item->id) }}" method="POST"
-                                            style="display:inline;">
+                                        <form action="{{ route('admin.phieumuon.restoreCard', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirmRestore()">
                                             @csrf
-                                            <button type="submit" class="btn btn-success">Khôi phục</button>
+                                            <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
                                         </form>
+                                        
+                                        <form action="{{ route('admin.phieumuon.forceDeletePhieuMuon', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete()">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+                                        
+                                        <script>
+                                            function confirmRestore() {
+                                                return confirm('Bạn có chắc chắn muốn khôi phục phiếu mượn này không?');
+                                            }
+                                    
+                                            function confirmDelete() {
+                                                return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn phiếu mượn này không? Hành động này không thể hoàn tác.');
+                                            }
+                                        </script>
+                                        
                                     </td>
                                 @endforeach
                             </tbody>

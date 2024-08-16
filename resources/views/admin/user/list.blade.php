@@ -22,7 +22,7 @@
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="index.php" class="text-muted">Danh sách</a>
                         </li>
                         <li class="breadcrumb-item text-muted">Quản lý Tài Khoản</li>
                         <li class="breadcrumb-item text-dark">Danh sách Tài Khoản</li>

@@ -110,10 +110,10 @@
                                         <tbody>
                                             @foreach ($cart as $item)
                                                 <tr>
-                                                    <td>{{ $item['maSach'] }}</td>
-                                                    <td>{{ $item['tenSach'] }}</td>
+                                                    <td>{{ $item['bookId_cart'] }}</td>
+                                                    <td>{{ $item['bookName_cart'] }}</td>
                                                     <td>{{ $item['author'] }}</td>
-                                                    <td>{{ $item['soLuong'] }}</td>
+                                                    <td>{{ $item['quantity_cart'] }}</td>
                                                     <td class="text-center">
                                                         <form action="{{ route('cart.delete', $item['id']) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');">
                                                             @csrf
@@ -235,16 +235,16 @@
                                             <tbody>
                                                 @foreach ($cart as $index => $item)
                                                     <tr>
-                                                        <td>{{ $item['maSach'] }}</td>
-                                                        <td>{{ $item['tenSach'] }}</td>
+                                                        <td>{{ $item['bookId_cart'] }}</td>
+                                                        <td>{{ $item['bookName_cart'] }}</td>
                                                         <td>
                                                             <input type="number" name="quantity_in_card[]"
-                                                                class="form-control" value="{{ $item['soLuong'] }}"
+                                                                class="form-control" value="{{ $item['quantity_cart'] }}"
                                                                 min="1" />
                                                             <input type="hidden" name="bookId[]"
-                                                                value="{{ $item['maSach'] }}" />
+                                                                value="{{ $item['bookId_cart'] }}" />
                                                             <input type="hidden" name="bookName[]"
-                                                                value="{{ $item['tenSach'] }}" />
+                                                                value="{{ $item['bookName_cart'] }}" />
                                                         </td>
                                                         <td><input type="checkbox" name="addBook[]"
                                                                 value="{{ $index }}" checked /></td>

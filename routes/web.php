@@ -66,6 +66,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('formaddPro', [AdminController::class, 'formaddPro'])->name('formaddPro');
         Route::post('/insertPro', [AdminController::class, 'insertPro'])->name('insertPro');
         Route::get('/delPro/{id}', [AdminController::class, 'delPro'])->name('delPro');
+        Route::delete('/admin/product/{id}/forceDelete', [AdminController::class, 'forceDeleteProduct'])->name('forceDeleteProduct');
         Route::get('formupdatePro/{id}', [AdminController::class, 'formupdatePro'])->name('formupdatePro');
         Route::post('/updatePro', [AdminController::class, 'updatePro'])->name('updatePro');
         Route::get('listDeletedProducts', [AdminController::class, 'listDeletedProducts'])->name('listDeletedProducts');
@@ -102,6 +103,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('formaddUser', [AdminController::class, 'formaddUser'])->name('formaddUser');
         Route::post('/insertUser', [AdminController::class, 'insertUser'])->name('insertUser');
         Route::get('/delUser/{id}', [AdminController::class, 'delUser'])->name('delUser');
+        Route::delete('/admin/user/{id}/forceDelete', [AdminController::class, 'forceDeleteUser'])->name('forceDeleteUser');
         Route::get('formupdateUser/{id}', [AdminController::class, 'formupdateUser'])->name('formupdateUser');
         Route::post('/updateUser', [AdminController::class, 'updateUser'])->name('updateUser');
         Route::post('/admin/user/restore/{id}', [AdminController::class, 'restoreUser'])->name('restoreUser');
@@ -121,6 +123,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/updateStatus/{id}', [PhieuMuonController::class, 'updateStatus'])->name('updateStatus');
         Route::post('/admin/phieumuon/restore/{id}', [PhieuMuonController::class, 'restoreCard'])->name('restoreCard');
         Route::get('listDeletedCards', [PhieuMuonController::class, 'listDeletedCards'])->name('listDeletedCards');
+        Route::delete('/admin/phieumuon/{id}/forceDelete', [PhieuMuonController::class, 'forceDeletePhieuMuon'])->name('forceDeletePhieuMuon');
         // web.php
         Route::delete('/phieumuon/bulk-delete', [PhieuMuonController::class, 'bulkDelete'])->name('bulkDelete');
 

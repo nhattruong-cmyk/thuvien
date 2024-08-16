@@ -44,16 +44,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
+        // Lấy user hiện tại
+        $user = $request->user();
+    
+        // Loại bỏ email khỏi dữ liệu đã validate để đảm bảo nó không bị thay đổi
+        $data = $request->validated();
+        unset($data['email']);
+    
+        // Cập nhật thông tin người dùng ngoại trừ email
+        $user->fill($data);
+    
+        $user->save();
+    
         return Redirect::route('profile.edit')->with('status', 'Cập nhật hồ sơ thành công');
     }
+    
 
     /**
      * Delete the user's account.

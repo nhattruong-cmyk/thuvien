@@ -17,15 +17,15 @@
                     data-kt-swapper="true" data-kt-swapper-mode="prepend"
                     data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
                     <!--begin::Heading-->
-                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý sản phẩm</h1>
+                    <h1 class="text-dark fw-bolder my-0 fs-2">Quản lý phân quyền</h1>
                     <!--end::Heading-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="index.php" class="text-muted">Danh sách</a>
                         </li>
-                        <li class="breadcrumb-item text-muted">Quản lý sản phẩm</li>
-                        <li class="breadcrumb-item text-dark">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item text-muted">Quản lý phân quyền</li>
+                        <li class="breadcrumb-item text-dark">Danh sách phân quyền</li>
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>

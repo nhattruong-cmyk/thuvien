@@ -233,11 +233,27 @@
                                         </td>
                                         <td>
                                             <!-- Nút khôi phục -->
-                                            <form action="{{ route('admin.user.restoreUser', $item->id) }}" method="POST"
-                                                style="display:inline;">
+                                            <form action="{{ route('admin.user.restoreUser', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirmRestore()">
                                                 @csrf
-                                                <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
                                             </form>
+                                        
+                                            <!-- Nút xóa cứng -->
+                                            <form action="{{ route('admin.user.forceDeleteUser', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete()">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                            </form>
+                                            
+                                            <script>
+                                                function confirmRestore() {
+                                                    return confirm('Bạn có chắc chắn muốn khôi phục người dùng này không?');
+                                                }
+                                        
+                                                function confirmDelete() {
+                                                    return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này không? Hành động này không thể hoàn tác.');
+                                                }
+                                            </script>
                                         </td>
                                     </tr>
                                 @endforeach

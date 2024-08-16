@@ -22,7 +22,7 @@
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="index.php" class="text-muted">Danh sách</a>
                         </li>
                         <li class="breadcrumb-item text-muted">Quản lý bình luận</li>
                         <li class="breadcrumb-item text-dark">Danh sách bình luận</li>
@@ -220,19 +220,19 @@
                                 <meta name="csrf-token" content="{{ csrf_token() }}">
 
                                 @foreach ($comments as $comment)
-                                    <tr>
-                                        <td>{{ $comment->id }}</td>
-                                        <td>{{ $comment->product->name }}</td>
-                                        <td>{{ $comment->comment }}</td>
-                                        <td>{{ $comment->user->name }}</td>
-                                        <td>{{ $comment->rating }}</td>
-                                        <td>{{ $comment->created_at->format('H:i:s d/m/Y') }}</td>
-                                        <td>
-                                            <a href="javascript:void(0);"
-                                                onclick="confirmDelete({{ $comment->id }})"><input type="button"
-                                                    class="btn btn-danger btn-sm" value="Xóa"></a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ $comment->id }}</td>
+                                    <td>{{ $comment->product->name }}</td>
+                                    <td>{{ $comment->comment }}</td>
+                                    <td>{{ $comment->user && is_null($comment->user->deleted_at) ? $comment->user->name : 'Tài khoản đã bị xóa' }}</td>
+                                    <td>{{ $comment->rating }}</td>
+                                    <td>{{ $comment->created_at->format('H:i:s d/m/Y') }}</td>
+                                    <td>
+                                        <a href="javascript:void(0);"
+                                            onclick="confirmDelete({{ $comment->id }})"><input type="button"
+                                                class="btn btn-danger btn-sm" value="Xóa"></a>
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
 

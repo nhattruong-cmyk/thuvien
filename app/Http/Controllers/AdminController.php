@@ -126,6 +126,15 @@ class AdminController extends Controller
         // Kiểm tra nếu sản phẩm tồn tại
         if ($product) {
     
+            // Kiểm tra xem sản phẩm có đang được mượn hay không
+            $isBeingLoaned = PhieuMuon::where('bookId', $id)
+                ->whereIn('status', [1, 2]) // Trạng thái 1 hoặc 2 tượng trưng cho "đang mượn"
+                ->exists();
+    
+            if ($isBeingLoaned) {
+                return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm đang được mượn và không thể xóa.');
+            }
+    
             // Xóa mềm sản phẩm khỏi cơ sở dữ liệu
             $product->delete();
     
@@ -136,6 +145,7 @@ class AdminController extends Controller
             return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
         }
     }
+    
     
     public function search(Request $request)
     {
@@ -195,6 +205,21 @@ class AdminController extends Controller
         }
 
         // Trả về thông báo lỗi nếu người dùng không tồn tại
+        return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
+    }
+
+    public function forceDeleteProduct($id)
+    {
+        // Tìm sản phẩm với cả những sản phẩm đã bị xóa mềm
+        $product = Product::withTrashed()->find($id);
+
+        if ($product) {
+            // Tiến hành xóa cứng sản phẩm
+            $product->forceDelete();
+
+            return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa vĩnh viễn.');
+        }
+
         return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
     }
     
@@ -313,11 +338,12 @@ class AdminController extends Controller
     
         // Kiểm tra nếu người dùng tồn tại
         if ($user) {
-            // Kiểm tra xem người dùng có đang mượn sách hay không
-            $isMuon = PhieuMuon::where('userId', $id)->count();
-            if ($isMuon > 0) {
-                return redirect()->route('admin.user.listUser')->with('error', 'Người dùng này vẫn đang mượn sách và không thể xóa.');
+            // Kiểm tra xem người dùng có bất kỳ phiếu mượn nào không phải status = 3
+            $hasNonReturnBooks = PhieuMuon::where('userId', $id)->where('status', '<>', 3)->exists();
+            if ($hasNonReturnBooks) {
+                return redirect()->route('admin.user.listUser')->with('error', 'Người dùng này vẫn đang mượn sách chưa trả hoặc trong trạng thái khác và không thể xóa.');
             }
+    
             // Xóa mềm người dùng khỏi cơ sở dữ liệu
             $user->delete();
     
@@ -356,17 +382,43 @@ class AdminController extends Controller
         return redirect()->route('admin.user.listUser')->with('error', 'Tài khoản không tồn tại.');
     }
 
+    public function forceDeleteUser($id)
+    {
+        // Tìm người dùng với cả người dùng đã bị xóa mềm
+        $user = User::withTrashed()->find($id);
+
+        if ($user) {
+            // Tiến hành xóa cứng người dùng
+            $user->forceDelete();
+
+            return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa vĩnh viễn.');
+        }
+
+        return redirect()->route('admin.user.listUser')->with('error', 'Tài khoản không tồn tại.');
+    }
+
+
     public function approveDelete(User $user)
     {
         $requestedAt = Carbon::parse($user->delete_requested_at);
-
+    
+        $hasActiveLoans = PhieuMuon::where('userId', $user->id)
+            ->whereIn('status', [1, 2])
+            ->exists();
+    
+        if ($hasActiveLoans) {
+            return redirect()->route('admin.user.listUser')->with('error', 'Người dùng đang mượn sách, không thể xóa tài khoản.');
+        }
+    
         if ($user->delete_request && $requestedAt->diffInDays(now()) <= 3) {
             $user->delete();
             return redirect()->route('admin.user.listUser')->with('status', 'Tài khoản đã được xóa.');
         }
-
+    
         return redirect()->route('admin.user.listUser')->with('error', 'Yêu cầu xóa tài khoản đã hết hạn hoặc không hợp lệ.');
     }
+    
+    
 
     public function cancelDelete(User $user)
     {

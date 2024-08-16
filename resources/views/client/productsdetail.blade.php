@@ -53,12 +53,13 @@
                             <div class="d-flex mt-3">
                                 <input type="number" class="btn border rounded me-2" id="quantity" value="1"
                                     name="quantity" min="1" max="5">
-                         
+
                                 <a href="#" class="btn btn-outline-secondary me-2"><i class="fa fa-heart"></i> Yêu
                                     thích</a>
-                                    <button class="btn btn-outline-info me-2" id="request-borrow" data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">
-                                        <i class="fa fa-book"></i> Yêu cầu mượn sách
-                                    </button>
+                                <button class="btn btn-outline-info me-2" id="request-borrow"
+                                    data-ma-sach="{{ $product->id }}" data-ten-sach="{{ $product->name }}">
+                                    <i class="fa fa-book"></i> Yêu cầu mượn sách
+                                </button>
                             </div>
 
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -74,18 +75,18 @@
                                             return;
                                         }
 
-                                        var maSach = $(this).data('ma-sach');
-                                        var tenSach = $(this).data('ten-sach');
-                                        var soLuong = $('#quantity').val();
+                                        var bookId_cart = $(this).data('ma-sach');
+                                        var bookName_cart = $(this).data('ten-sach');
+                                        var quantity_cart = $('#quantity').val();
 
                                         $.ajax({
                                             url: "{{ route('add.to.cart') }}",
                                             method: "POST",
                                             data: {
                                                 _token: "{{ csrf_token() }}",
-                                                maSach: maSach,
-                                                tenSach: tenSach,
-                                                soLuong: soLuong
+                                                bookId_cart: bookId_cart,
+                                                bookName_cart: bookName_cart,
+                                                quantity_cart: quantity_cart
                                             },
                                             success: function(response) {
                                                 if (response.success) {
@@ -153,12 +154,17 @@
                                                     @forelse ($comments as $comment)
                                                         <li class="comment-item">
                                                             <div class="comment-avatar">
-                                                                <img src="{{ asset('avata/' . $comment->user->img) }}"
-                                                                    class="avatar online" />
+                                                                @if ($comment->user && is_null($comment->user->deleted_at))
+                                                                    <img src="{{ asset('avata/' . $comment->user->img) }}"
+                                                                        class="avatar online" />
+                                                                @else
+                                                                    <img src="{{ asset('images/default-avatar.png') }}"
+                                                                        class="avatar online" />
+                                                                @endif
                                                             </div>
                                                             <div class="comment-content">
                                                                 <div class="comment-username">
-                                                                    {{ $comment->user->name }}
+                                                                    {{ $comment->user && is_null($comment->user->deleted_at) ? $comment->user->name : 'Tài khoản đã bị xóa' }}
                                                                     @for ($i = 1; $i <= 5; $i++)
                                                                         <span
                                                                             class="rating-star-display">{{ $i <= $comment->rating ? '★' : '☆' }}</span>

@@ -27,9 +27,9 @@ class CartController extends Controller
         $cart = Session::get($cartKey, []);
 
         $book = [
-            'maSach' => $request->maSach,
-            'tenSach' => $request->tenSach,
-            'soLuong' => $request->soLuong,
+            'bookId_cart' => $request->bookId_cart,
+            'bookName_cart' => $request->bookName_cart,
+            'quantity_cart' => $request->quantity_cart,
         ];
 
         // Save to session
@@ -39,9 +39,9 @@ class CartController extends Controller
         // Save to database
         $cartItem = new Cart;
         $cartItem->user_id = $user->id;
-        $cartItem->maSach = $request->maSach;
-        $cartItem->tenSach = $request->tenSach;
-        $cartItem->soLuong = $request->soLuong;
+        $cartItem->bookId_cart = $request->bookId_cart;
+        $cartItem->bookName_cart = $request->bookName_cart;
+        $cartItem->quantity_cart = $request->quantity_cart;
         $cartItem->save();
 
         return response()->json(['success' => true]);

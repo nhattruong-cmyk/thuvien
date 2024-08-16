@@ -143,7 +143,7 @@
                                     <div class="form-group">
                                         <label for="email">Email</label>
                                         <input type="text" name="email" class="form-control" id="email"
-                                            placeholder="Địa chỉ Email" value="{{ old('email', $user->email) }}">
+                                            placeholder="Địa chỉ Email" readonly value="{{ old('email', $user->email) }}">
                                         @error('email')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror

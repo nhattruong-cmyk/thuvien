@@ -72,7 +72,7 @@
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb fw-bold fs-base my-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="index.php" class="text-muted">Home</a>
+                            <a href="index.php" class="text-muted">Danh sách</a>
                         </li>
                         <li class="breadcrumb-item text-muted">Quản lý phiếu mượn</li>
                         <li class="breadcrumb-item text-dark">Danh sách phiếu mượn</li>
@@ -294,6 +294,9 @@
                                             <td><input type="checkbox" name="ids[]" value="{{ $item->id }}"></td>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->status == '1' ? 'Chưa xác nhận' : ($item->status == '2' ? 'Đang mượn' : 'Đã trả') }}
+                                                @if ($isLate)
+                                                <br><span class="text-danger">Đã trễ {{ $daysLate }} ngày</span>
+                                            @endif
                                             </td>
                                             <td>{{ $item->userName }}</td>
                                             <td>{{ $item->bookName }}</td>
@@ -301,9 +304,6 @@
                                             <td>{{ Carbon::parse($item->borrowed_at)->format('d/m/Y') }}</td>
                                             <td>
                                                 {{ Carbon::parse($item->returned_at)->format('d/m/Y') }}
-                                                @if ($isLate)
-                                                    <br><span class="text-danger">Đã trễ {{ $daysLate }} ngày</span>
-                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.phieumuon.formupdatePhieuMuon', $item->id) }}">
@@ -504,11 +504,11 @@
                                 <thead>
                                     <tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                         <th class="min-w-70px">Mã Sách</th>
-                                        <th class="min-w-100px">Tên Sách</th>
-                                        <th class="min-w-100px">Tác Giả</th>
-                                        <th class="min-w-100px">Xuất Bản</th>
-                                        <th class="min-w-70px">Số lượng</th>
-                                        <th class="min-w-70px">Ngày mượn</th>
+                                        <th class="min-w-170px">Tên Sách</th>
+                                        <th class="min-w-70px">Tác Giả</th>
+                                        <th class="min-w-70px">Xuất Bản</th>
+                                        <th class="min-w-75px">Số lượng</th>
+                                        <th class="min-w-75px">Ngày mượn</th>
                                         <th class="min-w-70px">Hạn Trả</th>
                                     </tr>
                                 </thead>
@@ -544,7 +544,7 @@
 
                 // Tạo cửa sổ in mới với kích thước A5 nằm ngang và áp dụng CSS
                 var originalContents = document.body.innerHTML;
-                document.body.innerHTML = '<div style="width: 210mm; padding: 5mm; font-size: 10px;">' +
+                document.body.innerHTML = '<div style="width: 210mm; padding: 3mm; font-size: 10px;">' +
                     printContents + '</div>';
 
                 // Thực hiện in

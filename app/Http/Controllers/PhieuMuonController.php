@@ -59,8 +59,9 @@ class PhieuMuonController extends Controller
         DB::beginTransaction();
     
         try {
-            $userId = $request->input('userId');
-            $userName = $request->input('userName');
+            // $userId = $request->input('userId');
+            $userId = Auth::user()->id;
+            $userName = Auth::user()->name;
             $phone = $request->input('phone');
             $status = $request->input('status');
             $borrowed_at = $request->input('borrowed_at');
@@ -69,6 +70,7 @@ class PhieuMuonController extends Controller
             $maSachList = $request->input('bookId', []);
             $tenSachList = $request->input('bookName', []);
             $quantityList = $request->input('quantity_in_card', []);
+           
     
             // Kiểm tra nếu trạng thái là 3 thì không cho phép
             if ($status == 3) {
@@ -306,7 +308,20 @@ class PhieuMuonController extends Controller
         }
     }
     
-    
+    public function forceDeletePhieuMuon($id)
+    {
+        // Tìm phiếu mượn với cả những phiếu đã bị xóa mềm
+        $phieuMuon = PhieuMuon::withTrashed()->find($id);
+
+        if ($phieuMuon) {
+            // Tiến hành xóa cứng phiếu mượn
+            $phieuMuon->forceDelete();
+
+            return redirect()->route('admin.phieumuon.listPhieuMuon')->with('success', 'Phiếu mượn đã được xóa vĩnh viễn.');
+        }
+
+        return redirect()->route('admin.phieumuon.listPhieuMuon')->with('error', 'Phiếu mượn không tồn tại.');
+    }
 
     public function delPhieuMuon($id)
     {
