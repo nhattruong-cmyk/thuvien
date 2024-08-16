@@ -29,10 +29,11 @@ class UpdateRequest extends FormRequest
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
             'author' => 'required|string|max:255',
-            'publication_year' => 'required|digits:4|integer',
+            'publication_year' => 'required|digits:4|integer|between:1901,2155',
+
         ];
     }
-    
+
     public function messages(): array
     {
         return [
@@ -53,9 +54,8 @@ class UpdateRequest extends FormRequest
             'author.max' => 'Tên tác giả không được vượt quá 255 ký tự.',
             'publication_year.required' => 'Vui lòng nhập năm xuất bản.',
             'publication_year.digits' => 'Năm xuất bản phải có 4 chữ số.',
-            'publication_year.integer' => 'Năm xuất bản phải là một số nguyên.',
-      
+            'publication_year.between' => 'Năm xuất bản không phù hợp, phải nằm trong khoảng từ 1901 đến 2155.',
         ];
-        
+
     }
 }

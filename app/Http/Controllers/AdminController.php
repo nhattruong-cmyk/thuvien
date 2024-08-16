@@ -57,10 +57,11 @@ class AdminController extends Controller
             }
         }
 
-        if (Product::create($productData)) {
+        try {
+            Product::create($productData);
             return redirect()->route('admin.product.listPro')->with('success', 'Thêm sản phẩm thành công');
-        } else {
-            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi thêm sản phẩm: ' . $e->getMessage());
         }
 
     }
@@ -122,22 +123,22 @@ class AdminController extends Controller
     {
         // Tìm sản phẩm theo ID
         $product = Product::find($id);
-    
+
         // Kiểm tra nếu sản phẩm tồn tại
         if ($product) {
-    
+
             // Kiểm tra xem sản phẩm có đang được mượn hay không
             $isBeingLoaned = PhieuMuon::where('bookId', $id)
                 ->whereIn('status', [1, 2]) // Trạng thái 1 hoặc 2 tượng trưng cho "đang mượn"
                 ->exists();
-    
+
             if ($isBeingLoaned) {
                 return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm đang được mượn và không thể xóa.');
             }
-    
+
             // Xóa mềm sản phẩm khỏi cơ sở dữ liệu
             $product->delete();
-    
+
             // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
             return redirect()->route('admin.product.listPro')->with('success', 'Sản phẩm đã được xóa thành công.');
         } else {
@@ -145,8 +146,8 @@ class AdminController extends Controller
             return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
         }
     }
-    
-    
+
+
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -222,7 +223,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.product.listPro')->with('error', 'Sản phẩm không tồn tại.');
     }
-    
+
 
 
     // COMMENT --------------------------------------------------------------------------------------------------------------------------
@@ -335,7 +336,7 @@ class AdminController extends Controller
     {
         // Tìm người dùng theo ID
         $user = User::find($id);
-    
+
         // Kiểm tra nếu người dùng tồn tại
         if ($user) {
             // Kiểm tra xem người dùng có bất kỳ phiếu mượn nào không phải status = 3
@@ -343,18 +344,18 @@ class AdminController extends Controller
             if ($hasNonReturnBooks) {
                 return redirect()->route('admin.user.listUser')->with('error', 'Người dùng này vẫn đang mượn sách chưa trả hoặc trong trạng thái khác và không thể xóa.');
             }
-    
+
             // Xóa mềm người dùng khỏi cơ sở dữ liệu
             $user->delete();
-    
+
             // Trả về thông báo thành công hoặc chuyển hướng đến trang khác
             return redirect()->route('admin.user.listUser')->with('success', 'Tài khoản đã được xóa thành công.');
         }
-    
+
         // Trả về thông báo lỗi nếu người dùng không tồn tại
         return redirect()->route('admin.user.listUser')->with('error', 'Tài khoản không tồn tại.');
     }
-    
+
     public function listDeletedUsers()
     {
         // Lấy danh sách người dùng đã bị xóa mềm
@@ -401,24 +402,24 @@ class AdminController extends Controller
     public function approveDelete(User $user)
     {
         $requestedAt = Carbon::parse($user->delete_requested_at);
-    
+
         $hasActiveLoans = PhieuMuon::where('userId', $user->id)
             ->whereIn('status', [1, 2])
             ->exists();
-    
+
         if ($hasActiveLoans) {
             return redirect()->route('admin.user.listUser')->with('error', 'Người dùng đang mượn sách, không thể xóa tài khoản.');
         }
-    
+
         if ($user->delete_request && $requestedAt->diffInDays(now()) <= 3) {
             $user->delete();
             return redirect()->route('admin.user.listUser')->with('status', 'Tài khoản đã được xóa.');
         }
-    
+
         return redirect()->route('admin.user.listUser')->with('error', 'Yêu cầu xóa tài khoản đã hết hạn hoặc không hợp lệ.');
     }
-    
-    
+
+
 
     public function cancelDelete(User $user)
     {
@@ -426,11 +427,11 @@ class AdminController extends Controller
         $user->delete_requested_at = null;
         $user->delete_request_cancelled = true;
         $user->save();
-    
+
         return redirect()->route('admin.user.listUser')->with('status', 'Yêu cầu xóa tài khoản đã bị hủy.');
     }
-    
-    
+
+
 
 
 
